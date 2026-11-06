@@ -1,6 +1,33 @@
 # Progress
 
-## Phase 5 — complete
+## Phase 6 — complete
+
+Built strict-typed pure decide with bounded backlog/utilization/head-age signals,
+step limits, cooldowns and raw-demand downscale stabilization. Added deterministic
+steady/ramp/spike/sawtooth traces, JSON/PNG simulation harness, token-owned Redis
+leadership renewal/release, fail-closed controller, dry-run and official-client
+Kubernetes scale adapters with explicit mapping and network timeouts in threads.
+Compose defaults to dry-run; actual Kubernetes actuation remains Phase 7.
+
+Ruff, mypy (47 source files) and all 60 CPU tests passed. Coverage includes
+table-driven signals/bounds, cooldown/history decay, no history-driven scale-up,
+sawtooth stability, fake Kubernetes subresource calls, and real Redis ownership
+loss. Standard existing Redis/chaos/model/stream tests remain green.
+
+E8 simulated queue recovered 42 s after spike onset; E9 stabilization reduced
+direction reversals 29→1 at higher replica-seconds. E10 targets 5/20/80 were
+identical because other signals dominated; target 500 reduced replica-seconds
+1775→1755 but increased modeled mean wait 2.025→3.017 s. Simulation capacity and
+cold starts are assumptions, not GPU measurements. Real Compose dry-run probe
+sends 1600 real HTTP requests and records proposed/current metrics without
+changing replicas. Current KEDA 2.21 parameters were verified against its docs;
+HPA/KEDA are compared honestly, neither is claimed deployed.
+
+Delivered lesson 06, autoscaling concept, ADR-0009, diagram 7, E8–E10, trace
+artifacts/plot and refreshed config/study plan. A Redis lease is not API fencing;
+already-issued writes may outlive ownership after a long pause.
+
+## Phase 5 — historical completed phase
 
 Implemented bounded-label gateway/worker metrics, invocation and per-item timing
 histograms, structured request/trace logging context, Redis queue/heartbeat/DLQ
@@ -173,7 +200,7 @@ Docker required execution-environment escalation, which was granted.
 
 ## Deferred — according to the phase plan
 
-Phases 6–8: autoscaling, Kubernetes/CI, load testing, runbook and measured SLOs.
+Phases 7–8: Kubernetes/CI, load testing, runbook and measured SLOs.
 
 ## Current limitations
 
@@ -209,6 +236,6 @@ Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 
 ## Next
 
-Owner authorized continuation through Phase 8. Next is Phase 6: pure autoscaling
-policy, simulations, dry-run/Kubernetes adapters, Redis leadership lock and
-measured control-loop experiments.
+Owner authorized continuation through Phase 8. Next is Phase 7: deployment
+packaging, real kind verification, CI workflow, rolling update, pod loss and
+actual autoscaler scale-up/down experiments.

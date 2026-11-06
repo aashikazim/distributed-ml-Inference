@@ -3,13 +3,14 @@
 A Python 3.12 learning project: HTTP requests travel through Redis Streams to
 pull-based workers and return through per-gateway inboxes.
 
-**Phases 1–5 are implemented:** authenticated sync/async inference, a **simulated**
+**Phases 1–6 are implemented:** authenticated sync/async inference, a **simulated**
 fake backend, real DistilBERT sentiment inference, dynamic batching, live worker
 registry, reclaim/DLQ, deadlines/cancellation, rate limiting and atomic admission.
 Streaming chat runs through a bounded LLM adapter against a simulated OpenAI
 server or real vLLM. Real Qwen inference and cancellation were verified on NVIDIA
 GB10. Prometheus/Grafana dashboards and the queue exporter are provisioned.
-Autoscaling and Kubernetes are later phases.
+The autoscaling policy and dry-run loop are implemented; actual Kubernetes
+deployment verification follows in Phase 7.
 
 ## Run the fake backend
 
@@ -150,3 +151,7 @@ Monitoring opens at http://localhost:3000 (read-only local Grafana) and
 http://localhost:9090 (Prometheus). See [lesson 05](docs/learning/05-observability.md)
 and [panel queries](docs/dashboards.md). E7 records a real dashboard-based
 diagnosis with simulated model compute.
+
+The default autoscaler is dry-run: recommendations appear in the Autoscaler
+dashboard without changing Compose replicas. [Lesson 06](docs/learning/06-autoscaling.md)
+explains its policy, simulations and HPA/KEDA alternatives.

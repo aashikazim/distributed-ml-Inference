@@ -594,3 +594,74 @@ That is interpolation, not evidence of ten-second raw request latency. Raw succe
 p95 is separately measured and does not include failed requests. Bucket resolution
 and the chosen population must accompany any percentile claim. E7 is one ordered
 pair of short runs, not a statistical capacity guarantee or SLO measurement.
+
+
+## E8 — spike recovery in the simulated control loop
+
+**Question:** How long until added capacity drains a sudden queue?
+**Prediction:** Bounded growth plus warmup creates a transient queue, then ready
+capacity drains it. **Setup:** 2026-11-06, Linux aarch64 host, source working tree
+based on fba33b6, deterministic fluid queue. All results in E8–E10 are **simulated**:
+20 requests/s per ready replica, 5-second warmup, 1-second steps, 5-second control
+cycle, min=1/max=8, 120-second stabilization, default policy otherwise. No Redis,
+HTTP, model execution, deadlines or admission inside this simulation.
+
+**Method:** `uv run python -m tools.autoscale_sim --output docs/results/autoscale-sim.json`
+replays steady, ramp, spike and sawtooth traces. The spike rises 10→120 requests/s
+at t=60 and lasts to t=120. Track backlog and ready/desired separately.
+
+**Measured simulation:** peak backlog 1100, first cleared at t=102: **42 simulated
+seconds after spike onset**, before the spike ended. Completed all 12600 offered
+units; mean modeled wait 2.025 s, p95 8.05 s; 1775 desired replica-seconds.
+Desired growth was 1→2 at t=60, 4 at t=65 and 8 at t=70; availability lagged by
+five seconds. **Conclusion:** bounded reactive growth cannot prevent the initial
+queue. **Surprise:** the queue cleared during the sustained spike, not only after
+traffic fell. These are model outcomes, not real serving latency promises.
+
+## E9 — remove stabilization and observe flapping
+
+**Question:** What does retaining recent demand cost and prevent?
+**Prediction:** Fewer reversals, more reserved capacity. **Setup/method:** Same
+simulation; 15 repeated 40-second sawtooth cycles. Disable both cooldowns in both
+arms to isolate the stabilization window, comparing zero and 120 seconds.
+
+| Stabilization seconds | Replica changes | Direction reversals | Replica-seconds | Modeled wait p95 seconds |
+|---|---:|---:|---:|---:|
+| 0 | 60 | 29 | 1950 | 4.05 |
+| 120 | 4 | 1 | 3795 | 1.05 |
+
+**Conclusion:** Stabilization substantially reduced repeated direction changes,
+while retaining more capacity. **What surprised us:** its lower waiting cost came
+from avoiding repeated cold starts as well as avoiding replica-count churn.
+Stable does not mean free; count replica-seconds alongside latency.
+
+## E10 — backlog target versus cost and waiting
+
+**Question:** How much does changing target_backlog_per_replica matter?
+**Prediction:** Tighter targets reduce waiting while reserving more capacity.
+**Setup/method:** Same spike and default three-signal policy; sweep 5, 20, 80,
+then extend to 500 after the first three give identical results.
+
+| Backlog target | Peak backlog | Replica-seconds | Modeled mean wait seconds | Modeled p95 seconds |
+|---|---:|---:|---:|---:|
+| 5 | 1100 | 1775 | 2.025 | 8.05 |
+| 20 | 1100 | 1775 | 2.025 | 8.05 |
+| 80 | 1100 | 1775 | 2.025 | 8.05 |
+| 500 | 1300 | 1755 | 3.017 | 10.05 |
+
+**Conclusion:** At target 500, slightly fewer replica-seconds cost more waiting;
+targets 5–80 followed identical recommendations. **What surprised us:** the
+prediction of a smooth trade-off was wrong over the initial sweep. Step limits,
+busy ratio and head age dominated those backlog recommendations. A knob is not
+necessarily influential just because it exists in a formula.
+
+Raw assumptions, per-second traces, policies and summaries:
+[autoscale-sim.json](results/autoscale-sim.json). Plot of the four standard traces:
+
+![Simulated queue and ready/desired replicas](results/autoscale-sim.png)
+
+These deterministic simulations omit scheduling/network failures, variable batch
+capacity, retries, deadlines and model downloads. They test policy behavior under
+stated assumptions, not production capacity. Actual kind actuation is E11–E13.
+The real Redis/HTTP Compose dry-run evidence is [p6-dryrun.json](results/p6-dryrun.json):
+it logs recommendations and exposes metrics but never changes Compose replicas.

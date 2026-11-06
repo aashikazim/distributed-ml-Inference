@@ -1,0 +1,4 @@
+segments:
+  - {seconds: 180, start_rps: 10, end_rps: 100}
+  - {seconds: 120, start_rps: 100, end_rps: 100}
+  - {seconds: 300, start_rps: 10, end_rps: 10}

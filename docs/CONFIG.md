@@ -136,3 +136,23 @@ INFER_EXPORTER_INTERVAL_S (2): seconds between Redis platform-statistic polls.
 
 INFER_WORKER_METRICS_PORT also serves classifier metrics now; zero chooses a random
 port for isolated local drill subprocesses. Compose uses 9001 internally.
+
+## Phase 6 controller settings
+
+| Setting | Default | Meaning |
+|---|---|---|
+| INFER_SCALER_MODE | dryrun | Log only, or kubernetes for real scale-subresource writes |
+| INFER_AUTOSCALE_INTERVAL_S | 5 | Control-loop polling period |
+| INFER_AUTOSCALE_LOCK_TTL_S | 30 | Leadership lease seconds, minimum 15; renewed every TTL/3 |
+| INFER_AUTOSCALER_METRICS_PORT | 9003 | Internal metrics listener; zero chooses an ephemeral port |
+| INFER_KUBERNETES_NAMESPACE | infer-platform | Namespace of managed deployments |
+| INFER_WORKER_DEPLOYMENTS | {} | JSON object mapping model name to Deployment name |
+
+Optional model autoscale policy: min=1, max=8, target_backlog_per_replica=10,
+target_busy_ratio=0.7, max_head_age_s=0.5, up_cooldown_s=5,
+down_cooldown_s=30, stabilization_s=120, max_up_step=4. Model-specific catalog
+values override these defaults. Missing autoscale excludes that model from the
+controller. Kubernetes mode further restricts to the explicit deployment map.
+The Kubernetes adapter uses in-cluster credentials, get/patch on deployments/scale
+and request timeouts (connect 3 s, read 5 s). Blocking client calls run in threads.
+Dry-run uses live accepting workers as current and never changes Compose replicas.

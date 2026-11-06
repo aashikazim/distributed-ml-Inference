@@ -1,0 +1,153 @@
+{
+  "simulated_compute": true,
+  "actual_scaling": false,
+  "http": {
+    "statuses": {
+      "200": 1600
+    },
+    "success_p95_ms": 64.6194510627538
+  },
+  "autoscaler_desired_replicas": [
+    {
+      "metric": {
+        "__name__": "autoscaler_desired_replicas",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "sentiment"
+      },
+      "value": [
+        1793995222.883,
+        "1"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_desired_replicas",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "fake-classifier"
+      },
+      "value": [
+        1793995222.883,
+        "2"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_desired_replicas",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "chat"
+      },
+      "value": [
+        1793995222.883,
+        "1"
+      ]
+    }
+  ],
+  "autoscaler_current_replicas": [
+    {
+      "metric": {
+        "__name__": "autoscaler_current_replicas",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "sentiment"
+      },
+      "value": [
+        1793995222.886,
+        "0"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_current_replicas",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "fake-classifier"
+      },
+      "value": [
+        1793995222.886,
+        "1"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_current_replicas",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "chat"
+      },
+      "value": [
+        1793995222.886,
+        "1"
+      ]
+    }
+  ],
+  "autoscaler_decisions_total": [
+    {
+      "metric": {
+        "__name__": "autoscaler_decisions_total",
+        "direction": "up",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "sentiment"
+      },
+      "value": [
+        1793995222.887,
+        "47"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_decisions_total",
+        "direction": "up",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "fake-classifier"
+      },
+      "value": [
+        1793995222.887,
+        "9"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_decisions_total",
+        "direction": "up",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "chat"
+      },
+      "value": [
+        1793995222.887,
+        "1"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_decisions_total",
+        "direction": "hold",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "fake-classifier"
+      },
+      "value": [
+        1793995222.887,
+        "38"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "autoscaler_decisions_total",
+        "direction": "hold",
+        "instance": "autoscaler:9003",
+        "job": "autoscaler",
+        "model": "chat"
+      },
+      "value": [
+        1793995222.887,
+        "46"
+      ]
+    }
+  ]
+}

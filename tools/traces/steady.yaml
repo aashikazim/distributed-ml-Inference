@@ -1,0 +1,2 @@
+segments:
+  - {seconds: 600, start_rps: 10, end_rps: 10}

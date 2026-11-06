@@ -38,3 +38,5 @@ documents and ADRs are written when their implementation exists, not prefilled
 with unverified claims.
 
 Continue with [lesson 05](learning/05-observability.md), [latency concepts](concepts/latency-and-observability.md), [dashboard queries](dashboards.md) and [ADR-0008](adr/0008-metrics.md).
+
+Then study [lesson 06](learning/06-autoscaling.md), [autoscaling concepts](concepts/autoscaling.md), [ADR-0009](adr/0009-autoscaling.md), and simulated E8–E10 before actual kind deployment.

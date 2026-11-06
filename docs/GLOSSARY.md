@@ -104,3 +104,17 @@
 | Cardinality | Number of distinct metric-label combinations |
 | Scrape | Prometheus polling an HTTP metrics endpoint |
 | Exporter | Process translating Redis state into measurable gauges |
+
+
+| Term | Plain-language meaning |
+|---|---|
+| Control loop | Repeated observation, decision and actuation followed by new observation |
+| Actuator | Adapter that applies a desired replica count |
+| Cooldown | Minimum elapsed time before another change in a direction |
+| Stabilization window | Recent-demand memory delaying downscale |
+| Hysteresis | Policy that resists rapid reversal around a changing signal |
+| Replica-second | One desired replica reserved for one second; a simulated cost proxy here |
+| Leadership lease | Expiring token authorizing one controller to act while it owns renewal |
+| Fencing | Rejecting stale writers even if an old operation arrives after leadership changes |
+| HPA | Kubernetes Horizontal Pod Autoscaler |
+| KEDA | Kubernetes event-driven autoscaling project with existing event-source scalers |

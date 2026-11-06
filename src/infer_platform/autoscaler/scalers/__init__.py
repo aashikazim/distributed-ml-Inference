@@ -1,0 +1,6 @@
+from typing import Protocol
+
+
+class Scaler(Protocol):
+    async def current(self, model: str, observed: int) -> int: ...
+    async def scale(self, model: str, replicas: int) -> None: ...

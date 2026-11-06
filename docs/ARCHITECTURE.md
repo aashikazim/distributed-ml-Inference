@@ -1,4 +1,4 @@
-# Architecture — Phase 5
+# Architecture — Phase 6
 
 The current platform serves fake-classifier (**simulated** compute/output) and
 real DistilBERT SST-2 sentiment inference. Both use bounded dynamic batching.
@@ -315,3 +315,28 @@ production authentication, notification routing and retention remain deployment 
 See [panel queries](dashboards.md), [ADR-0008](adr/0008-metrics.md) and
 [lesson 05](learning/05-observability.md). Autoscaler metrics are defined/tested;
 its dashboard receives live control-loop data in Phase 6.
+
+
+## Diagram 7: autoscaler feedback loop
+
+```mermaid
+flowchart LR
+    R[Redis queue and accepting heartbeats] --> O[Observe backlog, head age, busy]
+    K[Deployment replica spec] --> O
+    O --> D[Pure decide and raw-demand history]
+    D --> B[Bounds, steps, cooldown, stabilization]
+    B --> L[Check renewed token-owned Redis lease]
+    L --> A[Dry-run log or Deployment scale patch]
+    A --> W[Scheduling, load, warmup, ready workers]
+    W --> R
+```
+
+Compose runs dry-run by default; no virtual replica count is claimed as real.
+The Kubernetes adapter uses an explicit model/deployment map and official-client
+scale calls in threads with network timeouts. It is fake-client-tested in Phase 6;
+actual cluster verification follows in Phase 7. The leader lease renews separately
+and stops on ownership loss. It is coordination, not API fencing. Restart seeds
+history with current capacity to avoid immediate contraction. Simulation plots
+show delayed ready capacity separately from desired capacity; their inference
+costs are explicitly simulated. HPA and KEDA alternatives are documented in
+[autoscaling concepts](concepts/autoscaling.md) and [ADR-0009](adr/0009-autoscaling.md).

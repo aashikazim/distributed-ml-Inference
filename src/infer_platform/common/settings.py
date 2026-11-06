@@ -5,6 +5,8 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from infer_platform.autoscaler.policy import Policy
+
 
 class FakeConfig(BaseModel):
     base_ms: float = Field(default=20, ge=0)
@@ -27,6 +29,7 @@ class LLMConfig(BaseModel):
 
 class ModelConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    autoscale: Policy | None = None
     backend: Literal["fake", "torch", "llm"]
     llm: LLMConfig | None = None
     hf_id: str | None = None
@@ -87,6 +90,13 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
     gateway_stream_buffer: int = Field(default=128, ge=2)
     worker_metrics_port: int = Field(default=9001, ge=0, le=65535)
+
+    scaler_mode: Literal["dryrun", "kubernetes"] = "dryrun"
+    autoscale_interval_s: float = Field(default=5, gt=0)
+    autoscale_lock_ttl_s: float = Field(default=30, ge=15)
+    autoscaler_metrics_port: int = Field(default=9003, ge=0, le=65535)
+    kubernetes_namespace: str = "infer-platform"
+    worker_deployments: dict[str, str] = Field(default_factory=dict)
 
     exporter_interval_s: float = Field(default=2, gt=0)
 
