@@ -1,6 +1,6 @@
 # Learn the inference platform
 
-Phase 4 has a real distributed request path, dynamic batching, CPU-verified
+Phase 5 has a real distributed request path, dynamic batching, CPU-verified
 DistilBERT, bounded reliability controls, and streaming chat verified on real GB10
 vLLM and a fake TCP server. Fake inference remains **simulated**. Start with
 [the repository quickstart](../README.md), then follow this order:
@@ -33,6 +33,8 @@ then explaining the observation aloud. Copying commands alone does not establish
 understanding: predict XPENDING and XLEN first, then compare the actual result.
 
 Future document slots are explicit: BENCHMARKS.md and RUNBOOK.md arrive in Phase 8,
-dashboards.md in Phase 5. Later lessons, concept
+Later lessons, concept
 documents and ADRs are written when their implementation exists, not prefilled
 with unverified claims.
+
+Continue with [lesson 05](learning/05-observability.md), [latency concepts](concepts/latency-and-observability.md), [dashboard queries](dashboards.md) and [ADR-0008](adr/0008-metrics.md).

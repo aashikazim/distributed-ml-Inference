@@ -5,6 +5,7 @@ from collections.abc import AsyncGenerator, Awaitable, Callable
 from typing import Any
 from uuid import uuid4
 
+import structlog
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
@@ -25,6 +26,7 @@ def install_chat_routes(
 
     @app.post("/v1/chat/completions")
     async def chat(body: ChatRequest, request: Request) -> Any:
+        request.scope["metric_model"] = body.model
         started = clock.monotonic()
         state = request.app.state
         key_id = state.auth.authenticate(request.headers.get("X-API-Key"))
@@ -44,6 +46,8 @@ def install_chat_routes(
         if len(router.waiters) >= config.max_gateway_inflight:
             return error(503, "OVERLOADED", "Gateway waiter capacity reached", retry_after=1)
         rid = uuid4().hex
+        context = structlog.contextvars.get_contextvars()
+        structlog.contextvars.bind_contextvars(request_id=rid)
         queue = router.register(
             rid, config.gateway_stream_buffer if body.stream else 1, body.stream
         )
@@ -88,6 +92,7 @@ def install_chat_routes(
                         return
                     else:
                         complete = True
+                        request.scope["metric_meta"] = json.loads(current.meta)
                         final = json.loads(current.data)
                         expected = final["choices"][0]["message"]["content"]
                         if observed_text.digest() != hashlib.sha256(expected.encode()).digest():
@@ -145,7 +150,7 @@ def install_chat_routes(
                     timeout_ms=remaining,
                     stream="1" if body.stream else "0",
                     key_id=key_id,
-                    trace_id=uuid4().hex,
+                    trace_id=context.get("trace_id", uuid4().hex),
                 )
                 attempted = True
                 outcome = await enqueue(

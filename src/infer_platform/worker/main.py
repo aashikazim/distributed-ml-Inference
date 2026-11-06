@@ -34,6 +34,7 @@ from infer_platform.common.schemas import (
 from infer_platform.common.settings import ModelConfig, Settings
 from infer_platform.worker.batcher import BatchItem, BatchResult, DynamicBatcher, ItemRejected
 from infer_platform.worker.heartbeat import Heartbeats
+from infer_platform.worker.metrics import WorkerMetrics
 from infer_platform.worker.reclaim import Reclaimer
 from infer_platform.worker.runners.base import ModelRunner
 from infer_platform.worker.runners.fake import FakeRunner
@@ -72,6 +73,7 @@ class Worker:
         self.batcher: DynamicBatcher | None = None
         self.active: set[str] = set()
         self.settings = settings
+        self.metrics = WorkerMetrics()
         self.result_ttl = settings.result_ttl_s if settings else 300
 
     async def setup(self) -> None:
@@ -98,6 +100,7 @@ class Worker:
                 self.config.max_wait_ms,
                 self.config.prefetch_bound,
                 self.clock,
+                lambda size, seconds: self.metrics.invocation(self.model, size, seconds),
             )
             heartbeat = Heartbeats(
                 self.redis,
@@ -111,6 +114,7 @@ class Worker:
                 self.stop,
                 self.settings.heartbeat_interval_s if self.settings else 3,
                 self.settings.heartbeat_ttl_s if self.settings else 10,
+                self.metrics.busy.labels(self.model).set,
             )
             batcher = self.batcher
             await heartbeat.write()
@@ -222,6 +226,7 @@ class Worker:
             )
         )
         if deliveries > 1:
+            self.metrics.reclaimed.labels(self.model).inc()
             log.info(
                 "request_reclaimed",
                 component="worker",
@@ -288,6 +293,7 @@ class Worker:
                 await self.redis.expire(reply, 120)
                 await self.redis.set(result_key(rid), record.model_dump_json(), ex=self.result_ttl)
             await self.ack_delete(entry_id)
+        self.metrics.dlq.labels(self.model).inc()
         log.warning(
             "request_dead_lettered",
             component="worker",
@@ -409,6 +415,9 @@ class Worker:
             result_key(message.request_id), record.model_dump_json(), ex=self.result_ttl
         )
         await self.ack_delete(entry_id)
+        self.metrics.items.labels(self.model, record.status).inc()
+        timing = Meta.model_validate_json(response.meta)
+        self.metrics.wait.labels(self.model).observe(timing.batch_wait_ms / 1000)
 
     async def ack_delete(self, entry_id: str) -> None:
         # Atomic cleanup avoids an ACKed-but-retained entry permanently consuming admission depth.
@@ -441,13 +450,11 @@ async def main() -> None:
     redis = create_redis(settings)
     config = settings.load_models()[settings.worker_model]
     worker: Worker
-    metrics_registry = None
     if config.backend == "llm":
         from infer_platform.worker.llm_worker import LLMWorker
 
         llm_worker = LLMWorker(redis, settings.worker_model, config, settings)
         worker = llm_worker
-        metrics_registry = llm_worker.metrics.registry
     else:
         worker = Worker(
             redis,
@@ -459,13 +466,13 @@ async def main() -> None:
     for sig in (signal.SIGTERM, signal.SIGINT):
         asyncio.get_running_loop().add_signal_handler(sig, worker.stop.set)
     metrics_server = None
-    if metrics_registry is not None:
+    if worker.metrics is not None:
         from prometheus_client import start_http_server
 
         metrics_server, _ = await asyncio.to_thread(
             start_http_server,
             settings.worker_metrics_port,
-            registry=metrics_registry,
+            registry=worker.metrics.registry,
         )
     try:
         await worker.run()

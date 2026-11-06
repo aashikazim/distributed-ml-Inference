@@ -1,4 +1,5 @@
 import asyncio
+from collections.abc import Callable
 from typing import Protocol
 
 from redis.asyncio import Redis
@@ -31,11 +32,13 @@ class Heartbeats:
         stop: asyncio.Event,
         interval: float = 3,
         ttl: int = 10,
+        observe_busy: Callable[[float], None] | None = None,
     ) -> None:
         self.redis, self.key = redis, worker_key(model, worker_id)
         self.worker_id, self.backend, self.device = worker_id, backend, device
         self.started_at, self.batcher, self.clock = started_at, batcher, clock
         self.stop, self.interval, self.ttl = stop, interval, ttl
+        self.observe_busy = observe_busy
         self.previous_time = clock.monotonic()
         self.previous_busy = 0.0
 
@@ -46,6 +49,8 @@ class Heartbeats:
             busy += now - self.batcher.busy_started
         elapsed = now - self.previous_time
         ratio = min(1.0, max(0.0, (busy - self.previous_busy) / elapsed)) if elapsed > 0 else 0
+        if self.observe_busy is not None:
+            self.observe_busy(ratio)
         heartbeat = Heartbeat(
             worker_id=self.worker_id,
             backend=self.backend,

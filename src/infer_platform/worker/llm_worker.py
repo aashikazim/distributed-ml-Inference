@@ -23,7 +23,6 @@ from infer_platform.common.settings import ModelConfig, Settings
 from infer_platform.worker.batcher import BatchItem, BatchResult
 from infer_platform.worker.heartbeat import Heartbeats
 from infer_platform.worker.llm_adapter import LLMAdapter, LLMError
-from infer_platform.worker.llm_metrics import LLMMetrics
 from infer_platform.worker.main import Delivery, Worker
 from infer_platform.worker.reclaim import Reclaimer
 
@@ -51,7 +50,6 @@ class LLMWorker(Worker):
         )
         self.client = client
         self.runtime = settings
-        self.metrics = LLMMetrics()
         self.slots = asyncio.Semaphore(self.llm.max_concurrent)
         self.changed = asyncio.Event()
         self.busy_seconds = 0.0
@@ -84,6 +82,7 @@ class LLMWorker(Worker):
                 self.stop,
                 self.runtime.heartbeat_interval_s,
                 self.runtime.heartbeat_ttl_s,
+                self.metrics.busy.labels(self.model).set,
             )
             await heartbeat.write()
             self.ready.set()
@@ -167,6 +166,8 @@ class LLMWorker(Worker):
     async def schedule(
         self, adapter: LLMAdapter, entry_id: str, fields: dict[str, str], deliveries: int
     ) -> None:
+        if deliveries > 1:
+            self.metrics.reclaimed.labels(self.model).inc()
         try:
             message = RequestMessage.model_validate(fields)
         except ValidationError:
@@ -213,6 +214,13 @@ class LLMWorker(Worker):
     async def handle(self, adapter: LLMAdapter, item: BatchItem) -> None:
         delivery: Delivery = item.context
         message = delivery.message
+        structlog.contextvars.bind_contextvars(
+            component="worker",
+            model=self.model,
+            worker_id=self.worker_id,
+            request_id=item.request_id,
+            trace_id=message.trace_id,
+        )
         started = self.clock.monotonic()
         record = ResultRecord(
             status="RUNNING",
@@ -285,6 +293,7 @@ class LLMWorker(Worker):
                 completion_tokens=stats.completion_tokens,
                 chunk_writes=stats.chunk_writes,
             )
+            self.metrics.invocation(self.model, 1, meta.inference_ms / 1000)
             response = InboxMessage(
                 request_id=item.request_id,
                 type="final",

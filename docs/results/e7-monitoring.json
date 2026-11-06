@@ -1,0 +1,975 @@
+{
+  "simulated_compute": true,
+  "date_utc": "2026-11-06T19:47:46Z",
+  "hardware": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+  "commit": "3644455b1002c87b0dd1f8f6c5961fb69f841557",
+  "prediction": "Batch-size-one limits amortization: busy rises, batch size falls; compute duration is similar, queue wait and head age grow.",
+  "baseline": {
+    "statuses": {
+      "200": 6000
+    },
+    "success_p95_ms": 65.34832902252674,
+    "dashboard_queries": {
+      "overview/RPS": {
+        "expr": "sum by (model,status) (rate(gateway_requests_total[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "status": "200"
+            },
+            "value": [
+              1793994548.432,
+              "80.01818181818182"
+            ]
+          }
+        ]
+      },
+      "overview/Latency p50": {
+        "expr": "histogram_quantile(0.5, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.434,
+              "0.054907786885245904"
+            ]
+          }
+        ]
+      },
+      "overview/Latency p95": {
+        "expr": "histogram_quantile(0.95, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.436,
+              "0.09549077868852458"
+            ]
+          }
+        ]
+      },
+      "overview/Latency p99": {
+        "expr": "histogram_quantile(0.99, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.439,
+              "0.09909815573770492"
+            ]
+          }
+        ]
+      },
+      "overview/Errors / second": {
+        "expr": "sum by (model,status) (rate(gateway_requests_total{status=~\"4..|5..\"}[1m]))",
+        "data": []
+      },
+      "overview/Backlog": {
+        "expr": "queue_backlog",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_backlog",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994548.443,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_backlog",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.443,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_backlog",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994548.443,
+              "0"
+            ]
+          }
+        ]
+      },
+      "overview/Workers alive": {
+        "expr": "workers_alive",
+        "data": [
+          {
+            "metric": {
+              "__name__": "workers_alive",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994548.445,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "workers_alive",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.445,
+              "1"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "workers_alive",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994548.445,
+              "1"
+            ]
+          }
+        ]
+      },
+      "overview/Queue wait mean": {
+        "expr": "sum by (model) (rate(gateway_queue_wait_seconds_sum[1m])) / sum by (model) (rate(gateway_queue_wait_seconds_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.447,
+              "0.0010615540036177874"
+            ]
+          }
+        ]
+      },
+      "overview/Head age": {
+        "expr": "queue_head_age_seconds",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_head_age_seconds",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994548.449,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_head_age_seconds",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.449,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_head_age_seconds",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994548.449,
+              "0"
+            ]
+          }
+        ]
+      },
+      "overview/Pending": {
+        "expr": "queue_pending",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_pending",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994548.45,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_pending",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.45,
+              "4"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_pending",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994548.45,
+              "0"
+            ]
+          }
+        ]
+      },
+      "overview/DLQ entries": {
+        "expr": "queue_dlq_entries",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_dlq_entries",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994548.452,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_dlq_entries",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.452,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_dlq_entries",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994548.452,
+              "0"
+            ]
+          }
+        ]
+      },
+      "batching/Batch size mean": {
+        "expr": "sum by (model) (rate(worker_batch_size_sum[1m])) / sum by (model) (rate(worker_batch_size_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.455,
+              "2.2904737116085374"
+            ]
+          }
+        ]
+      },
+      "batching/Batch size distribution": {
+        "expr": "sum by (le,model) (rate(worker_batch_size_bucket[1m]))",
+        "data": [
+          {
+            "metric": {
+              "le": "1.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "0.09090909090909091"
+            ]
+          },
+          {
+            "metric": {
+              "le": "2.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "24.69090909090909"
+            ]
+          },
+          {
+            "metric": {
+              "le": "4.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "34.92727272727272"
+            ]
+          },
+          {
+            "metric": {
+              "le": "8.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "34.92727272727272"
+            ]
+          },
+          {
+            "metric": {
+              "le": "16.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "34.92727272727272"
+            ]
+          },
+          {
+            "metric": {
+              "le": "32.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "34.92727272727272"
+            ]
+          },
+          {
+            "metric": {
+              "le": "64.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "34.92727272727272"
+            ]
+          },
+          {
+            "metric": {
+              "le": "+Inf",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.457,
+              "34.92727272727272"
+            ]
+          }
+        ]
+      },
+      "batching/Batch wait mean": {
+        "expr": "sum by (model) (rate(worker_batch_wait_seconds_sum[1m])) / sum by (model) (rate(worker_batch_wait_seconds_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.459,
+              "0.01598170967436586"
+            ]
+          }
+        ]
+      },
+      "batching/Inference mean": {
+        "expr": "sum by (model) (rate(worker_inference_seconds_sum[1m])) / sum by (model) (rate(worker_inference_seconds_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.462,
+              "0.02656773705975255"
+            ]
+          }
+        ]
+      },
+      "batching/Busy ratio": {
+        "expr": "worker_busy_ratio",
+        "data": [
+          {
+            "metric": {
+              "__name__": "worker_busy_ratio",
+              "instance": "172.22.0.9:9001",
+              "job": "workers",
+              "model": "chat"
+            },
+            "value": [
+              1793994548.464,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "worker_busy_ratio",
+              "instance": "172.22.0.7:9001",
+              "job": "workers",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994548.464,
+              "0.9293162753039464"
+            ]
+          }
+        ]
+      },
+      "batching/Outcomes / second": {
+        "expr": "sum by (model,outcome) (rate(worker_items_total[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "outcome": "SUCCEEDED"
+            },
+            "value": [
+              1793994548.465,
+              "80"
+            ]
+          }
+        ]
+      },
+      "batching/Reclaims": {
+        "expr": "sum by (model) (increase(worker_reclaimed_total[5m]))",
+        "data": []
+      }
+    }
+  },
+  "bottleneck": {
+    "statuses": {
+      "200": 404,
+      "504": 5596
+    },
+    "success_p95_ms": 4926.846910035238,
+    "dashboard_queries": {
+      "overview/RPS": {
+        "expr": "sum by (model,status) (rate(gateway_requests_total[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "status": "200"
+            },
+            "value": [
+              1793994634.946,
+              "0.21818181818181817"
+            ]
+          },
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "status": "504"
+            },
+            "value": [
+              1793994634.946,
+              "79.78181818181818"
+            ]
+          }
+        ]
+      },
+      "overview/Latency p50": {
+        "expr": "histogram_quantile(0.5, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.948,
+              "7.210953346855984"
+            ]
+          }
+        ]
+      },
+      "overview/Latency p95": {
+        "expr": "histogram_quantile(0.95, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.95,
+              "9.721095334685598"
+            ]
+          }
+        ]
+      },
+      "overview/Latency p99": {
+        "expr": "histogram_quantile(0.99, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.952,
+              "9.94421906693712"
+            ]
+          }
+        ]
+      },
+      "overview/Errors / second": {
+        "expr": "sum by (model,status) (rate(gateway_requests_total{status=~\"4..|5..\"}[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "status": "504"
+            },
+            "value": [
+              1793994634.953,
+              "79.78181818181818"
+            ]
+          }
+        ]
+      },
+      "overview/Backlog": {
+        "expr": "queue_backlog",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_backlog",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994634.955,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_backlog",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.955,
+              "318"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_backlog",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994634.955,
+              "0"
+            ]
+          }
+        ]
+      },
+      "overview/Workers alive": {
+        "expr": "workers_alive",
+        "data": [
+          {
+            "metric": {
+              "__name__": "workers_alive",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994634.956,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "workers_alive",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.956,
+              "1"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "workers_alive",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994634.956,
+              "1"
+            ]
+          }
+        ]
+      },
+      "overview/Queue wait mean": {
+        "expr": "sum by (model) (rate(gateway_queue_wait_seconds_sum[1m])) / sum by (model) (rate(gateway_queue_wait_seconds_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.959,
+              "4.9365174763997475"
+            ]
+          }
+        ]
+      },
+      "overview/Head age": {
+        "expr": "queue_head_age_seconds",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_head_age_seconds",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994634.961,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_head_age_seconds",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.961,
+              "4.954861083984375"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_head_age_seconds",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994634.961,
+              "0"
+            ]
+          }
+        ]
+      },
+      "overview/Pending": {
+        "expr": "queue_pending",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_pending",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994634.962,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_pending",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.962,
+              "2"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_pending",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994634.962,
+              "0"
+            ]
+          }
+        ]
+      },
+      "overview/DLQ entries": {
+        "expr": "queue_dlq_entries",
+        "data": [
+          {
+            "metric": {
+              "__name__": "queue_dlq_entries",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "sentiment"
+            },
+            "value": [
+              1793994634.963,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_dlq_entries",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.963,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "queue_dlq_entries",
+              "instance": "exporter:9002",
+              "job": "exporter",
+              "model": "chat"
+            },
+            "value": [
+              1793994634.963,
+              "0"
+            ]
+          }
+        ]
+      },
+      "batching/Batch size mean": {
+        "expr": "sum by (model) (rate(worker_batch_size_sum[1m])) / sum by (model) (rate(worker_batch_size_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.965,
+              "1"
+            ]
+          }
+        ]
+      },
+      "batching/Batch size distribution": {
+        "expr": "sum by (le,model) (rate(worker_batch_size_bucket[1m]))",
+        "data": [
+          {
+            "metric": {
+              "le": "1.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "2.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "4.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "8.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "16.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "32.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "64.0",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          },
+          {
+            "metric": {
+              "le": "+Inf",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.969,
+              "36.76363636363636"
+            ]
+          }
+        ]
+      },
+      "batching/Batch wait mean": {
+        "expr": "sum by (model) (rate(worker_batch_wait_seconds_sum[1m])) / sum by (model) (rate(worker_batch_wait_seconds_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.97,
+              "0.011834132045373933"
+            ]
+          }
+        ]
+      },
+      "batching/Inference mean": {
+        "expr": "sum by (model) (rate(worker_inference_seconds_sum[1m])) / sum by (model) (rate(worker_inference_seconds_count[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.971,
+              "0.02395823411177153"
+            ]
+          }
+        ]
+      },
+      "batching/Busy ratio": {
+        "expr": "worker_busy_ratio",
+        "data": [
+          {
+            "metric": {
+              "__name__": "worker_busy_ratio",
+              "instance": "172.22.0.9:9001",
+              "job": "workers",
+              "model": "chat"
+            },
+            "value": [
+              1793994634.973,
+              "0"
+            ]
+          },
+          {
+            "metric": {
+              "__name__": "worker_busy_ratio",
+              "instance": "172.22.0.7:9001",
+              "job": "workers",
+              "model": "fake-classifier"
+            },
+            "value": [
+              1793994634.973,
+              "0.8898233214740332"
+            ]
+          }
+        ]
+      },
+      "batching/Outcomes / second": {
+        "expr": "sum by (model,outcome) (rate(worker_items_total[1m]))",
+        "data": [
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "outcome": "SUCCEEDED"
+            },
+            "value": [
+              1793994634.974,
+              "0.2909090909090909"
+            ]
+          },
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "outcome": "CANCELLED"
+            },
+            "value": [
+              1793994634.974,
+              "29.363636363636363"
+            ]
+          },
+          {
+            "metric": {
+              "model": "fake-classifier",
+              "outcome": "EXPIRED"
+            },
+            "value": [
+              1793994634.974,
+              "50.38181818181818"
+            ]
+          }
+        ]
+      },
+      "batching/Reclaims": {
+        "expr": "sum by (model) (increase(worker_reclaimed_total[5m]))",
+        "data": []
+      }
+    }
+  }
+}

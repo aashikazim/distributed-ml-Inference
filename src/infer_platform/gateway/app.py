@@ -9,13 +9,12 @@ import structlog
 from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
-from prometheus_client import CollectorRegistry, Histogram, generate_latest
+from prometheus_client import generate_latest
 from redis.exceptions import RedisError
 
 from infer_platform.common.clock import Clock, SystemClock
 from infer_platform.common.keys import cancel_key, inbox, request_stream, result_key
 from infer_platform.common.logging import configure_logging
-from infer_platform.common.metrics import LATENCY_BUCKETS
 from infer_platform.common.redis import create_redis, server_ms
 from infer_platform.common.registry import live_workers
 from infer_platform.common.schemas import (
@@ -52,6 +51,10 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     config = settings or Settings()
     clock = clock or SystemClock()
 
+    from infer_platform.gateway.metrics import GatewayMetrics, ObserveHTTP
+
+    observed = GatewayMetrics()
+
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         configure_logging()
@@ -61,14 +64,8 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         app.state.models = config.load_models()
         app.state.auth = Authenticator(config.api_keys)
         app.state.limiter = RateLimiter(redis, config.rate_limit_per_s, config.rate_limit_burst)
-        app.state.metrics_registry = CollectorRegistry()
-        app.state.chat_ttft = Histogram(
-            "gateway_ttft_seconds",
-            "Request to first SSE content",
-            ["model"],
-            buckets=LATENCY_BUCKETS,
-            registry=app.state.metrics_registry,
-        )
+        app.state.metrics_registry = observed.registry
+        app.state.chat_ttft = observed.ttft
         app.state.redis = redis
         app.state.router = router
         try:
@@ -82,6 +79,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
 
     app = FastAPI(lifespan=lifespan)
     app.add_middleware(BodyLimit, limit=config.max_body_bytes)
+    app.add_middleware(ObserveHTTP, metrics=observed, models=set(config.load_models()))
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
@@ -209,6 +207,8 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         if not async_mode and len(router.waiters) >= config.max_gateway_inflight:
             return error(503, "OVERLOADED", "Gateway waiter capacity reached", retry_after=1)
         request_id = uuid4().hex
+        context = structlog.contextvars.get_contextvars()
+        structlog.contextvars.bind_contextvars(request_id=request_id)
         queue = None if async_mode else router.register(request_id)
         message = RequestMessage(
             request_id=request_id,
@@ -216,7 +216,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             payload=body.model_dump_json(),
             timeout_ms=max(1, int(remaining_s * 1000)),
             key_id=key_id,
-            trace_id=uuid4().hex,
+            trace_id=context.get("trace_id", uuid4().hex),
         )
         accepted = False
         try:

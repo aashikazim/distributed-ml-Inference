@@ -86,7 +86,9 @@ class Settings(BaseSettings):
 
     llm_base_url: str | None = None
     gateway_stream_buffer: int = Field(default=128, ge=2)
-    worker_metrics_port: int = Field(default=9001, ge=1, le=65535)
+    worker_metrics_port: int = Field(default=9001, ge=0, le=65535)
+
+    exporter_interval_s: float = Field(default=2, gt=0)
 
     device: Literal["auto", "cpu", "cuda"] = "auto"
     torch_threads: int = Field(default=1, gt=0)

@@ -534,3 +534,63 @@ A ten-token warm completion had 21.73 ms worker TTFT and 76.65 ms upstream durat
 These are individual observations, not percentile or default-configuration claims.
 [Verification](results/p4-gpu-verification.json) and
 [cold first request](results/p4-gpu-first-request.json) preserve both states.
+
+## E7 — diagnose a batching bottleneck using only dashboard queries
+
+**Question:** Can Overview and Batching distinguish queue saturation from slower
+model execution without reading logs? **Prediction, recorded before traffic:**
+Batch-size-one loses amortization; batch size falls, queue/head age grow, and
+invocation time remains similar. Busy fraction should stay high under saturation.
+
+**Setup:** 2026-11-06, Linux aarch64 on the same 20-logical-CPU GB10 host; no GPU
+compute in E7. Python 3.12.3, Redis 7.4.12, Prometheus 3.5.0, Grafana 12.1.0.
+Real Docker services, TCP HTTP, Redis and scraping; **simulated model compute**
+(base 20 ms, per item 2 ms, jitter 3 ms). Phase 5 working tree based on 3644455;
+the phase commit preserves the implementation used. Not an isolated production
+machine; brief verification checks also ran on the host during the drill.
+
+**Method:** `uv run --extra ml python -m tools.monitoring_experiment` sends
+80 requests/s for 75 seconds per scenario, first max_batch_size=32, then 1.
+One worker in both scenarios; same 5-second deadline and queue admission policy.
+It saves exact expressions from the provisioned dashboards and their real
+Prometheus results after each scenario, then restores the worker configuration.
+No application logs are used for the diagnosis. Histograms have interpolation
+error; raw HTTP success timings are a separate cross-check, not diagnostic input.
+
+| Observation | Baseline batch cap 32 | Bottleneck batch cap 1 |
+|---|---:|---:|
+| HTTP 200 / 6000 offered | 6000 | 404 |
+| HTTP 504 / 6000 offered | 0 | 5596 |
+| Dashboard mean actual batch | 2.290 | 1.000 |
+| Dashboard mean invocation seconds | 0.02657 | 0.02396 |
+| Dashboard Redis queue wait seconds | 0.00106 | 4.93652 |
+| Dashboard undelivered backlog | 0 | 318 |
+| Dashboard head age seconds | 0 | 4.95486 |
+| Dashboard pending | 4 | 2 |
+| Dashboard busy fraction | 0.929 | 0.890 |
+| Dashboard approximate all-response p95 seconds | 0.09549 | 9.72110 |
+| Raw successful HTTP p95 milliseconds | 65.35 | 4926.85 |
+
+**Dashboard-only diagnosis:** Overview shows growing waiting and errors, not just
+higher latency. Batching shows single-item execution with a similar/slightly
+shorter invocation duration. A high busy fraction in both scenarios means busy
+alone cannot identify healthy throughput. Batch throughput estimates explain the
+difference: about 2.29/0.02657 versus 1/0.02396 items per second, against 80 offered.
+The bottleneck is lost batching capacity, not a new expensive model invocation.
+Restoring batching fixes the controlled cause; blindly increasing timeout would
+only retain more waiting work.
+
+**Conclusion:** The dashboards locate queue saturation and insufficient service
+capacity without request logs. The full experiment is repeatable and restores its
+configuration. All four dashboards were discovered through Grafana's API, all
+active targets were healthy, and promtool accepted configuration and five rules.
+Evidence: [e7-monitoring.json](results/e7-monitoring.json),
+[p5-provisioning.json](results/p5-provisioning.json), [panel guide](dashboards.md).
+
+**What surprised us:** Even the healthy worker was about 93% busy; utilization
+alone would have misdiagnosed it. The coarse 5-to-10-second histogram bucket also
+made p95 look near ten seconds when many timeouts were just over five seconds.
+That is interpolation, not evidence of ten-second raw request latency. Raw success
+p95 is separately measured and does not include failed requests. Bucket resolution
+and the chosen population must accompany any percentile claim. E7 is one ordered
+pair of short runs, not a statistical capacity guarantee or SLO measurement.

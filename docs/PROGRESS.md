@@ -1,6 +1,27 @@
 # Progress
 
-## Phase 4 — complete
+## Phase 5 — complete
+
+Implemented bounded-label gateway/worker metrics, invocation and per-item timing
+histograms, structured request/trace logging context, Redis queue/heartbeat/DLQ
+exporter with freshness, DNS discovery for worker replicas, Prometheus 3.5.0 and
+Grafana 12.1.0 with four automatically provisioned dashboards and five alert rules.
+All active Compose scrape targets were healthy. promtool config/rules checks passed.
+Ruff, mypy (40 source files) and all 48 CPU tests passed; one opt-in GPU test
+remains excluded by default and its Phase 4 real-GPU evidence is retained.
+
+E7 offered 6000 requests per scenario: healthy batching completed all; batch cap
+one completed 404 and timed out 5596. Dashboard queue wait rose 0.00106→4.93652 s
+while invocation time stayed similar and actual batch fell 2.29→1. Diagnosis used
+only saved dashboard expressions/series. Compute was simulated, transport real.
+The coarse histogram overestimated timeout p95; EXPERIMENTS.md explains it.
+
+Delivered lesson 05, latency concept, ADR-0008, diagram 6, dashboards.md, E7 and
+provisioning artifacts. No screenshots were captured; every panel query is
+documented. SLO alert has no target until measured Phase 8 proposal. Alert
+notification routing and production auth/retention remain deployment-specific.
+
+## Phase 4 — historical completed phase
 
 Built the separate httpx LLMAdapter and semaphore-bounded worker, streaming and
 nonstream chat endpoint, per-request SSE routing, coalesced Redis chunk relay,
@@ -152,7 +173,6 @@ Docker required execution-environment escalation, which was granted.
 
 ## Deferred — according to the phase plan
 
-Phase 5: metrics/exporter, provisioned dashboards, alerts and richer logging.
 Phases 6–8: autoscaling, Kubernetes/CI, load testing, runbook and measured SLOs.
 
 ## Current limitations
@@ -189,6 +209,6 @@ Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 
 ## Next
 
-Stop for owner review. Phase 5 will add complete metrics/exporter instrumentation,
-Prometheus scraping (including vLLM), provisioned Grafana dashboards, alerts,
-logging context and the bottleneck diagnosis experiment. Do not begin it automatically.
+Owner authorized continuation through Phase 8. Next is Phase 6: pure autoscaling
+policy, simulations, dry-run/Kubernetes adapters, Redis leadership lock and
+measured control-loop experiments.

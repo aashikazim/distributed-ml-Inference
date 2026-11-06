@@ -131,3 +131,8 @@ The engine has localhost:8100/metrics; the chat worker exposes its LLM counters,
 TTFT/TPOT histograms and active-sequence gauge on internal port 9001. Gateway
 /metrics exposes client-side TTFT. Full platform instrumentation and Prometheus
 scraping configuration arrive in Phase 5.
+
+INFER_EXPORTER_INTERVAL_S (2): seconds between Redis platform-statistic polls.
+
+INFER_WORKER_METRICS_PORT also serves classifier metrics now; zero chooses a random
+port for isolated local drill subprocesses. Compose uses 9001 internally.

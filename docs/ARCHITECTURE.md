@@ -1,4 +1,4 @@
-# Architecture — Phase 4
+# Architecture — Phase 5
 
 The current platform serves fake-classifier (**simulated** compute/output) and
 real DistilBERT SST-2 sentiment inference. Both use bounded dynamic batching.
@@ -290,3 +290,28 @@ Metrics are exposed at gateway /metrics and chat worker :9001/metrics. Engine
 
 See [ADR-0007](adr/0007-llm-adapter.md), [GPU evidence](GPU_VERIFICATION.md) and
 [LLM concepts](concepts/llm-serving.md) for the boundary and measurement limits.
+
+
+## Diagram 6: metrics pipeline
+
+```mermaid
+flowchart LR
+    G[Gateway RED metrics] --> P[Prometheus every five seconds]
+    W[Workers: batches, compute, outcomes] --> P
+    R[Redis queues and heartbeats] --> E[Exporter every two seconds]
+    E --> P
+    V[vLLM or simulated engine metrics] --> P
+    P --> F[Provisioned Grafana dashboards]
+    P --> A[Sustained alert rules]
+```
+
+Per-process registries avoid global test contamination. Worker DNS discovery
+scrapes each replica IP; counters use bounded labels, never request identity.
+Logs carry request_id/trace_id and component context. Queue gauges are best-effort
+Redis snapshots; exporter freshness must accompany their interpretation.
+Histograms aggregate buckets before quantiles. The SLO rule waits for a measured
+Phase 8 target series. Metrics endpoints and Grafana are development-local/internal;
+production authentication, notification routing and retention remain deployment work.
+See [panel queries](dashboards.md), [ADR-0008](adr/0008-metrics.md) and
+[lesson 05](learning/05-observability.md). Autoscaler metrics are defined/tested;
+its dashboard receives live control-loop data in Phase 6.

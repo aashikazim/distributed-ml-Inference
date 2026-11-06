@@ -51,6 +51,7 @@ class DynamicBatcher:
         max_wait_ms: float,
         prefetch_bound: int | None = None,
         clock: Clock | None = None,
+        observe: Callable[[int, float], None] | None = None,
     ) -> None:
         bound = prefetch_bound if prefetch_bound is not None else 2 * max_batch_size
         if max_batch_size < 1 or max_wait_ms < 0 or bound < max_batch_size:
@@ -67,6 +68,7 @@ class DynamicBatcher:
         self.capacity_changed = asyncio.Event()
         self.busy_seconds = 0.0
         self.busy_started: float | None = None
+        self.observe = observe
         self.closed = False
         self.deliveries: set[asyncio.Task[None]] = set()
 
@@ -155,7 +157,10 @@ class DynamicBatcher:
                 inputs,
             )
         finally:
-            self.busy_seconds += self.clock.monotonic() - self.busy_started
+            elapsed = self.clock.monotonic() - self.busy_started
+            self.busy_seconds += elapsed
+            if self.observe is not None:
+                self.observe(len(inputs), elapsed)
             self.busy_started = None
         if len(outputs) != len(inputs):
             raise ValueError("Runner output count differs from input count")

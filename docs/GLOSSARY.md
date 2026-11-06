@@ -91,3 +91,16 @@
 | Prefix caching | Reusing engine attention state for shared prompt prefixes |
 | Eager execution | Running model operations without CUDA graph replay in this tested server mode |
 | Stream interruption | Explicit failure when a partially emitted answer cannot safely finish or resume |
+
+
+| Term | Plain-language meaning |
+|---|---|
+| Histogram | Bucket counts plus sum/count describing a population of observations |
+| Quantile / percentile | Estimated boundary below which a chosen fraction of observations falls |
+| SLI | Measured service-level indicator |
+| Error budget | Fraction of outcomes an SLO permits to miss its target |
+| RED | Request rate, errors and duration |
+| USE | Resource utilization, saturation and errors |
+| Cardinality | Number of distinct metric-label combinations |
+| Scrape | Prometheus polling an HTTP metrics endpoint |
+| Exporter | Process translating Redis state into measurable gauges |

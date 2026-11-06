@@ -81,6 +81,7 @@ class WorkerProcess:
         self.log_path = root / f"worker-{uuid4().hex}.log"
         env = {
             **os.environ,
+            "INFER_WORKER_METRICS_PORT": "0",
             "INFER_REDIS_URL": settings.redis_url.get_secret_value(),
             "INFER_API_KEYS": json.dumps([key.get_secret_value() for key in settings.api_keys]),
             "INFER_MODELS_PATH": str(settings.models_path),

@@ -1,0 +1,238 @@
+{
+  "prometheus": {
+    "status": "success",
+    "data": {
+      "version": "3.5.0",
+      "revision": "8be3a9560fbdd18a94dedec4b747c35178177202",
+      "branch": "HEAD",
+      "buildUser": "root@4451b64cb451",
+      "buildDate": "20250714-16:18:17",
+      "goVersion": "go1.24.5"
+    }
+  },
+  "grafana": {
+    "database": "ok",
+    "version": "12.1.0",
+    "commit": "ccd7b6ce7ea6184b8c7eb1de044174147dd9a648"
+  },
+  "dashboards": [
+    {
+      "id": 1,
+      "uid": "ag3ih58mqp0cgd",
+      "orgId": 1,
+      "title": "Inference",
+      "uri": "db/inference",
+      "url": "/dashboards/f/ag3ih58mqp0cgd/inference",
+      "slug": "",
+      "type": "dash-folder",
+      "tags": [],
+      "isStarred": false,
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 5,
+      "uid": "inference-autoscaler",
+      "orgId": 1,
+      "title": "Autoscaler",
+      "uri": "db/autoscaler",
+      "url": "/d/inference-autoscaler/autoscaler",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "ag3ih58mqp0cgd",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/ag3ih58mqp0cgd/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 2,
+      "uid": "inference-batching",
+      "orgId": 1,
+      "title": "Batching",
+      "uri": "db/batching",
+      "url": "/d/inference-batching/batching",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "ag3ih58mqp0cgd",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/ag3ih58mqp0cgd/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 3,
+      "uid": "inference-llm",
+      "orgId": 1,
+      "title": "LLM",
+      "uri": "db/llm",
+      "url": "/d/inference-llm/llm",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "ag3ih58mqp0cgd",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/ag3ih58mqp0cgd/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 4,
+      "uid": "inference-overview",
+      "orgId": 1,
+      "title": "Overview",
+      "uri": "db/overview",
+      "url": "/d/inference-overview/overview",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "ag3ih58mqp0cgd",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/ag3ih58mqp0cgd/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    }
+  ],
+  "targets": {
+    "status": "success",
+    "data": {
+      "activeTargets": [
+        {
+          "discoveredLabels": {
+            "__address__": "exporter:9002",
+            "__metrics_path__": "/metrics",
+            "__scheme__": "http",
+            "__scrape_interval__": "5s",
+            "__scrape_timeout__": "5s",
+            "job": "exporter"
+          },
+          "labels": {
+            "instance": "exporter:9002",
+            "job": "exporter"
+          },
+          "scrapePool": "exporter",
+          "scrapeUrl": "http://exporter:9002/metrics",
+          "globalUrl": "http://exporter:9002/metrics",
+          "lastError": "",
+          "lastScrape": "2026-11-06T19:51:37.062702421Z",
+          "lastScrapeDuration": 0.000645587,
+          "health": "up",
+          "scrapeInterval": "5s",
+          "scrapeTimeout": "5s"
+        },
+        {
+          "discoveredLabels": {
+            "__address__": "gateway:8000",
+            "__metrics_path__": "/metrics",
+            "__scheme__": "http",
+            "__scrape_interval__": "5s",
+            "__scrape_timeout__": "5s",
+            "job": "gateway"
+          },
+          "labels": {
+            "instance": "gateway:8000",
+            "job": "gateway"
+          },
+          "scrapePool": "gateway",
+          "scrapeUrl": "http://gateway:8000/metrics",
+          "globalUrl": "http://gateway:8000/metrics",
+          "lastError": "",
+          "lastScrape": "2026-11-06T19:51:32.859447984Z",
+          "lastScrapeDuration": 0.001493399,
+          "health": "up",
+          "scrapeInterval": "5s",
+          "scrapeTimeout": "5s"
+        },
+        {
+          "discoveredLabels": {
+            "__address__": "172.22.0.3:8000",
+            "__meta_dns_name": "fake-openai",
+            "__metrics_path__": "/metrics",
+            "__scheme__": "http",
+            "__scrape_interval__": "5s",
+            "__scrape_timeout__": "5s",
+            "job": "vllm"
+          },
+          "labels": {
+            "instance": "172.22.0.3:8000",
+            "job": "vllm"
+          },
+          "scrapePool": "vllm",
+          "scrapeUrl": "http://172.22.0.3:8000/metrics",
+          "globalUrl": "http://172.22.0.3:8000/metrics",
+          "lastError": "",
+          "lastScrape": "2026-11-06T19:51:36.430239631Z",
+          "lastScrapeDuration": 0.000771091,
+          "health": "up",
+          "scrapeInterval": "5s",
+          "scrapeTimeout": "5s"
+        },
+        {
+          "discoveredLabels": {
+            "__address__": "172.22.0.7:9001",
+            "__meta_dns_name": "worker-fake",
+            "__metrics_path__": "/metrics",
+            "__scheme__": "http",
+            "__scrape_interval__": "5s",
+            "__scrape_timeout__": "5s",
+            "job": "workers"
+          },
+          "labels": {
+            "instance": "172.22.0.7:9001",
+            "job": "workers"
+          },
+          "scrapePool": "workers",
+          "scrapeUrl": "http://172.22.0.7:9001/metrics",
+          "globalUrl": "http://172.22.0.7:9001/metrics",
+          "lastError": "",
+          "lastScrape": "2026-11-06T19:51:36.037931964Z",
+          "lastScrapeDuration": 0.001085686,
+          "health": "up",
+          "scrapeInterval": "5s",
+          "scrapeTimeout": "5s"
+        },
+        {
+          "discoveredLabels": {
+            "__address__": "172.22.0.9:9001",
+            "__meta_dns_name": "worker-chat-fake",
+            "__metrics_path__": "/metrics",
+            "__scheme__": "http",
+            "__scrape_interval__": "5s",
+            "__scrape_timeout__": "5s",
+            "job": "workers"
+          },
+          "labels": {
+            "instance": "172.22.0.9:9001",
+            "job": "workers"
+          },
+          "scrapePool": "workers",
+          "scrapeUrl": "http://172.22.0.9:9001/metrics",
+          "globalUrl": "http://172.22.0.9:9001/metrics",
+          "lastError": "",
+          "lastScrape": "2026-11-06T19:51:36.007316225Z",
+          "lastScrapeDuration": 0.001062165,
+          "health": "up",
+          "scrapeInterval": "5s",
+          "scrapeTimeout": "5s"
+        }
+      ],
+      "droppedTargets": [],
+      "droppedTargetCounts": {
+        "exporter": 0,
+        "gateway": 0,
+        "vllm": 0,
+        "workers": 0
+      }
+    }
+  }
+}
