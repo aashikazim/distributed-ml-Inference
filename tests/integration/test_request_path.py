@@ -40,6 +40,7 @@ async def test_roundtrip_errors_cleanup_and_timeout(settings):
     worker = Worker(redis, model, settings.load_models()[model])
     await worker.setup()
     task = asyncio.create_task(worker.run())
+    await asyncio.wait_for(worker.ready.wait(), 5)
     app = create_app(settings)
     try:
         async with app.router.lifespan_context(app):
@@ -75,11 +76,11 @@ async def test_roundtrip_errors_cleanup_and_timeout(settings):
                 ).status_code == 404
                 assert (
                     await client.post(path + "?async=true", json={"input": "x"}, headers=headers)
-                ).status_code == 400
+                ).status_code == 202
                 worker.stop.set()
                 await task
                 timeout = await client.post(path, json={"input": "hi"}, headers=headers)
-                assert timeout.status_code == 504
+                assert timeout.status_code == 503
                 assert not app.state.router.waiters
     finally:
         worker.stop.set()
@@ -191,6 +192,7 @@ async def test_concurrent_requests_and_readiness(settings):
     model = settings.worker_model
     worker = Worker(redis, model, settings.load_models()[model])
     task = asyncio.create_task(worker.run())
+    await asyncio.wait_for(worker.ready.wait(), 5)
     app = create_app(settings)
     try:
         async with app.router.lifespan_context(app):

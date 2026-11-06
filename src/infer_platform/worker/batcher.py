@@ -65,6 +65,8 @@ class DynamicBatcher:
         self.outstanding = 0
         self.changed = asyncio.Event()
         self.capacity_changed = asyncio.Event()
+        self.busy_seconds = 0.0
+        self.busy_started: float | None = None
         self.closed = False
         self.deliveries: set[asyncio.Task[None]] = set()
 
@@ -145,11 +147,16 @@ class DynamicBatcher:
             await asyncio.gather(*unfinished, return_exceptions=True)
 
     async def predict(self, inputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        outputs = await asyncio.get_running_loop().run_in_executor(
-            self.executor,
-            self.runner.predict_batch,
-            inputs,
-        )
+        self.busy_started = self.clock.monotonic()
+        try:
+            outputs = await asyncio.get_running_loop().run_in_executor(
+                self.executor,
+                self.runner.predict_batch,
+                inputs,
+            )
+        finally:
+            self.busy_seconds += self.clock.monotonic() - self.busy_started
+            self.busy_started = None
         if len(outputs) != len(inputs):
             raise ValueError("Runner output count differs from input count")
         return outputs

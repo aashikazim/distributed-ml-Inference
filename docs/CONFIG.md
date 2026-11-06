@@ -50,3 +50,32 @@ HF_HUB_DOWNLOAD_TIMEOUT=30 in Compose); the inference hot path makes no model HT
 calls after warmup. These HF_* variables are library download controls, not
 application settings. Transformers is constrained to major version 4 to keep the
 implemented runner API stable; the exact dependency versions are locked.
+
+## Phase 3 reliability and admission
+
+| Variable | Default | Purpose |
+|---|---|---|
+| INFER_HEARTBEAT_INTERVAL_S | 3 | Registry refresh interval |
+| INFER_HEARTBEAT_TTL_S | 10 | Registry expiry; must exceed refresh interval |
+| INFER_RESULT_TTL_S | 300 | Accepted-request and final-result cache TTL |
+| INFER_CANCEL_TTL_S | 120 | Best-effort cancellation flag lifetime |
+| INFER_RATE_LIMIT_PER_S | 100 | Per-key inference token refill per second |
+| INFER_RATE_LIMIT_BURST | 200 | Maximum tokens per key |
+| INFER_ADMISSION_ENABLED | true | Check live workers and retained work depth; disable only in controlled E5 |
+| INFER_MAX_BODY_BYTES | 65536 | Count actual HTTP body bytes before parsing |
+
+Model fields: reclaim_idle_ms (30000), reclaim_interval_ms (2000),
+max_deliveries (3). Reclaim idle time must exceed the slowest expected locally
+buffered batch plus inference and reply time. Reduced values in chaos tests are
+for controlled short fake workloads only. Deliberately setting it too short can
+duplicate live work. An entry is quarantined when its delivery count is greater
+than max_deliveries. DLQ streams retain approximately 10000 recent entries.
+
+Admission uses XLEN atomically with enqueue, so max_queue_depth bounds retained
+undelivered plus pending work. Heartbeats include accepting, device, backend,
+in_flight (all locally outstanding items), busy_ratio (recent compute fraction)
+and Redis started_at timestamp. Cancellation cannot interrupt a running CPU model:
+it skips queued work or discards its eventual output. API polling is authenticated
+and restricted to the key that accepted the request; rate limits apply to inference
+submissions. Cached pending state expires at its request deadline logically and at
+result TTL physically. Final cache writes refresh the result TTL.

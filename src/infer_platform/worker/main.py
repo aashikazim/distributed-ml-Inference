@@ -13,12 +13,28 @@ from redis.asyncio import Redis
 from redis.exceptions import ResponseError
 
 from infer_platform.common.clock import Clock, SystemClock
-from infer_platform.common.keys import GROUP, request_stream
+from infer_platform.common.keys import (
+    GROUP,
+    cancel_key,
+    dlq_key,
+    request_stream,
+    result_key,
+    worker_key,
+)
 from infer_platform.common.logging import configure_logging
 from infer_platform.common.redis import create_redis, server_ms
-from infer_platform.common.schemas import InboxMessage, InferInput, Meta, RequestMessage
+from infer_platform.common.results import mark_running
+from infer_platform.common.schemas import (
+    InboxMessage,
+    InferInput,
+    Meta,
+    RequestMessage,
+    ResultRecord,
+)
 from infer_platform.common.settings import ModelConfig, Settings
 from infer_platform.worker.batcher import BatchItem, BatchResult, DynamicBatcher, ItemRejected
+from infer_platform.worker.heartbeat import Heartbeats
+from infer_platform.worker.reclaim import Reclaimer
 from infer_platform.worker.runners.base import ModelRunner
 from infer_platform.worker.runners.fake import FakeRunner
 
@@ -40,6 +56,7 @@ class Worker:
         config: ModelConfig,
         clock: Clock | None = None,
         runner: ModelRunner | None = None,
+        settings: Settings | None = None,
     ) -> None:
         self.redis, self.model, self.config = redis, model, config
         self.clock = clock or SystemClock()
@@ -52,6 +69,9 @@ class Worker:
         self.stop = asyncio.Event()
         self.ready = asyncio.Event()
         self.batcher: DynamicBatcher | None = None
+        self.active: set[str] = set()
+        self.settings = settings
+        self.result_ttl = settings.result_ttl_s if settings else 300
 
     async def setup(self) -> None:
         try:
@@ -77,6 +97,21 @@ class Worker:
                 self.config.prefetch_bound,
                 self.clock,
             )
+            heartbeat = Heartbeats(
+                self.redis,
+                self.model,
+                self.worker_id,
+                self.config.backend,
+                getattr(self.runner, "device", "cpu"),
+                await server_ms(self.redis),
+                self.batcher,
+                self.clock,
+                self.stop,
+                self.settings.heartbeat_interval_s if self.settings else 3,
+                self.settings.heartbeat_ttl_s if self.settings else 10,
+            )
+            batcher = self.batcher
+            await heartbeat.write()
             self.ready.set()
             log.info(
                 "worker_ready",
@@ -86,14 +121,29 @@ class Worker:
                 backend=self.config.backend,
             )
             async with asyncio.TaskGroup() as tasks:
-                tasks.create_task(self.consume(self.batcher))
-                tasks.create_task(self.batcher.run())
+                monitor = tasks.create_task(heartbeat.run())
+
+                async def serve() -> None:
+                    try:
+                        async with asyncio.TaskGroup() as work:
+                            work.create_task(self.consume(batcher))
+                            work.create_task(batcher.run())
+                    finally:
+                        monitor.cancel()
+
+                tasks.create_task(serve())
         finally:
+            self.stop.set()
             self.ready.clear()
-            # A cancelled executor future cannot interrupt model code. Wait off the event loop.
-            await asyncio.to_thread(executor.shutdown, wait=True, cancel_futures=True)
+            try:
+                await self.redis.delete(worker_key(self.model, self.worker_id))
+            finally:
+                # CPU code cannot be interrupted by cancelling its asyncio Future.
+                await asyncio.to_thread(executor.shutdown, wait=True, cancel_futures=True)
 
     async def consume(self, batcher: DynamicBatcher) -> None:
+        reclaimer = Reclaimer(self.redis, self.model, self.worker_id, self.config.reclaim_idle_ms)
+        next_reclaim = self.clock.monotonic()
         try:
             while not self.stop.is_set():
                 if not batcher.free_capacity:
@@ -106,6 +156,17 @@ class Worker:
                             task.cancel()
                         await asyncio.gather(capacity, stopped, return_exceptions=True)
                     continue
+                if self.clock.monotonic() >= next_reclaim:
+                    for entry_id, fields, deliveries in await reclaimer.claim(
+                        batcher.free_capacity
+                    ):
+                        if entry_id in self.active:
+                            continue
+                        await self.accept(entry_id, fields, deliveries, batcher)
+                    next_reclaim = self.clock.monotonic() + self.config.reclaim_interval_ms / 1000
+                    if not batcher.free_capacity:
+                        continue
+                block = max(1, min(1000, int((next_reclaim - self.clock.monotonic()) * 1000)))
                 streams = cast(
                     list[tuple[str, list[tuple[str, dict[str, str]]]]],
                     await self.redis.xreadgroup(
@@ -113,37 +174,133 @@ class Worker:
                         self.worker_id,
                         {request_stream(self.model): ">"},
                         count=batcher.free_capacity,
-                        block=1000,
+                        block=block,
                     ),
                 )
-                if streams:
-                    now_ms = await server_ms(self.redis)
-                    received_at = self.clock.monotonic()
-                    for _, entries in streams:
-                        for entry_id, fields in entries:
-                            message = RequestMessage.model_validate(fields)
-                            delivery = Delivery(
-                                entry_id,
-                                message,
-                                max(0, now_ms - int(entry_id.split("-")[0])),
-                            )
-                            await batcher.submit(
-                                BatchItem(
-                                    message.request_id,
-                                    message.payload,
-                                    received_at,
-                                    delivery,
-                                )
-                            )
+                for _, entries in streams:
+                    for entry_id, fields in entries:
+                        await self.accept(entry_id, fields, 1, batcher)
         finally:
             batcher.close()
+
+    async def accept(
+        self, entry_id: str, fields: dict[str, str], deliveries: int, batcher: DynamicBatcher
+    ) -> None:
+        try:
+            message = RequestMessage.model_validate(fields)
+        except ValidationError:
+            if deliveries > self.config.max_deliveries:
+                await self.dead_letter(entry_id, fields, deliveries, "INVALID_MESSAGE")
+            return  # Remain pending; malformed envelopes cannot safely address a reply.
+        cached = await self.redis.get(result_key(message.request_id))
+        if cached:
+            record = ResultRecord.model_validate_json(cached)
+            if record.response is not None and record.key_id == message.key_id:
+                await self.publish(entry_id, message, record.response, record)
+                return
+        if deliveries > self.config.max_deliveries:
+            last_error = ResultRecord.model_validate_json(cached).last_error if cached else None
+            await self.dead_letter(
+                entry_id,
+                fields,
+                deliveries,
+                last_error or "MAX_DELIVERIES",
+                message,
+            )
+            return
+        received = self.clock.monotonic()
+        queue_ms = max(0, await server_ms(self.redis) - int(entry_id.split("-")[0]))
+        self.active.add(entry_id)
+        await batcher.submit(
+            BatchItem(
+                message.request_id,
+                message.payload,
+                received,
+                Delivery(entry_id, message, queue_ms),
+            )
+        )
+        if deliveries > 1:
+            log.info(
+                "request_reclaimed",
+                component="worker",
+                worker_id=self.worker_id,
+                model=self.model,
+                request_id=message.request_id,
+                delivery_count=deliveries,
+            )
+
+    async def dead_letter(
+        self,
+        entry_id: str,
+        fields: dict[str, str],
+        deliveries: int,
+        last_error: str,
+        message: RequestMessage | None = None,
+    ) -> None:
+        await self.redis.xadd(
+            dlq_key(self.model),
+            {
+                "entry_id": entry_id,
+                "request_id": fields.get("request_id", ""),
+                "last_error": last_error,
+                "delivery_count": str(deliveries),
+                "message": json.dumps(fields),
+            },
+            maxlen=10000,
+            approximate=True,
+        )
+        if message is not None:
+            item = BatchItem(
+                message.request_id,
+                message.payload,
+                self.clock.monotonic(),
+                Delivery(entry_id, message, 0),
+            )
+            await self.finish(item, BatchResult(error_code="DEAD_LETTERED"))
+        else:
+            # Salvage only an explicitly addressed envelope; never invent a reply destination.
+            rid, reply = fields.get("request_id"), fields.get("reply_to")
+            if rid and reply and reply.startswith("inbox:"):
+                response = InboxMessage(
+                    request_id=rid,
+                    type="error",
+                    data=json.dumps(
+                        {"code": "DEAD_LETTERED", "message": "Invalid stream envelope"}
+                    ),
+                    meta=Meta(worker_id=self.worker_id, batch_size=0).model_dump_json(),
+                )
+                record = ResultRecord(
+                    status="DEAD_LETTERED",
+                    key_id=fields.get("key_id", ""),
+                    deadline_ms=0,
+                    response=response,
+                    last_error=last_error,
+                )
+                # Publish uses only the routing fields for this quarantined malformed entry.
+                await self.redis.xadd(
+                    reply,
+                    {key: str(value) for key, value in response.model_dump().items()},
+                    maxlen=10000,
+                    approximate=True,
+                )
+                await self.redis.expire(reply, 120)
+                await self.redis.set(result_key(rid), record.model_dump_json(), ex=self.result_ttl)
+            await self.ack_delete(entry_id)
+        log.warning(
+            "request_dead_lettered",
+            component="worker",
+            model=self.model,
+            worker_id=self.worker_id,
+            delivery_count=deliveries,
+            reason=last_error,
+        )
 
     async def prepare(self, item: BatchItem) -> dict[str, Any]:
         delivery: Delivery = item.context
         age_ms = await server_ms(self.redis) - int(delivery.entry_id.split("-")[0])
         if age_ms >= delivery.message.timeout_ms:
             raise ItemRejected("EXPIRED")
-        if await self.redis.exists(f"cancel:{item.request_id}"):
+        if await self.redis.exists(cancel_key(item.request_id)):
             raise ItemRejected("CANCELLED")
         try:
             body = InferInput.model_validate_json(item.payload)
@@ -151,10 +308,29 @@ class Worker:
             raise ItemRejected("INVALID_INPUT") from exc
         if len(body.input) > self.config.max_input_chars:
             raise ItemRejected("INVALID_INPUT")
+        record = ResultRecord(
+            status="RUNNING",
+            key_id=delivery.message.key_id,
+            deadline_ms=int(delivery.entry_id.split("-")[0]) + delivery.message.timeout_ms,
+        )
+        existing = await mark_running(
+            self.redis, result_key(item.request_id), record, self.result_ttl
+        )
+        if existing is not None:
+            raise ItemRejected("ALREADY_FINISHED")
         return body.model_dump()
 
     async def finish(self, item: BatchItem, result: BatchResult) -> None:
         delivery: Delivery = item.context
+        if result.error_code == "ALREADY_FINISHED":
+            cached = await self.redis.get(result_key(item.request_id))
+            if cached:
+                record = ResultRecord.model_validate_json(cached)
+                if record.response is not None:
+                    await self.publish(delivery.entry_id, delivery.message, record.response, record)
+                    self.active.discard(delivery.entry_id)
+                    return
+            raise RuntimeError("Cached final outcome expired during replay")
         meta = Meta(
             worker_id=self.worker_id,
             batch_size=result.batch_size,
@@ -162,6 +338,22 @@ class Worker:
             batch_wait_ms=result.batch_wait_ms,
             inference_ms=result.inference_ms,
         )
+        age_ms = await server_ms(self.redis) - int(delivery.entry_id.split("-")[0])
+        if result.error_code != "DEAD_LETTERED":
+            if age_ms >= delivery.message.timeout_ms:
+                result.error_code, result.output = "EXPIRED", None
+            elif await self.redis.exists(cancel_key(item.request_id)):
+                result.error_code, result.output = "CANCELLED", None
+        if result.error_code == "INFERENCE_FAILED":
+            record = ResultRecord(
+                status="RUNNING",
+                key_id=delivery.message.key_id,
+                deadline_ms=int(delivery.entry_id.split("-")[0]) + delivery.message.timeout_ms,
+                last_error=result.error_code,
+            )
+            await mark_running(self.redis, result_key(item.request_id), record, self.result_ttl)
+            self.active.discard(delivery.entry_id)
+            return  # Keep pending for the reclaim loop, not an unbounded immediate retry.
         kind: Literal["final", "error"] = "error" if result.error_code else "final"
         response = InboxMessage(
             request_id=item.request_id,
@@ -173,16 +365,22 @@ class Worker:
             ),
             meta=meta.model_dump_json(),
         )
-        # Reply before ACK. Transport failures leave the request pending for future reclaim.
-        await self.redis.xadd(
-            delivery.message.reply_to,
-            {key: str(value) for key, value in response.model_dump().items()},
-            maxlen=10000,
-            approximate=True,
+        status: Any = (
+            result.error_code
+            if result.error_code in {"EXPIRED", "CANCELLED", "DEAD_LETTERED"}
+            else "FAILED"
+            if result.error_code
+            else "SUCCEEDED"
         )
-        await self.redis.expire(delivery.message.reply_to, 120)
-        await self.redis.xack(request_stream(self.model), GROUP, delivery.entry_id)
-        await self.redis.xdel(request_stream(self.model), delivery.entry_id)
+        record = ResultRecord(
+            status=status,
+            key_id=delivery.message.key_id,
+            deadline_ms=int(delivery.entry_id.split("-")[0]) + delivery.message.timeout_ms,
+            response=response,
+            last_error=result.error_code,
+        )
+        await self.publish(delivery.entry_id, delivery.message, response, record)
+        self.active.discard(delivery.entry_id)
         log.info(
             "request_finished",
             component="worker",
@@ -191,8 +389,31 @@ class Worker:
             worker_id=self.worker_id,
             model=self.model,
             batch_size=result.batch_size,
-            outcome=result.error_code or "SUCCEEDED",
+            outcome=record.status,
         )
+
+    async def publish(
+        self, entry_id: str, message: RequestMessage, response: InboxMessage, record: ResultRecord
+    ) -> None:
+        # Ordered durable outcome: response -> result cache -> ACK -> delete.
+        await self.redis.xadd(
+            message.reply_to,
+            {key: str(value) for key, value in response.model_dump().items()},
+            maxlen=10000,
+            approximate=True,
+        )
+        await self.redis.expire(message.reply_to, 120)
+        await self.redis.set(
+            result_key(message.request_id), record.model_dump_json(), ex=self.result_ttl
+        )
+        await self.ack_delete(entry_id)
+
+    async def ack_delete(self, entry_id: str) -> None:
+        # Atomic cleanup avoids an ACKed-but-retained entry permanently consuming admission depth.
+        async with self.redis.pipeline(transaction=True) as pipe:
+            pipe.xack(request_stream(self.model), GROUP, entry_id)
+            pipe.xdel(request_stream(self.model), entry_id)
+            await pipe.execute()
 
 
 def make_runner(config: ModelConfig, settings: Settings) -> ModelRunner:
@@ -217,7 +438,13 @@ async def main() -> None:
     settings = Settings()
     redis = create_redis(settings)
     config = settings.load_models()[settings.worker_model]
-    worker = Worker(redis, settings.worker_model, config, runner=make_runner(config, settings))
+    worker = Worker(
+        redis,
+        settings.worker_model,
+        config,
+        runner=make_runner(config, settings),
+        settings=settings,
+    )
     for sig in (signal.SIGTERM, signal.SIGINT):
         asyncio.get_running_loop().add_signal_handler(sig, worker.stop.set)
     try:

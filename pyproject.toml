@@ -41,10 +41,15 @@ strict = true
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-m 'not gpu'"
 markers = ["integration: real Redis", "chaos: process failure", "slow: lengthy test", "model: real model, requires cached weights", "gpu: requires GPU"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/integration/*" = ["ASYNC109", "ASYNC110"]
+"tests/chaos/*" = ["ASYNC110"]
+"tools/reliability.py" = ["ASYNC110"]
 
 "scripts/experiment_e1.py" = ["ASYNC110"]
+
+"tools/reliability_experiments.py" = ["ASYNC110"]

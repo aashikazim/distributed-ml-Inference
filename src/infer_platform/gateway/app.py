@@ -1,42 +1,64 @@
 import asyncio
 import json
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import Any
 from uuid import uuid4
 
 import structlog
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from redis.exceptions import RedisError
 
-from infer_platform.common.keys import inbox, request_stream
+from infer_platform.common.clock import Clock, SystemClock
+from infer_platform.common.keys import cancel_key, inbox, request_stream, result_key
 from infer_platform.common.logging import configure_logging
-from infer_platform.common.redis import create_redis
-from infer_platform.common.schemas import InferInput, InferResponse, Meta, RequestMessage
+from infer_platform.common.redis import create_redis, server_ms
+from infer_platform.common.registry import live_workers
+from infer_platform.common.schemas import (
+    InboxMessage,
+    InferInput,
+    InferResponse,
+    Meta,
+    RequestMessage,
+    ResultRecord,
+)
 from infer_platform.common.settings import Settings
+from infer_platform.gateway.admission import enqueue
 from infer_platform.gateway.auth import Authenticator
+from infer_platform.gateway.body_limit import BodyLimit
+from infer_platform.gateway.rate_limit import RateLimiter
 from infer_platform.gateway.response_router import ResponseRouter
 
 
-def error(status: int, code: str, message: str, request_id: str | None = None) -> JSONResponse:
+def error(
+    status: int,
+    code: str,
+    message: str,
+    request_id: str | None = None,
+    retry_after: int | None = None,
+) -> JSONResponse:
     return JSONResponse(
         status_code=status,
+        headers={"Retry-After": str(retry_after)} if retry_after is not None else None,
         content={"error": {"code": code, "message": message, "request_id": request_id}},
     )
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, clock: Clock | None = None) -> FastAPI:
+    config = settings or Settings()
+    clock = clock or SystemClock()
+
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        config = settings or Settings()
         configure_logging()
         redis = create_redis(config)
         router = ResponseRouter(redis, inbox(uuid4().hex), config.inbox_ttl_s)
         app.state.config = config
         app.state.models = config.load_models()
         app.state.auth = Authenticator(config.api_keys)
+        app.state.limiter = RateLimiter(redis, config.rate_limit_per_s, config.rate_limit_burst)
         app.state.redis = redis
         app.state.router = router
         try:
@@ -49,6 +71,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 await redis.aclose()
 
     app = FastAPI(lifespan=lifespan)
+    app.add_middleware(BodyLimit, limit=config.max_body_bytes)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
@@ -57,7 +80,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.exception_handler(RedisError)
     async def redis_error(request: Request, exc: RedisError) -> JSONResponse:
-        return error(503, "UNAVAILABLE", "Redis unavailable")
+        return error(503, "UNAVAILABLE", "Redis unavailable", retry_after=1)
 
     @app.get("/healthz")
     async def health() -> dict[str, str]:
@@ -84,60 +107,120 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     "id": name,
                     "backend": config.backend,
                     "queue_depth": await request.app.state.redis.xlen(request_stream(name)),
+                    "live_workers": len(await live_workers(request.app.state.redis, name)),
                 }
                 for name, config in request.app.state.models.items()
             ]
         }
 
+    @app.get("/v1/results/{request_id}")
+    async def results(request_id: str, request: Request) -> Any:
+        key_id = request.app.state.auth.authenticate(request.headers.get("X-API-Key"))
+        if key_id is None:
+            return error(401, "UNAUTHORIZED", "Missing or invalid API key")
+        value = await request.app.state.redis.get(result_key(request_id))
+        if not value:
+            return error(404, "UNKNOWN_REQUEST", "Unknown or expired request", request_id)
+        record = ResultRecord.model_validate_json(value)
+        if record.key_id != key_id:
+            return error(404, "UNKNOWN_REQUEST", "Unknown or expired request", request_id)
+        if record.response is not None:
+            return render(record.response)
+        if await server_ms(request.app.state.redis) >= record.deadline_ms:
+            return error(504, "EXPIRED", "Request deadline exceeded", request_id)
+        return JSONResponse(
+            status_code=202, content={"request_id": request_id, "status": record.status}
+        )
+
+    async def mark_cancelled(request: Request, request_id: str) -> None:
+        # Cancellation is best effort during Redis failure and must not delay a timeout by seconds.
+        with suppress(RedisError, TimeoutError):
+            async with asyncio.timeout(0.25):
+                await request.app.state.redis.set(
+                    cancel_key(request_id), "1", ex=config.cancel_ttl_s
+                )
+
+    async def disconnected(request: Request) -> None:
+        while not await request.is_disconnected():
+            await clock.sleep(0.05)
+
+    async def wait_reply(queue: asyncio.Queue[InboxMessage], request: Request) -> Any:
+        reply = asyncio.create_task(queue.get())
+        disconnect = asyncio.create_task(disconnected(request))
+        try:
+            done, _ = await asyncio.wait([reply, disconnect], return_when=asyncio.FIRST_COMPLETED)
+            if reply in done:
+                return await reply
+            raise ConnectionAbortedError
+        finally:
+            for task in (reply, disconnect):
+                task.cancel()
+            await asyncio.gather(reply, disconnect, return_exceptions=True)
+
     @app.post("/v1/infer/{model}")
-    async def infer(model: str, body: InferInput, request: Request) -> Any:
+    async def infer(
+        model: str,
+        body: InferInput,
+        request: Request,
+        async_mode: bool = Query(False, alias="async"),
+    ) -> Any:
         state = request.app.state
         key_id = state.auth.authenticate(request.headers.get("X-API-Key"))
         if key_id is None:
             return error(401, "UNAUTHORIZED", "Missing or invalid API key")
-        config = state.models.get(model)
-        if config is None:
+        model_config = state.models.get(model)
+        if model_config is None:
             return error(404, "UNKNOWN_MODEL", "Unknown model")
-        if len(body.input) > config.max_input_chars:
+        if len(body.input) > model_config.max_input_chars:
             return error(422, "INVALID_INPUT", "Input exceeds model character limit")
-        if request.query_params:
-            return error(
-                400, "UNSUPPORTED_MODE", "Only synchronous inference is currently available"
-            )
+        if any(key != "async" for key in request.query_params):
+            return error(400, "INVALID_INPUT", "Unknown query parameter")
+        retry = await state.limiter.check(key_id)
+        if retry:
+            return error(429, "RATE_LIMITED", "API key rate limit exceeded", retry_after=retry)
         router = state.router
-        if len(router.waiters) >= state.config.max_gateway_inflight:
-            return error(503, "OVERLOADED", "Gateway waiter capacity reached")
+        if not async_mode and len(router.waiters) >= config.max_gateway_inflight:
+            return error(503, "OVERLOADED", "Gateway waiter capacity reached", retry_after=1)
         request_id = uuid4().hex
-        queue = router.register(request_id)
+        queue = None if async_mode else router.register(request_id)
         message = RequestMessage(
             request_id=request_id,
             reply_to=router.inbox,
             payload=body.model_dump_json(),
-            timeout_ms=config.request_timeout_ms,
+            timeout_ms=model_config.request_timeout_ms,
             key_id=key_id,
             trace_id=uuid4().hex,
         )
+        accepted = False
         try:
-            async with asyncio.timeout(config.request_timeout_ms / 1000):
-                await state.redis.xadd(request_stream(model), message.fields())
-                response = await queue.get()
-            if response.type == "error":
-                failure = json.loads(response.data)
-                return error(
-                    {"EXPIRED": 504, "CANCELLED": 400, "INVALID_INPUT": 422}.get(
-                        failure["code"], 500
-                    ),
-                    failure["code"],
-                    failure["message"],
-                    request_id,
+            async with asyncio.timeout(model_config.request_timeout_ms / 1000):
+                outcome = await enqueue(
+                    state.redis,
+                    model,
+                    message,
+                    model_config.max_queue_depth,
+                    config.result_ttl_s,
+                    config.admission_enabled,
                 )
-            return InferResponse(
-                request_id=request_id,
-                output=json.loads(response.data),
-                meta=Meta.model_validate_json(response.meta),
-            )
+                if outcome != "ACCEPTED":
+                    return error(
+                        503, outcome, "No worker capacity available", request_id, retry_after=1
+                    )
+                accepted = True
+                if async_mode:
+                    return JSONResponse(status_code=202, content={"request_id": request_id})
+                assert queue is not None
+                return render(await wait_reply(queue, request))
         except TimeoutError:
+            await mark_cancelled(request, request_id)
             return error(504, "TIMEOUT", "Request deadline exceeded", request_id)
+        except ConnectionAbortedError:
+            await mark_cancelled(request, request_id)
+            return error(400, "CANCELLED", "Client disconnected", request_id)
+        except asyncio.CancelledError:
+            # Enqueue may have reached Redis even if its connection/future was cancelled.
+            await mark_cancelled(request, request_id)
+            raise
         finally:
             router.waiters.pop(request_id, None)
             structlog.get_logger().info(
@@ -147,6 +230,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 trace_id=message.trace_id,
                 model=model,
                 input_chars=len(body.input),
+                accepted=accepted,
+                async_mode=async_mode,
             )
 
     return app
+
+
+def render(response: Any) -> Any:
+    if response.type == "error":
+        failure = json.loads(response.data)
+        status = {"EXPIRED": 504, "CANCELLED": 400, "INVALID_INPUT": 422, "DEAD_LETTERED": 500}.get(
+            failure["code"], 500
+        )
+        return error(status, failure["code"], failure["message"], response.request_id)
+    return InferResponse(
+        request_id=response.request_id,
+        output=json.loads(response.data),
+        meta=Meta.model_validate_json(response.meta),
+    )

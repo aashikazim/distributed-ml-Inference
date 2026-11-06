@@ -42,3 +42,23 @@ class InferResponse(BaseModel):
     request_id: str
     output: dict[str, Any]
     meta: Meta
+
+
+class Heartbeat(BaseModel):
+    worker_id: str
+    device: str
+    backend: str
+    in_flight: int
+    busy_ratio: float
+    started_at: float
+    accepting: bool = True
+
+
+class ResultRecord(BaseModel):
+    status: Literal[
+        "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "EXPIRED", "CANCELLED", "DEAD_LETTERED"
+    ]
+    key_id: str
+    deadline_ms: float
+    response: InboxMessage | None = None
+    last_error: str | None = None
