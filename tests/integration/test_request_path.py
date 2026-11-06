@@ -87,7 +87,7 @@ async def test_roundtrip_errors_cleanup_and_timeout(settings):
         await redis.aclose()
 
 
-async def test_router_fanout_duplicates_and_reader_failure(settings):
+async def test_router_fanout_duplicates_and_malformed_reply(settings):
     redis = create_redis(settings)
     router = ResponseRouter(redis, "inbox:test-" + uuid4().hex, 120)
     await router.start()
@@ -141,4 +141,93 @@ async def test_expired_work_skips_runner(settings):
         with suppress(asyncio.CancelledError):
             await task
         await redis.delete(request_stream(model), reply)
+        await redis.aclose()
+
+
+async def test_reply_failure_leaves_request_pending(settings):
+    from concurrent.futures import ThreadPoolExecutor
+    from unittest.mock import AsyncMock, patch
+
+    from redis.exceptions import ConnectionError
+
+    redis = create_redis(settings)
+    model = settings.worker_model
+    worker = Worker(redis, model, settings.load_models()[model])
+    await worker.setup()
+    message = RequestMessage(
+        request_id=uuid4().hex,
+        reply_to="inbox:unavailable",
+        payload='{"input":"x"}',
+        timeout_ms=5000,
+        key_id="hash",
+        trace_id="trace",
+    )
+    entry_id = await redis.xadd(request_stream(model), message.fields())
+    delivered = await redis.xreadgroup(
+        GROUP,
+        worker.worker_id,
+        {request_stream(model): ">"},
+        count=1,
+    )
+    assert delivered
+    try:
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            with patch.object(redis, "xadd", AsyncMock(side_effect=ConnectionError("offline"))):
+                with pytest.raises(ConnectionError):
+                    await worker.process(entry_id, message.fields(), executor)
+        assert (await redis.xpending(request_stream(model), GROUP))["pending"] == 1
+        assert await redis.xlen(request_stream(model)) == 1
+    finally:
+        await redis.delete(request_stream(model))
+        await redis.aclose()
+
+
+async def test_concurrent_requests_and_readiness(settings):
+    from unittest.mock import AsyncMock, patch
+
+    from redis.exceptions import ConnectionError
+
+    redis = create_redis(settings)
+    model = settings.worker_model
+    worker = Worker(redis, model, settings.load_models()[model])
+    task = asyncio.create_task(worker.run())
+    app = create_app(settings)
+    try:
+        async with app.router.lifespan_context(app):
+            async with httpx.AsyncClient(
+                transport=httpx.ASGITransport(app=app),
+                base_url="http://test",
+                timeout=5,
+            ) as client:
+                responses = await asyncio.gather(
+                    *(
+                        client.post(
+                            f"/v1/infer/{model}",
+                            json={"input": "x" * length},
+                            headers={"X-API-Key": "test-key"},
+                        )
+                        for length in range(1, 5)
+                    )
+                )
+                assert all(response.status_code == 200 for response in responses)
+                assert [response.json()["output"]["input_chars"] for response in responses] == [
+                    1,
+                    2,
+                    3,
+                    4,
+                ]
+                assert len({response.json()["request_id"] for response in responses}) == 4
+                with patch.object(
+                    app.state.redis, "ping", AsyncMock(side_effect=ConnectionError("offline"))
+                ):
+                    assert (await client.get("/healthz")).status_code == 200
+                    assert (await client.get("/readyz")).status_code == 503
+                app.state.router.task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await app.state.router.task
+                assert (await client.get("/readyz")).status_code == 503
+    finally:
+        worker.stop.set()
+        await task
+        await redis.delete(request_stream(model))
         await redis.aclose()
