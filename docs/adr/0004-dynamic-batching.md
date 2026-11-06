@@ -19,9 +19,11 @@ one model call at a time in a dedicated executor.
 Bound active, staged and queued work together by prefetch_bound (default twice
 max_batch_size). This is stricter than bounding only the queue and prevents
 hoarding work across a collector and an executor. Redis reads use free capacity.
-An executor task includes eligibility checks and response fan-out; slow Redis
-reply writes can therefore delay the next compute batch. We choose simple,
-bounded ownership now rather than another response-output buffer.
+Result fan-out runs in supervised asynchronous tasks after compute. Slow Redis
+reply writes do not keep an idle runner from starting the next staged batch.
+Capacity remains reserved until each result is delivered, so those response
+tasks share the same outstanding-work bound. A delivery failure propagates
+and leaves unfinished work pending.
 
 Before compute, validate each input and check expiry and cancellation. Fail
 rejected items independently. If a batch invocation fails, retry each surviving

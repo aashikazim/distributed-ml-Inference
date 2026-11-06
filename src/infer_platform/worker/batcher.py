@@ -66,6 +66,7 @@ class DynamicBatcher:
         self.changed = asyncio.Event()
         self.capacity_changed = asyncio.Event()
         self.closed = False
+        self.deliveries: set[asyncio.Task[None]] = set()
 
     @property
     def free_capacity(self) -> int:
@@ -95,12 +96,16 @@ class DynamicBatcher:
         try:
             while True:
                 self.changed.clear()
+                for delivery in list(self.deliveries):
+                    if delivery.done():
+                        await delivery
+                        self.deliveries.remove(delivery)
                 if running is not None and running.done():
                     await running  # Propagate reply/transport errors; never ACK unseen results.
                     running = None
                 while len(staged) < self.max_batch_size and not self.queue.empty():
                     staged.append(self.queue.get_nowait())
-                if not staged and running is None and self.closed:
+                if not staged and running is None and not self.deliveries and self.closed:
                     return
                 deadline = staged[0].enqueued_at + self.max_wait_ms / 1000 if staged else None
                 if (
@@ -126,7 +131,7 @@ class DynamicBatcher:
                     )
                 try:
                     await asyncio.wait(
-                        [*owned, *([running] if running is not None else [])],
+                        [*owned, *self.deliveries, *([running] if running is not None else [])],
                         return_when=asyncio.FIRST_COMPLETED,
                     )
                 finally:
@@ -134,9 +139,10 @@ class DynamicBatcher:
                         task.cancel()
                     await asyncio.gather(*owned, return_exceptions=True)
         finally:
-            if running is not None:
-                running.cancel()
-                await asyncio.gather(running, return_exceptions=True)
+            unfinished = [*self.deliveries, *([running] if running is not None else [])]
+            for task in unfinished:
+                task.cancel()
+            await asyncio.gather(*unfinished, return_exceptions=True)
 
     async def predict(self, inputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         outputs = await asyncio.get_running_loop().run_in_executor(
@@ -188,6 +194,12 @@ class DynamicBatcher:
                         failed_ms + (self.clock.monotonic() - retry_started) * 1000
                     )
                     results[item.request_id] = result
+        # Slow reply I/O must not keep an idle model from starting the next batch.
+        # Outstanding capacity remains reserved until delivery completes.
+        delivery = asyncio.create_task(self.deliver(items, results))
+        self.deliveries.add(delivery)
+
+    async def deliver(self, items: list[BatchItem], results: dict[str, BatchResult]) -> None:
         for item in items:
             await self.finish(item, results[item.request_id])
             self.outstanding -= 1

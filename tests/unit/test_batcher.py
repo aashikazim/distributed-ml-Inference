@@ -215,3 +215,30 @@ async def test_all_rejected_and_close_empty_do_not_run_empty_batch() -> None:
     async with harness() as empty:
         empty.batcher.close()
         assert empty.runner.calls.empty()
+
+
+async def test_slow_result_delivery_does_not_hold_idle_runner() -> None:
+    async with harness(size=2) as h:
+        delivering = asyncio.Event()
+        release = asyncio.Event()
+        original = h.batcher.finish
+
+        async def slow_finish(item: BatchItem, result: BatchResult) -> None:
+            if item.request_id == "a":
+                delivering.set()
+                await release.wait()
+            await original(item, result)
+
+        h.batcher.finish = slow_finish
+        await h.add("a")
+        await h.add("b")
+        await asyncio.wait_for(h.runner.calls.get(), 5)
+        await delivering.wait()
+        await h.add("c")
+        await h.add("d")
+        try:
+            assert await asyncio.wait_for(h.runner.calls.get(), 5) == ["c", "d"]
+        finally:
+            release.set()
+        results = [await h.results.get() for _ in range(4)]
+        assert {rid for rid, _ in results} == {"a", "b", "c", "d"}
