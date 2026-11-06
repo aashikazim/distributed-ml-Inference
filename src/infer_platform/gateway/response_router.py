@@ -16,10 +16,11 @@ log = structlog.get_logger()
 class ResponseRouter:
     """One reader per gateway; register before enqueue to avoid fast-response races."""
 
-    def __init__(self, redis: Redis, inbox: str, ttl: int) -> None:
+    def __init__(self, redis: Redis, inbox: str, ttl: int, cancel_ttl: int = 120) -> None:
         self.redis = redis
         self.inbox = inbox
         self.ttl = ttl
+        self.cancel_ttl = cancel_ttl
         self.waiters: dict[str, asyncio.Queue[InboxMessage]] = {}
         self.task: asyncio.Task[None] | None = None
         self.connected = False
@@ -73,7 +74,9 @@ class ResponseRouter:
                             queue.put_nowait(message)
                         elif message.request_id in self.streaming:
                             self.overflowed.add(message.request_id)
-                            await self.redis.set(f"cancel:{message.request_id}", "1", ex=120)
+                            await self.redis.set(
+                                f"cancel:{message.request_id}", "1", ex=self.cancel_ttl
+                            )
                             while not queue.empty():
                                 queue.get_nowait()
                             queue.put_nowait(

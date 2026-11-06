@@ -56,7 +56,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         configure_logging()
         redis = create_redis(config)
-        router = ResponseRouter(redis, inbox(uuid4().hex), config.inbox_ttl_s)
+        router = ResponseRouter(redis, inbox(uuid4().hex), config.inbox_ttl_s, config.cancel_ttl_s)
         app.state.config = config
         app.state.models = config.load_models()
         app.state.auth = Authenticator(config.api_keys)

@@ -1,10 +1,12 @@
 import asyncio
+import hashlib
 import json
 from collections.abc import AsyncGenerator, Awaitable, Callable
 from typing import Any
 from uuid import uuid4
 
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from infer_platform.common.clock import Clock
 from infer_platform.common.schemas import ChatRequest, ChunkBundle, InboxMessage, RequestMessage
@@ -63,11 +65,15 @@ def install_chat_routes(
             nonlocal complete
             current = first
             first_content = True
+            observed_text = hashlib.sha256()
             try:
                 while True:
                     if current.type == "chunk":
                         bundle = ChunkBundle.model_validate_json(current.data)
                         for chunk in bundle.chunks:
+                            for choice in chunk.choices:
+                                if choice.delta.content:
+                                    observed_text.update(choice.delta.content.encode())
                             if first_content and any(c.delta.content for c in chunk.choices):
                                 first_content = False
                                 state.chat_ttft.labels(body.model).observe(
@@ -83,6 +89,19 @@ def install_chat_routes(
                     else:
                         complete = True
                         final = json.loads(current.data)
+                        expected = final["choices"][0]["message"]["content"]
+                        if observed_text.digest() != hashlib.sha256(expected.encode()).digest():
+                            yield frame(
+                                {
+                                    "error": {
+                                        "code": "STREAM_INTERRUPTED",
+                                        "message": "Incomplete chunk delivery",
+                                        "request_id": rid,
+                                    }
+                                }
+                            )
+                            yield frame("[DONE]")
+                            return
                         yield frame(
                             {
                                 "id": final["id"],
@@ -143,7 +162,11 @@ def install_chat_routes(
                 first = await wait(queue, request)
                 if not body.stream or first.type == "error":
                     complete = True
-                    return render(first)
+                    rendered = render(first)
+                    if isinstance(rendered, JSONResponse):
+                        rendered.headers["X-Request-ID"] = rid
+                        return rendered
+                    return JSONResponse(content=rendered, headers={"X-Request-ID": rid})
                 response = ManagedStream(
                     events(first),
                     cleanup,

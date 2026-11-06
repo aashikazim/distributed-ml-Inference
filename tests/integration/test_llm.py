@@ -253,3 +253,85 @@ async def test_stream_queue_overflow_is_local_and_cancels(redis_url, tmp_path):
         await router.close()
         await redis.delete("cancel:slow")
         await redis.aclose()
+
+
+async def test_missing_chunk_fails_instead_of_silent_partial_success(redis_url, tmp_path):
+    from unittest.mock import patch
+
+    async with lab(redis_url, tmp_path, coalesce=0) as (_, cfg, redis, _, _, client):
+        original = redis.xadd
+
+        async def drop_one(name, fields, **kwargs):
+            if fields.get("type") == "chunk":
+                chunks = json.loads(fields["data"])["chunks"]
+                if any(
+                    c["delta"].get("content") == "token3 " for c in chunks for c in c["choices"]
+                ):
+                    return "0-0"  # Simulate a missing inbox entry after transport/storage loss.
+            return await original(name, fields, **kwargs)
+
+        with patch.object(redis, "xadd", side_effect=drop_one):
+            response = await client.post("/v1/chat/completions", json=body(cfg.worker_model))
+        frames = [data async for data in sse_data(response)]
+        assert frames[-1] == "[DONE]"
+        assert json.loads(frames[-2])["error"]["code"] == "STREAM_INTERRUPTED"
+        rid = response.headers["x-request-id"]
+
+        async def persisted():
+            response = await client.get(f"/v1/results/{rid}")
+            return response if response.status_code == 200 else None
+
+        cached = await eventually(persisted)
+        assert "token3 " in cached.json()["choices"][0]["message"]["content"]
+
+
+async def test_reclaimed_partial_stream_is_not_regenerated(redis_url, tmp_path):
+    from infer_platform.common.schemas import RequestMessage, ResultRecord
+    from infer_platform.worker.llm_adapter import LLMAdapter
+
+    server = await asyncio.to_thread(
+        LocalServer, tmp_path, "infer_platform.fake.openai_server:create_app"
+    )
+    await server.ready()
+    cfg = llm_settings(tmp_path, redis_url, server.url)
+    redis = create_redis(cfg)
+    worker = LLMWorker(redis, cfg.worker_model, cfg.load_models()[cfg.worker_model], cfg)
+    await worker.setup()
+    rid = "partial-" + cfg.worker_model
+    reply = "inbox:" + rid
+    try:
+        message = RequestMessage(
+            request_id=rid,
+            reply_to=reply,
+            kind="chat",
+            payload=json.dumps(body(cfg.worker_model)),
+            timeout_ms=3000,
+            stream="1",
+            key_id="hash",
+            trace_id="trace",
+        )
+        entry = await redis.xadd(request_stream(cfg.worker_model), message.fields())
+        await redis.xreadgroup(
+            GROUP, "dead-consumer", {request_stream(cfg.worker_model): ">"}, count=1
+        )
+        await redis.set(
+            "result:" + rid,
+            ResultRecord(
+                status="RUNNING",
+                key_id="hash",
+                deadline_ms=9999999999999,
+                stream_started=True,
+            ).model_dump_json(),
+            ex=300,
+        )
+        await redis.xclaim(request_stream(cfg.worker_model), GROUP, worker.worker_id, 0, [entry])
+        async with httpx.AsyncClient(timeout=3) as client:
+            await worker.schedule(LLMAdapter(client, worker.llm), entry, message.fields(), 2)
+        cached = json.loads(await redis.get("result:" + rid))
+        assert json.loads(cached["response"]["data"])["code"] == "STREAM_INTERRUPTED"
+        assert (await server.stats())["calls"] == 0
+        assert (await redis.xpending(request_stream(cfg.worker_model), GROUP))["pending"] == 0
+    finally:
+        await redis.delete(request_stream(cfg.worker_model), reply, "result:" + rid)
+        await redis.aclose()
+        await server.close()
