@@ -465,15 +465,15 @@ async def main() -> None:
         )
     for sig in (signal.SIGTERM, signal.SIGINT):
         asyncio.get_running_loop().add_signal_handler(sig, worker.stop.set)
-    metrics_server = None
-    if worker.metrics is not None:
-        from prometheus_client import start_http_server
+    from infer_platform.worker.probes import start_server
 
-        metrics_server, _ = await asyncio.to_thread(
-            start_http_server,
-            settings.worker_metrics_port,
-            registry=worker.metrics.registry,
-        )
+    metrics_server = await asyncio.to_thread(
+        start_server,
+        settings.worker_metrics_port,
+        worker.metrics.registry,
+        worker.ready,
+        worker.stop,
+    )
     try:
         await worker.run()
     finally:

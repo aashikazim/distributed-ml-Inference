@@ -1,0 +1,16 @@
+{
+  "torch": "2.14.1+cu130",
+  "gpu": "NVIDIA GB10",
+  "output": [
+    {
+      "label": "POSITIVE",
+      "score": 0.9998778104782104,
+      "probabilities": [
+        0.00012218682968523353,
+        0.9998778104782104
+      ]
+    }
+  ],
+  "date": "2026-11-06",
+  "verification": "CUDA classifier runner load, warmup and prediction in non-root image; not Kubernetes GPU overlay"
+}

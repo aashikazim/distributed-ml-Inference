@@ -88,9 +88,13 @@ The application does not need CUDA packages when calling the separate GPU server
 
 **Pending:** other GPUs/models, long-context saturation, production-sized load,
 CUDA graph comparisons, GPU Kubernetes scheduling and a GPU cluster. The GPU
-Kustomize overlay belongs to Phase 7 and has not been created or tested here.
-Prometheus scraping configuration, dashboards and alerts belong to Phase 5;
-Phase 4 exposes metrics and queries the real engine directly for abort evidence.
+Kustomize overlay is now provided in deploy/k8s/overlays/gpu, rendered but
+**untested on a GPU Kubernetes cluster**.
+Prometheus scraping configuration, dashboards and alerts were added in Phase 5.
+Phase 4 abort evidence queried the real engine directly. Phase 7 additionally
+built the CUDA worker image and ran real DistilBERT load/warmup/prediction on
+GB10 with torch 2.14.1+cu130; see results/p7-cuda-runner.json. That Docker
+verification does not establish Kubernetes GPU scheduling.
 
 Primary references: [vLLM Docker deployment](https://docs.vllm.ai/en/stable/deployment/docker/),
 [vLLM GPU installation](https://docs.vllm.ai/en/stable/getting_started/installation/gpu/),

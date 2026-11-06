@@ -1,0 +1,283 @@
+{
+  "targets": [
+    {
+      "discoveredLabels": {
+        "__address__": "autoscaler:9003",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "autoscaler"
+      },
+      "labels": {
+        "instance": "autoscaler:9003",
+        "job": "autoscaler"
+      },
+      "scrapePool": "autoscaler",
+      "scrapeUrl": "http://autoscaler:9003/metrics",
+      "globalUrl": "http://autoscaler:9003/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:26.7124856Z",
+      "lastScrapeDuration": 0.00211071,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "exporter:9002",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "exporter"
+      },
+      "labels": {
+        "instance": "exporter:9002",
+        "job": "exporter"
+      },
+      "scrapePool": "exporter",
+      "scrapeUrl": "http://exporter:9002/metrics",
+      "globalUrl": "http://exporter:9002/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:30.635157405Z",
+      "lastScrapeDuration": 0.001067635,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.50:8000",
+        "__meta_dns_name": "gateway-metrics",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "gateway"
+      },
+      "labels": {
+        "instance": "10.244.0.50:8000",
+        "job": "gateway"
+      },
+      "scrapePool": "gateway",
+      "scrapeUrl": "http://10.244.0.50:8000/metrics",
+      "globalUrl": "http://10.244.0.50:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:26.524269743Z",
+      "lastScrapeDuration": 0.0014829,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.48:8000",
+        "__meta_dns_name": "gateway-metrics",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "gateway"
+      },
+      "labels": {
+        "instance": "10.244.0.48:8000",
+        "job": "gateway"
+      },
+      "scrapePool": "gateway",
+      "scrapeUrl": "http://10.244.0.48:8000/metrics",
+      "globalUrl": "http://10.244.0.48:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:28.412916652Z",
+      "lastScrapeDuration": 0.001132323,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.96.255.233:8000",
+        "__meta_dns_name": "fake-openai",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "vllm"
+      },
+      "labels": {
+        "instance": "10.96.255.233:8000",
+        "job": "vllm"
+      },
+      "scrapePool": "vllm",
+      "scrapeUrl": "http://10.96.255.233:8000/metrics",
+      "globalUrl": "http://10.96.255.233:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:29.09652698Z",
+      "lastScrapeDuration": 0.000580977,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.46:9001",
+        "__meta_dns_name": "worker-fake",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "10.244.0.46:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://10.244.0.46:9001/metrics",
+      "globalUrl": "http://10.244.0.46:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:29.088426494Z",
+      "lastScrapeDuration": 0.001289635,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.13:9001",
+        "__meta_dns_name": "worker-chat",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "10.244.0.13:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://10.244.0.13:9001/metrics",
+      "globalUrl": "http://10.244.0.13:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:28.554754911Z",
+      "lastScrapeDuration": 0.001405187,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.51:9001",
+        "__meta_dns_name": "worker-sentiment",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "10.244.0.51:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://10.244.0.51:9001/metrics",
+      "globalUrl": "http://10.244.0.51:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T20:18:27.866667578Z",
+      "lastScrapeDuration": 0.002025894,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    }
+  ],
+  "dashboards": [
+    {
+      "id": 1,
+      "uid": "bg3ij0coe1bswb",
+      "orgId": 1,
+      "title": "Inference",
+      "uri": "db/inference",
+      "url": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "slug": "",
+      "type": "dash-folder",
+      "tags": [],
+      "isStarred": false,
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 2,
+      "uid": "inference-autoscaler",
+      "orgId": 1,
+      "title": "Autoscaler",
+      "uri": "db/autoscaler",
+      "url": "/d/inference-autoscaler/autoscaler",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 3,
+      "uid": "inference-batching",
+      "orgId": 1,
+      "title": "Batching",
+      "uri": "db/batching",
+      "url": "/d/inference-batching/batching",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 4,
+      "uid": "inference-llm",
+      "orgId": 1,
+      "title": "LLM",
+      "uri": "db/llm",
+      "url": "/d/inference-llm/llm",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 5,
+      "uid": "inference-overview",
+      "orgId": 1,
+      "title": "Overview",
+      "uri": "db/overview",
+      "url": "/d/inference-overview/overview",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    }
+  ],
+  "gateway_replicas_scraped": 2
+}

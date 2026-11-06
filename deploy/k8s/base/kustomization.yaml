@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: infer-platform
+resources:
+- namespace.yaml
+- workloads.yaml
+- redis.yaml
+- rbac.yaml
+- pdb.yaml
+- monitoring.yaml
+configMapGenerator:
+- name: platform-models
+  files:
+  - models.yaml
+- name: monitoring-prometheus
+  files:
+  - monitoring/prometheus.yml
+  - monitoring/alerts.yml
+- name: grafana-datasource
+  files:
+  - monitoring/datasource.yml
+- name: grafana-provider
+  files:
+  - monitoring/dashboard-provider.yml
+- name: grafana-dashboards
+  files:
+  - monitoring/overview.json
+  - monitoring/batching.json
+  - monitoring/llm.json
+  - monitoring/autoscaler.json
+generatorOptions:
+  disableNameSuffixHash: true

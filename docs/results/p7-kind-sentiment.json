@@ -1,0 +1,1 @@
+{"request_id":"bee0d60234cd4fecbe18b4d6ec22afa9","output":{"label":"POSITIVE","score":0.9998778104782104,"probabilities":[0.0001221867132699117,0.9998778104782104]},"meta":{"worker_id":"worker-sentiment-5dc85749d8-7rzzm-bb6b8636","batch_size":1,"queue_ms":0.760009765625,"batch_wait_ms":11.23882899992168,"inference_ms":34.62332196068019}}

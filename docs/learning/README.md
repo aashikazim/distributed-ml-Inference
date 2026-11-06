@@ -13,7 +13,7 @@ functions; introduce one controlled failure; teach the result without reading no
 | 04 | [LLM serving](04-llm-serving.md), [LLM concept](../concepts/llm-serving.md), E6a–E6b, [ADR-0007](../adr/0007-llm-adapter.md), [GPU verification](../GPU_VERIFICATION.md) | Phase 4: available |
 | 05 | [Observability](05-observability.md), [latency concept](../concepts/latency-and-observability.md), E7, [ADR-0008](../adr/0008-metrics.md), [dashboards](../dashboards.md) | Phase 5: available |
 | 06 | [Autoscaling](06-autoscaling.md), [controller concept](../concepts/autoscaling.md), E8–E10, [ADR-0009](../adr/0009-autoscaling.md) | Phase 6: available |
-| 07 | Kubernetes, deployment concept, E11–E13, ADR-0010 | Phase 7 |
+| 07 | [Kubernetes](07-kubernetes-deployment.md), [deployment concept](../concepts/deploying-ml-workloads.md), E11–E13, [ADR-0010](../adr/0010-deployment.md) | Phase 7: available |
 | 08 | Capstone, benchmarks, runbook and self-assessment | Phase 8 |
 
 ```mermaid

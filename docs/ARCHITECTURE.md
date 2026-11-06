@@ -1,11 +1,11 @@
-# Architecture — Phase 6
+# Architecture — Phase 7
 
 The current platform serves fake-classifier (**simulated** compute/output) and
 real DistilBERT SST-2 sentiment inference. Both use bounded dynamic batching.
 Registry, reclaim, DLQ, admission, rate limits, cancellation and async result
 polling remain shared. Phase 4 adds streaming chat via a separate vLLM adapter,
 verified against both a TCP fake server and real GPU vLLM. Dashboards, autoscaling
-and Kubernetes deployment remain later phases.
+and real kind deployment are implemented; diagrams 6–8 describe their boundaries.
 
 ## Diagram 1: containers
 
@@ -203,7 +203,7 @@ SIGTERM stops fresh reads/reclaims and drains accepted compute and response task
 Heartbeat accepting becomes false on refresh, then the key is deleted before
 exit. Compose gives classifier workers 15 seconds and chat workers 75 seconds. There is a short signal/heartbeat race and no
 promise of new work completing on a stopping replica. SIGKILL runs no cleanup.
-Kubernetes probes and terminationGracePeriodSeconds are Phase 7 work.
+Kubernetes probes and termination grace are implemented; see diagram 8.
 
 ## Design principles and remaining limits
 
@@ -213,8 +213,7 @@ Measure cross-process age with Redis time and local durations with monotonic tim
 Keep inputs and API keys out of logs; protect DLQ contents as input-bearing data.
 Retry with limits and deadlines; do not claim exactly-once execution.
 
-There is no Redis HA, worker readiness HTTP probe, autoscaler, result
-history beyond TTL, or automatic DLQ replay. API body bytes are bounded, while
+There is no Redis HA, result history beyond TTL, or automatic DLQ replay. API body bytes are bounded, while
 slow-client timeouts belong at the server/ingress. See [progress](PROGRESS.md).
 
 
@@ -340,3 +339,45 @@ history with current capacity to avoid immediate contraction. Simulation plots
 show delayed ready capacity separately from desired capacity; their inference
 costs are explicitly simulated. HPA and KEDA alternatives are documented in
 [autoscaling concepts](concepts/autoscaling.md) and [ADR-0009](adr/0009-autoscaling.md).
+
+
+## Diagram 8: deployment topology
+
+```mermaid
+flowchart TB
+    C[Local client port 8001] --> N[Kind NodePort 30080]
+    subgraph NS[Dedicated infer-platform namespace]
+        N --> G[Two gateway Pods]
+        G --> R[Redis StatefulSet with AOF PVC]
+        W[Classifier worker Deployment] --> R
+        L[Chat adapter Deployment] --> R
+        L --> F[Fake OpenAI server or GPU overlay vLLM]
+        S[Optional CPU sentiment Pod with model PVC] --> R
+        A[Autoscaler with narrow scale RBAC] --> W
+        E[Exporter] --> R
+        P[Prometheus] --> E
+        P --> H[Headless services for every gateway and worker]
+        D[Provisioned Grafana] --> P
+    end
+```
+
+Base/kind serve simulated classifier/chat workloads, real networking and delivery.
+The optional CPU component adds verified real sentiment. The GPU overlay requests
+NVIDIA resources and routes chat to vLLM but has not run on a GPU cluster.
+Named non-root image targets share the locked application build; optional CPU/CUDA
+ML extras use separate indexes. Model weights use writable PVCs rather than image
+layers. Role credentials are not baked into images. Only autoscaler mounts a
+service-account token, with get/patch limited to worker-fake deployments/scale.
+
+Readiness follows warmup/inbox health, liveness is process-local, startup probes
+allow initialization. SIGTERM drains within 45-second classifier/80-second chat
+grace, and maxUnavailable=0/maxSurge=1 retains serving capacity on rollout.
+PDBs protect voluntary eviction, not force kills. A single Redis PVC/AOF is dev
+persistence, not HA. Monitoring history is ephemeral. Initial dependency-startup
+restarts are possible and observed; stable readiness precedes testing.
+
+CI defines local-equivalent checks and role-image builds with conditional GHCR
+publication on main pushes. Hosted CI and publication are not verified because
+no push was performed. See [lesson 07](learning/07-kubernetes-deployment.md),
+[deployment concepts](concepts/deploying-ml-workloads.md), [ADR-0010](adr/0010-deployment.md)
+and [real kind experiments](EXPERIMENTS.md).

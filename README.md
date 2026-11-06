@@ -3,14 +3,14 @@
 A Python 3.12 learning project: HTTP requests travel through Redis Streams to
 pull-based workers and return through per-gateway inboxes.
 
-**Phases 1–6 are implemented:** authenticated sync/async inference, a **simulated**
+**Phases 1–7 are implemented:** authenticated sync/async inference, a **simulated**
 fake backend, real DistilBERT sentiment inference, dynamic batching, live worker
 registry, reclaim/DLQ, deadlines/cancellation, rate limiting and atomic admission.
 Streaming chat runs through a bounded LLM adapter against a simulated OpenAI
 server or real vLLM. Real Qwen inference and cancellation were verified on NVIDIA
 GB10. Prometheus/Grafana dashboards and the queue exporter are provisioned.
-The autoscaling policy and dry-run loop are implemented; actual Kubernetes
-deployment verification follows in Phase 7.
+The autoscaling policy runs in dry-run Compose or patches real kind workers.
+Rolling update, actual process/Pod loss and scale-up/down were verified on kind.
 
 ## Run the fake backend
 
@@ -155,3 +155,14 @@ diagnosis with simulated model compute.
 The default autoscaler is dry-run: recommendations appear in the Autoscaler
 dashboard without changing Compose replicas. [Lesson 06](docs/learning/06-autoscaling.md)
 explains its policy, simulations and HPA/KEDA alternatives.
+
+
+## Kubernetes locally
+
+With kind and kubectl on PATH, run scripts/kind-up.sh using the demonstration
+INFER_API_KEYS above. It uses an isolated /tmp/infer-kind-kubeconfig and the
+kind-infer-platform context, loads the local image and waits for readiness.
+The gateway is http://localhost:8001. Read [lesson 07](docs/learning/07-kubernetes-deployment.md)
+for exact executed commands, resources and E11–E13. CPU sentiment is an optional
+component; the GPU overlay is rendered but untested on a GPU cluster. The CI
+workflow is provided; hosted execution and GHCR publication remain unverified.

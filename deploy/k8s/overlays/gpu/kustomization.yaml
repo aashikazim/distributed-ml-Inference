@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+- vllm.yaml
+patches:
+- patch: "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: worker-chat\n\
+    spec:\n  template:\n    spec:\n      containers:\n      - env:\n        - name:\
+    \ INFER_LLM_BASE_URL\n          value: http://vllm:8000/v1\n        name: worker-chat\n"
+- patch: "$patch: delete\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name:\
+    \ fake-openai\n"
+- patch: "$patch: delete\napiVersion: v1\nkind: Service\nmetadata:\n  name: fake-openai\n"

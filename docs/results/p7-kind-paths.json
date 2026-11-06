@@ -1,0 +1,37 @@
+{
+  "async_submit": 202,
+  "async_final": 200,
+  "async_response": {
+    "request_id": "10a2824605d0455ab8233b12070e24f3",
+    "output": {
+      "label": "SIMULATED",
+      "input_chars": 10
+    },
+    "meta": {
+      "worker_id": "worker-fake-866bd7b776-z72ms-99d2a282",
+      "batch_size": 1,
+      "queue_ms": 1.343017578125,
+      "batch_wait_ms": 11.895199888385832,
+      "inference_ms": 52.55250702612102
+    }
+  },
+  "fake_chat_stream_done": true,
+  "sentiment": {
+    "request_id": "bee0d60234cd4fecbe18b4d6ec22afa9",
+    "output": {
+      "label": "POSITIVE",
+      "score": 0.9998778104782104,
+      "probabilities": [
+        0.0001221867132699117,
+        0.9998778104782104
+      ]
+    },
+    "meta": {
+      "worker_id": "worker-sentiment-5dc85749d8-7rzzm-bb6b8636",
+      "batch_size": 1,
+      "queue_ms": 0.760009765625,
+      "batch_wait_ms": 11.23882899992168,
+      "inference_ms": 34.62332196068019
+    }
+  }
+}

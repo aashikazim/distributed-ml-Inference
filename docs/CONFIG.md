@@ -156,3 +156,28 @@ controller. Kubernetes mode further restricts to the explicit deployment map.
 The Kubernetes adapter uses in-cluster credentials, get/patch on deployments/scale
 and request timeouts (connect 3 s, read 5 s). Blocking client calls run in threads.
 Dry-run uses live accepting workers as current and never changes Compose replicas.
+
+## Phase 7 packaging and overlays
+
+Docker build args: INSTALL_ML=0 keeps the HTTP/fake image small; INSTALL_ML=1
+with TORCH_DEVICE=cpu (default) uses the locked ml extra/CPU index, while
+TORCH_DEVICE=cuda uses the mutually exclusive cuda extra/cu130 index. Both were
+built on arm64 and ran classifier warmup/prediction; this is separate from GPU
+Kubernetes verification. Runtime roles are named Dockerfile targets gateway,
+worker, autoscaler, exporter and fake-openai. All run as UID 10001.
+
+The kind model catalog intentionally differs from Compose: fake batches of four,
+prefetch four, base 50 ms, deadline 30000 ms, reclaim idle 2000 ms, interval 100 ms;
+controller interval 2 s, stabilization 20 s, min 1/max 4. These settings make
+small simulated reliability/scaling drills observable; do not copy them to slow
+real models. Kind maps only fake-classifier to a managed Deployment. CPU
+sentiment is optional and not automatically scaled. GPU chat adapter/engine
+scaling remains a separate deployment design, not silently coupled to this map.
+
+KUBECONFIG (tool variable, not app setting) defaults to /tmp/infer-kind-kubeconfig
+in kind-up.sh. Its dedicated context is kind-infer-platform; localhost:8001 maps
+the gateway NodePort. API keys are inserted into platform-secrets from the existing
+environment. ConfigMaps disable name hashing for controlled drills; after changing
+models, restart affected processes so their startup-loaded catalog is refreshed.
+Production Redis auth/TLS, notification routing and durable monitoring retention
+are deployment choices, not enabled by the local development examples.

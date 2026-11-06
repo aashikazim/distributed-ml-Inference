@@ -118,3 +118,18 @@
 | Fencing | Rejecting stale writers even if an old operation arrives after leadership changes |
 | HPA | Kubernetes Horizontal Pod Autoscaler |
 | KEDA | Kubernetes event-driven autoscaling project with existing event-source scalers |
+
+
+| Term | Plain-language meaning |
+|---|---|
+| Pod | Kubernetes scheduling/lifecycle unit containing one or more containers |
+| Deployment | Controller maintaining interchangeable Pods at a desired replica count |
+| StatefulSet | Controller associating stable Pod identity with storage |
+| PVC | PersistentVolumeClaim asking the cluster for storage |
+| Startup probe | Initialization allowance before other health probes govern restarts |
+| Readiness probe | Check determining whether a Pod is available for traffic |
+| Liveness probe | Process health check used to decide restarts |
+| PDB | PodDisruptionBudget limiting voluntary eviction, not force kills |
+| RBAC | Role-based authorization limiting which API operations a service account can perform |
+| Headless Service | DNS discovery of individual ready Pod IPs rather than one load-balanced service address |
+| Kustomize | Composition of Kubernetes resources and focused overlay changes |

@@ -1,0 +1,83 @@
+{
+  "kind": {
+    "id": "sha256:2b9f9aa93ccf7b6485857176a597e57e6897dde20f38bf5e6258d4a4e0778309",
+    "size_bytes": 337236100,
+    "architecture": "arm64",
+    "user": "10001",
+    "command": [
+      "uvicorn",
+      "infer_platform.gateway.app:create_app",
+      "--factory",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000",
+      "--no-access-log"
+    ]
+  },
+  "cpu": {
+    "id": "sha256:189c2a0517a19227331efa9e6008d95998d597ee1c91ab2da09116f669090c25",
+    "size_bytes": 1328297962,
+    "architecture": "arm64",
+    "user": "10001",
+    "command": [
+      "python",
+      "-m",
+      "infer_platform.worker.main"
+    ]
+  },
+  "cuda": {
+    "id": "sha256:47838c5df0295ac3450cb1bbca88d6d0fd29857208b2b89879c92800acad8b66",
+    "size_bytes": 6020700053,
+    "architecture": "arm64",
+    "user": "10001",
+    "command": [
+      "python",
+      "-m",
+      "infer_platform.worker.main"
+    ]
+  },
+  "autoscaler": {
+    "id": "sha256:4175b9195627b551362dd4a5cca1e19a7e7e35b28bfcc0d3cca96d0c91d76bdf",
+    "size_bytes": 337236100,
+    "architecture": "arm64",
+    "user": "10001",
+    "command": [
+      "python",
+      "-m",
+      "infer_platform.autoscaler.main"
+    ]
+  },
+  "exporter": {
+    "id": "sha256:e49e37c1948c1a6de0a1ba227d4c33340fa22fbba7fc0645641eb1396659813e",
+    "size_bytes": 337236100,
+    "architecture": "arm64",
+    "user": "10001",
+    "command": [
+      "uvicorn",
+      "infer_platform.exporter.main:create_app",
+      "--factory",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "9002",
+      "--no-access-log"
+    ]
+  },
+  "fake-openai": {
+    "id": "sha256:b17f5578033a29138fb8a2a4dec3ea222ae67d6669e2b740ad527c8e7462a763",
+    "size_bytes": 337236100,
+    "architecture": "arm64",
+    "user": "10001",
+    "command": [
+      "uvicorn",
+      "infer_platform.fake.openai_server:create_app",
+      "--factory",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000",
+      "--no-access-log"
+    ]
+  }
+}

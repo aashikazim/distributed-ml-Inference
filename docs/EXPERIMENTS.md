@@ -665,3 +665,102 @@ capacity, retries, deadlines and model downloads. They test policy behavior unde
 stated assumptions, not production capacity. Actual kind actuation is E11–E13.
 The real Redis/HTTP Compose dry-run evidence is [p6-dryrun.json](results/p6-dryrun.json):
 it logs recommendations and exposes metrics but never changes Compose replicas.
+
+
+## E11 — rolling update under real kind load
+
+**Question/prediction:** Can maxUnavailable=0, readiness and SIGTERM drain preserve
+requests while replacing worker Pods? Predict zero failed requests with spare
+capacity. **Setup:** 2026-11-06, Linux aarch64/20 logical cores, Docker 28.3.3,
+kind 0.30.0, Kubernetes/kubectl 1.34.0, Python 3.12.3, Redis 7.4.12. Dedicated
+infer-platform cluster/context; real API, scheduler, Pods, HTTP and Redis. Model
+compute is **simulated**. Phase 7 working tree based on the Phase 6 commit; full
+source is committed with these artifacts. Two gateways, two workers during E11,
+batch cap/prefetch four, base 50 ms, deadline 30 s, reclaim idle 2 s. Autoscaler
+is paused for controlled E11/E12, then restored for E13.
+
+**Method:** `uv run python -m tools.kind_experiments` sends 60 requests/s for
+20 seconds, starts a real worker rolling restart after four seconds and waits
+for rollout. Later stages in that same command run E12/E13 and restore config.
+
+| Experiment | HTTP requests | Successful | Failed | Raw success p95 ms |
+|---|---:|---:|---:|---:|
+| E11 | 1200 | 1200 | 0 | 115.84 |
+| E12 | 120 | 120 | 0 | 3692.27 |
+| E13 | 4200 | 4200 | 0 | 642.06 |
+
+**Result/conclusion:** All 1200 E11 requests succeeded during replacement. This
+supports the tested rollout/grace policy at this load; it does not guarantee all
+future updates are lossless. **Surprise:** zero failures alone cannot prove a
+worker was killed mid-compute; E12 needs stronger evidence than a Pod API deletion.
+
+## E12 — selected pending request through worker process and Pod loss
+
+**Question/prediction:** Does actual mid-flight process death preserve the selected
+request when another worker can reclaim before deadline? Predict success after
+idle/scan/recompute delay. **Setup:** Same cluster; temporarily base 800 ms,
+6 requests/s for 20 seconds, two replicas, prefetch four, reclaim idle 2 s and
+30-second deadline. The idle budget exceeds the known local buffered execution
+budget for this simulated runner. Do not copy it to a slow unknown GPU workload.
+
+**Method:** Inspect real XPENDING and XRANGE, record one pending request ID and
+consumer, select that Pod's container/node PID, SIGKILL it from the kind node's
+ancestor PID namespace, then force-delete the Pod. Require that the same request
+ID returns 200 with a different worker identity. Scope checks refuse another
+cluster's node. Every delivered result still precedes XACK/XDEL.
+
+**Measured:** All 120 requests succeeded. The selected request took 3499.34 ms from client submission, with 2675.72 ms reported queue age on its recovered attempt; it returned from a different worker. This is not a separately measured kill-to-response duration.
+
+**What surprised us:** Deleting the Pod object immediately did not stop its
+process before the selected request finished. Sending SIGKILL from a sibling
+process inside its PID namespace also failed to kill namespace init. Both initial
+runs passed all HTTP requests but failed the stronger reclaim assertion; they are
+preserved as [initial deletion](results/kind-initial-race.json) and
+[initial namespace signal](results/kind-initial-signal.json). Only the final
+node-namespace kill plus different-worker check establishes this reclaim result.
+
+**Conclusion:** Pending ownership survives actual process loss and the live worker
+reclaims before the tuned deadline. At-least-once compute, not exactly-once,
+remains the guarantee. Original classifier defaults in Compose still have a
+shorter deadline than reclaim; this controlled kind policy is explicitly different.
+
+## E13 — real autoscaler growth and contraction on kind
+
+**Question/prediction:** Do observed queue/busy signals cause actual scale API
+writes and ready capacity, followed by delayed downscale? Predict growth above
+one and eventual return to min. **Setup:** Restore base 50 ms, start one worker,
+resume Kubernetes controller, offer 120 requests/s for 35 seconds. Policy min 1,
+max 4, target backlog 4, busy .7, head age .25 s, control 2 s, stabilization 20 s,
+up cooldown 2 s/down 5 s. The short window is a local drill configuration.
+
+**Measured:** All 4200 requests succeeded. Desired replicas rose 1→4; the recorded ready count lagged desired during startup. The controller returned to one ready/desired replica 28.67 seconds after load finished.
+
+**Conclusion:** Real Redis signals drove real named Deployment scale writes,
+not just dry-run gauges. **What surprised us:** stabilization/cooldown plus
+sampling and drain make observed return time longer than the nominal window.
+The default policy uses 120 seconds, not this experiment's 20.
+
+Raw per-request results, exact selected ID/consumer, replica samples, cluster
+versions and predictions: [kind-experiments.json](results/kind-experiments.json).
+These are single local runs with simulated compute, short loads and ordinary
+host scheduling. No production SLO, node-failure recovery or GPU Kubernetes claim
+is inferred. The hosted GitHub Actions workflow was written but not run/pushed;
+local lint/types/tests and image builds passed.
+
+## Phase 7 additional verification
+
+All 62 CPU tests pass, including real Redis/process chaos, deployment guards and
+worker warmup/drain probes. Named role images, CPU and CUDA variants built as
+non-root UID 10001: [image evidence](results/p7-images.json). The CPU and CUDA
+images both ran DistilBERT load/warmup/prediction on actual hardware:
+[CPU runner](results/p7-cpu-runner.json), [GB10 CUDA runner](results/p7-cuda-runner.json).
+CUDA used torch 2.14.1+cu130; CPU used 2.15.0+cpu. These are runner correctness
+checks, not a CPU-vs-GPU throughput benchmark.
+
+The optional CPU sentiment component started on kind and served real POSITIVE
+classification. Sync, async polling and simulated chat SSE passed through kind:
+[path evidence](results/p7-kind-paths.json). Grafana provisions four dashboards;
+Prometheus scrapes both gateways through a separate headless metrics service,
+plus worker Pod IPs: [monitoring evidence](results/p7-kind-monitoring.json).
+RBAC permitted named worker scale writes and denied general Deployment writes.
+GPU overlay rendered successfully but remains **untested on a GPU cluster**.

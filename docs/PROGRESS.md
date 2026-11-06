@@ -1,6 +1,35 @@
 # Progress
 
-## Phase 6 — complete
+## Phase 7 — implementation and local verification complete
+
+Built role-specific multi-stage non-root image targets, locked mutually exclusive
+CPU/CUDA extras, worker warmup/drain HTTP probes, complete Compose health/restart
+policies, Kustomize base/kind/CPU/GPU layouts, Redis AOF PVC, model caches,
+resources, rolling policies, PDBs, Secret-based keys and named scale-only RBAC.
+Added dedicated-context kind-up.sh and GitHub Actions checks/image builds with
+conditional main-branch GHCR publication. Hosted CI/publication remain pending;
+no remote push or hosted success is claimed.
+
+Ruff, mypy (48 source files) and all 62 CPU tests passed. All role/CPU/CUDA images
+built; real DistilBERT warmup/prediction passed in CPU and GB10 CUDA containers.
+Actual kind 0.30.0 / Kubernetes 1.34.0 cluster ran the stack: E11 rolling update
+1200/1200 succeeded; E12 process SIGKILL plus Pod deletion 120/120 succeeded,
+including the selected pending ID recovered elsewhere; E13 4200/4200 succeeded,
+replicas rose 1→4 and returned to one 28.67 s after load. Compute in these traffic
+drills was simulated; processes, networking, Redis and Kubernetes were real.
+Two earlier deletion/signal attempts are preserved and explicitly not counted
+as reclaim proof. The final helper kills only the selected dedicated kind node's
+container PID from its ancestor namespace.
+
+Optional CPU sentiment component served real inference on kind. Sync/async/SSE
+paths passed; Grafana provisioned four dashboards; Prometheus scraped both gateway
+Pod IPs and worker Pod IPs. RBAC allowed named scale writes and denied general
+Deployment writes. GPU overlay rendered but is **untested on a GPU cluster**.
+Initial dependency-startup restarts were observed; stable readiness preceded runs.
+The kind script was rerun for idempotency. Lesson 07, deployment concept,
+ADR-0010, diagram 8, experiment records and image/path evidence are delivered.
+
+## Phase 6 — historical completed phase
 
 Built strict-typed pure decide with bounded backlog/utilization/head-age signals,
 step limits, cooldowns and raw-demand downscale stabilization. Added deterministic
@@ -200,7 +229,8 @@ Docker required execution-environment escalation, which was granted.
 
 ## Deferred — according to the phase plan
 
-Phases 7–8: Kubernetes/CI, load testing, runbook and measured SLOs.
+Phase 8: load testing, runbook and measured SLO proposal.
+Hosted GitHub Actions/registry publication and GPU Kubernetes verification pending.
 
 ## Current limitations
 
@@ -228,7 +258,7 @@ expire; DLQ retention is approximate and contains original input data. There is
 no DLQ replay endpoint or automatic pruning of all old consumer metadata.
 HTTP body bytes are capped; slow-client/ingress concurrency policies remain a
 deployment concern. Model readiness HTTP probes and Kubernetes termination grace
-arrive in Phase 7. GPU Kubernetes, other models/hardware and long-context
+are implemented in Phase 7. GPU Kubernetes, other models/hardware and long-context
 saturation remain pending; local GB10 inference and abort are verified.
 
 Owner .env remains untouched and excluded from Git/Docker. The owner's staged
@@ -236,6 +266,6 @@ Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 
 ## Next
 
-Owner authorized continuation through Phase 8. Next is Phase 7: deployment
-packaging, real kind verification, CI workflow, rolling update, pod loss and
-actual autoscaler scale-up/down experiments.
+Owner authorized continuation through Phase 8. Next: Locust scenarios and real
+load benchmarks, executed runbook drills, Little's Law prediction/measurement,
+measured local SLO proposal and the final Definition of Done audit.
