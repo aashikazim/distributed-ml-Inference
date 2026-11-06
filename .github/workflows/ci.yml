@@ -11,7 +11,7 @@ jobs:
       redis:
         image: redis:7.4
         ports: ['6379:6379']
-        options: --health-cmd 'redis-cli ping' --health-interval 2s --health-timeout 1s --health-retries 30
+        options: --health-cmd "redis-cli ping" --health-interval 2s --health-timeout 1s --health-retries 30
     env:
       INFER_TEST_REDIS_URL: redis://localhost:6379/0
     steps:
