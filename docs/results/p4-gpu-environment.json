@@ -1,0 +1,25 @@
+{
+  "vllm": "0.33.0",
+  "torch": "2.14.0+cu130",
+  "cuda": "13.0",
+  "gpu": "NVIDIA GB10",
+  "capability": [
+    12,
+    1
+  ],
+  "device_total_memory_bytes": 128526049280,
+  "date": "2026-11-06",
+  "driver_version": "580.95.05",
+  "official_image": "vllm/vllm-openai@sha256:d825baf9ce4b1b6bfc5ecc7b79880c7e6748c65a72d697ce3d47607aafa84c6e",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "server_flags": {
+    "max_model_len": 2048,
+    "max_num_seqs": 32,
+    "gpu_memory_utilization": 0.25,
+    "enforce_eager": true
+  },
+  "container_user": "1000:0",
+  "engine_reported_kv_cache_gib": 28.62,
+  "prefix_caching": true
+}

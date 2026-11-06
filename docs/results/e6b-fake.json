@@ -1,0 +1,2429 @@
+{
+  "metadata": {
+    "date_utc": "2026-11-06T17:34:33.026176+00:00",
+    "backend": "fake",
+    "simulated": true,
+    "python": "3.12.3",
+    "platform": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+    "cpu_inventory": "Architecture:                         aarch64\nCPU op-mode(s):                       64-bit\nByte Order:                           Little Endian\nCPU(s):                               20\nOn-line CPU(s) list:                  0-19\nVendor ID:                            ARM\nModel name:                           Cortex-X925\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   103%\nCPU max MHz:                          4004.0000\nCPU min MHz:                          1378.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nModel name:                           Cortex-A725\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   93%\nCPU max MHz:                          2860.0000\nCPU min MHz:                          338.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nL1d cache:                            1.3 MiB (20 instances)\nL1i cache:                            1.3 MiB (20 instances)\nL2 cache:                             25 MiB (20 instances)\nL3 cache:                             24 MiB (2 instances)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-19\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; __user pointer sanitization\nVulnerability Spectre v2:             Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+    "commit": "476c46d5a08066863748fd89d0d5757a289b8006",
+    "tracked_changes": [
+      "docs/EXPERIMENTS.md"
+    ],
+    "prompt": "Count integers starting at 1, separated by commas, until you reach 1000. Do not stop early.",
+    "gpu_query_on_client_host": null
+  },
+  "rows": [
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 0,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 0.760347998002544,
+      "completion_tokens": 1024,
+      "tokens_s": 1346.7517540521935,
+      "client_ttft_p50_ms": 350.4103494924493,
+      "client_ttft_p95_ms": 626.7907900037244,
+      "worker_ttft_p50_ms": 43.318125943187624,
+      "worker_tpot_p50_ms": 2.152681246303791,
+      "chunk_xadds": 1056,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 70.52530895452946,
+          "duration_ms": 215.20340896677226,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 1.112060546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 191.6526259155944,
+            "ttft_ms": 47.66123497392982,
+            "tpot_ms": 2.205048841128628,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 447.6992080453783,
+          "duration_ms": 584.0518600307405,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 374.908935546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.1214279839769,
+            "ttft_ms": 43.09254791587591,
+            "tpot_ms": 2.1374318730233917,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 259.55526204779744,
+          "duration_ms": 396.73932804726064,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 188.444091796875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.96440292336047,
+            "ttft_ms": 43.31418196670711,
+            "tpot_ms": 2.151883270088879,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 71.46755594294518,
+          "duration_ms": 215.06371290888637,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 1.256103515625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 186.2510530045256,
+            "ttft_ms": 43.48464694339782,
+            "tpot_ms": 2.2160853499487514,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 259.92384110577404,
+          "duration_ms": 400.34346410539,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 189.89306640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.93292804062366,
+            "ttft_ms": 42.8996350383386,
+            "tpot_ms": 2.1809046655627236,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 623.4151020180434,
+          "duration_ms": 756.2159219523892,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 552.337890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.57338101323694,
+            "ttft_ms": 43.32206991966814,
+            "tpot_ms": 2.0767503181501987,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 259.4957569381222,
+          "duration_ms": 398.57970701996237,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 189.197998046875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.42937298398465,
+            "ttft_ms": 43.46642189193517,
+            "tpot_ms": 2.1540255097317553,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 261.76820509135723,
+          "duration_ms": 399.6175870997831,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 190.821044921875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.46318092476577,
+            "ttft_ms": 44.10413803998381,
+            "tpot_ms": 2.1534792225187025,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 626.7907900037244,
+          "duration_ms": 757.6985720079392,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 557.716064453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 173.11781202442944,
+            "ttft_ms": 42.229085927829146,
+            "tpot_ms": 2.060955412508476,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 623.7763209501281,
+          "duration_ms": 754.8638170119375,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 555.593994140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 172.88341105449945,
+            "ttft_ms": 42.102556908503175,
+            "tpot_ms": 2.0608876033553054,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 442.750487010926,
+          "duration_ms": 579.6960230218247,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 374.113037109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.93972399178892,
+            "ttft_ms": 42.992595001123846,
+            "tpot_ms": 2.1300974767655134,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 439.963172073476,
+          "duration_ms": 575.2618330297992,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 372.06591796875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.6958179436624,
+            "ttft_ms": 43.72770409099758,
+            "tpot_ms": 2.1251051904751903,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 73.72261094860733,
+          "duration_ms": 212.50283101107925,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 2.300048828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 184.40348899457604,
+            "ttft_ms": 43.86218497529626,
+            "tpot_ms": 2.1945144297436827,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 72.64106802176684,
+          "duration_ms": 212.40379102528095,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 0.85107421875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 186.58808001782745,
+            "ttft_ms": 47.862180043011904,
+            "tpot_ms": 2.1701896829264506,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 622.970666969195,
+          "duration_ms": 754.9906820058823,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 556.297119140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 174.49281399603933,
+            "ttft_ms": 42.52436803653836,
+            "tpot_ms": 2.077010888901968,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 439.0524938935414,
+          "duration_ms": 577.7138168923557,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-6b642c97",
+            "batch_size": 1,
+            "queue_ms": 372.090087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.62143202405423,
+            "ttft_ms": 42.83654596656561,
+            "tpot_ms": 2.157073920696146,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        }
+      ],
+      "repeat": 1
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 0,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 0.7349138880381361,
+      "completion_tokens": 1024,
+      "tokens_s": 1393.3605238208027,
+      "client_ttft_p50_ms": 331.7558140261099,
+      "client_ttft_p95_ms": 598.701109061949,
+      "worker_ttft_p50_ms": 42.087796493433416,
+      "worker_tpot_p50_ms": 2.089484872865594,
+      "chunk_xadds": 1056,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 63.20460408460349,
+          "duration_ms": 195.49377204384655,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 1.555908203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.2214430598542,
+            "ttft_ms": 42.99485101364553,
+            "tpot_ms": 2.0861304439012964,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 247.90110206231475,
+          "duration_ms": 381.99300202541053,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 180.549072265625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 176.13852093927562,
+            "ttft_ms": 42.1502209501341,
+            "tpot_ms": 2.104144539713623,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 244.2195100011304,
+          "duration_ms": 379.22853603959084,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 179.011962890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 176.32698500528932,
+            "ttft_ms": 41.94666806142777,
+            "tpot_ms": 2.1063253811989275,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 596.2344210129231,
+          "duration_ms": 729.8590369755402,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 529.0830078125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.90149503666908,
+            "ttft_ms": 42.775616981089115,
+            "tpot_ms": 2.0915750480656112,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 240.95212703105062,
+          "duration_ms": 374.2564220447093,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 176.068115234375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.16510596033186,
+            "ttft_ms": 41.82469891384244,
+            "tpot_ms": 2.0935956355450407,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 236.9010919937864,
+          "duration_ms": 372.5042350124568,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 171.571044921875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 177.87010001484305,
+            "ttft_ms": 42.455007089301944,
+            "tpot_ms": 2.103345793864084,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 598.3286270638928,
+          "duration_ms": 731.2388700665906,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 533.50390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 173.9680089522153,
+            "ttft_ms": 41.298342985101044,
+            "tpot_ms": 2.0786733810035956,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 422.700462047942,
+          "duration_ms": 557.4200620176271,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 358.593017578125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 174.56849291920662,
+            "ttft_ms": 40.73051596060395,
+            "tpot_ms": 2.1019362537781636,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 417.31167305260897,
+          "duration_ms": 550.379661959596,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 352.218994140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 174.14746701251715,
+            "ttft_ms": 41.70639393851161,
+            "tpot_ms": 2.0802639857200638,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 66.18808000348508,
+          "duration_ms": 196.81682100053877,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 0.98291015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 173.56168699916452,
+            "ttft_ms": 43.46903006080538,
+            "tpot_ms": 2.0594823798756043,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 71.8855740269646,
+          "duration_ms": 201.84085401706398,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 2.889892578125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 176.99414293747395,
+            "ttft_ms": 45.60358799062669,
+            "tpot_ms": 2.066343651330542,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 71.53742900118232,
+          "duration_ms": 199.2212689947337,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 4.0390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 173.92944998573512,
+            "ttft_ms": 44.518940965645015,
+            "tpot_ms": 2.0366929053875897,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 418.86907594744116,
+          "duration_ms": 554.3743449961767,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 355.506103515625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 176.45621905103326,
+            "ttft_ms": 41.37749597430229,
+            "tpot_ms": 2.0990214451023985,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 415.610525989905,
+          "duration_ms": 548.2344799675047,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 350.3701171875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.77314202208072,
+            "ttft_ms": 42.85424202680588,
+            "tpot_ms": 2.087394697665577,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 598.701109061949,
+          "duration_ms": 730.0806390121579,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 535.028076171875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 173.5884229419753,
+            "ttft_ms": 42.02537203673273,
+            "tpot_ms": 2.0739627458776035,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 592.5184430088848,
+          "duration_ms": 726.0066430317238,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-a817555c",
+            "batch_size": 1,
+            "queue_ms": 528.695068359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.73488596826792,
+            "ttft_ms": 41.915611946024,
+            "tpot_ms": 2.0985617616494734,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        }
+      ],
+      "repeat": 2
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 0,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 0.7638710730243474,
+      "completion_tokens": 1024,
+      "tokens_s": 1340.540355777239,
+      "client_ttft_p50_ms": 341.1584290442988,
+      "client_ttft_p95_ms": 614.3233890179545,
+      "worker_ttft_p50_ms": 42.15311701409519,
+      "worker_tpot_p50_ms": 2.1690757536802385,
+      "chunk_xadds": 1056,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 64.47870808187872,
+          "duration_ms": 204.6015610685572,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 1.260986328125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 183.54092189110816,
+            "ttft_ms": 43.36979798972607,
+            "tpot_ms": 2.170144713350705,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 71.32577802985907,
+          "duration_ms": 208.36977800354362,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 0.659912109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 182.77995800599456,
+            "ttft_ms": 45.553363976068795,
+            "tpot_ms": 2.1689226185636863,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 250.3637110348791,
+          "duration_ms": 389.43369104526937,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 184.4560546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.4174439748749,
+            "ttft_ms": 41.507704998366535,
+            "tpot_ms": 2.1861011443275307,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 254.342713044025,
+          "duration_ms": 392.8066419903189,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 188.118896484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.08395400829613,
+            "ttft_ms": 42.09730902221054,
+            "tpot_ms": 2.171078048247312,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 246.1128019494936,
+          "duration_ms": 385.5449289549142,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 179.675048828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.3380270032212,
+            "ttft_ms": 42.158509022556245,
+            "tpot_ms": 2.191779159364246,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 73.38623993564397,
+          "duration_ms": 210.08239802904427,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 1.366943359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 184.55230502877384,
+            "ttft_ms": 47.0888790441677,
+            "tpot_ms": 2.161324857586315,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 75.95758605748415,
+          "duration_ms": 212.03756309114397,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 3.1220703125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 184.8285630112514,
+            "ttft_ms": 48.266215017065406,
+            "tpot_ms": 2.151770254833594,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 254.65361203532666,
+          "duration_ms": 392.50372909009457,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 189.993896484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.6494479747489,
+            "ttft_ms": 41.35856800712645,
+            "tpot_ms": 2.16007099989506,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 436.454041977413,
+          "duration_ms": 572.7187560405582,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 369.388916015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.2641410138458,
+            "ttft_ms": 42.450670967809856,
+            "tpot_ms": 2.1519663167141734,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 427.663246053271,
+          "duration_ms": 563.1489470833912,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 362.43798828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.03872399963439,
+            "ttft_ms": 42.14772500563413,
+            "tpot_ms": 2.1412269367525973,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 608.2270910264924,
+          "duration_ms": 754.0678540244699,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 541.674072265625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 186.44598207902163,
+            "ttft_ms": 42.550176032818854,
+            "tpot_ms": 2.1786819201051477,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 613.170213997364,
+          "duration_ms": 758.754623006098,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 549.925048828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 185.65829598810524,
+            "ttft_ms": 40.472978027537465,
+            "tpot_ms": 2.1759113500131266,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 429.5985869830474,
+          "duration_ms": 567.9386269766837,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 365.998046875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.49042993132025,
+            "ttft_ms": 41.56625003088266,
+            "tpot_ms": 2.157008110929931,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 434.272009995766,
+          "duration_ms": 571.0329519351944,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 369.51904296875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.10109092574567,
+            "ttft_ms": 43.2689490262419,
+            "tpot_ms": 2.1530654769213426,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 614.3233890179545,
+          "duration_ms": 758.6147339316085,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 550.055908203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 186.22381996829063,
+            "ttft_ms": 41.48284101393074,
+            "tpot_ms": 2.19930299846012,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 610.1160970283672,
+          "duration_ms": 756.9696659920737,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-b1d789dc",
+            "batch_size": 1,
+            "queue_ms": 546.157958984375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 187.11000203620642,
+            "ttft_ms": 42.13290894404054,
+            "tpot_ms": 2.1692288887967903,
+            "completion_tokens": 64,
+            "chunk_writes": 66
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        }
+      ],
+      "repeat": 3
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 20,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 0.7812449160264805,
+      "completion_tokens": 1024,
+      "tokens_s": 1310.7285295476934,
+      "client_ttft_p50_ms": 369.09327999455854,
+      "client_ttft_p95_ms": 659.5478209201247,
+      "worker_ttft_p50_ms": 44.389676419086754,
+      "worker_tpot_p50_ms": 2.1173418092999667,
+      "chunk_xadds": 125,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 85.24155302438885,
+          "duration_ms": 201.003551017493,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 1.69091796875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.55863098520786,
+            "ttft_ms": 42.050012038089335,
+            "tpot_ms": 2.1497973957882515,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 286.3851520232856,
+          "duration_ms": 403.9895160822198,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 198.3310546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.4232139363885,
+            "ttft_ms": 43.10366802383214,
+            "tpot_ms": 2.08774388819519,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 287.60799299925566,
+          "duration_ms": 407.4479549890384,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 199.009033203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 183.2336389925331,
+            "ttft_ms": 44.66202994808555,
+            "tpot_ms": 2.092375031982859,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 450.57856698986143,
+          "duration_ms": 564.7445709910244,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 362.27197265625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 177.97425901517272,
+            "ttft_ms": 43.36045403033495,
+            "tpot_ms": 2.075891871567047,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 89.44567700382322,
+          "duration_ms": 209.95237992610782,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 0.626953125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 183.95500408951193,
+            "ttft_ms": 45.140592963434756,
+            "tpot_ms": 2.157549588157544,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 93.80853897891939,
+          "duration_ms": 217.36940601840615,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 1.239990234375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 190.7602990977466,
+            "ttft_ms": 48.85463393293321,
+            "tpot_ms": 2.1698960797890785,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 91.75974095705897,
+          "duration_ms": 217.47351891826838,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 3.674072265625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 188.13868099823594,
+            "ttft_ms": 44.76083104964346,
+            "tpot_ms": 2.178383492199438,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 466.3361459970474,
+          "duration_ms": 581.255579018034,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 376.343017578125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.12688192538917,
+            "ttft_ms": 45.67978100385517,
+            "tpot_ms": 2.1002336334998883,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 472.27759403176606,
+          "duration_ms": 592.9270180640742,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 385.090087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 182.8903571004048,
+            "ttft_ms": 43.74340001959354,
+            "tpot_ms": 2.117772285442149,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 262.98435509670526,
+          "duration_ms": 380.53046201821417,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 175.6220703125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 182.59056203532964,
+            "ttft_ms": 45.33657804131508,
+            "tpot_ms": 2.1232819195748087,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 630.5276879575104,
+          "duration_ms": 745.0812150491402,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 543.73388671875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.78797696903348,
+            "ttft_ms": 43.575655086897314,
+            "tpot_ms": 2.1335181728419332,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 278.08047202415764,
+          "duration_ms": 393.9294160809368,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 190.052001953125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.43554003816098,
+            "ttft_ms": 45.489827054552734,
+            "tpot_ms": 2.100692555633566,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 659.0522020123899,
+          "duration_ms": 774.2641810327768,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 572.59912109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.2775170179084,
+            "ttft_ms": 44.195466907694936,
+            "tpot_ms": 2.1281441754942376,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 647.8667809860781,
+          "duration_ms": 764.04319901485,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 561.22705078125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.01940997783095,
+            "ttft_ms": 44.16111402679235,
+            "tpot_ms": 2.1169113331577845,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 471.8438470736146,
+          "duration_ms": 592.5378960091621,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 386.47900390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.87895801384002,
+            "ttft_ms": 43.320933007635176,
+            "tpot_ms": 2.109788238100471,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 659.5478209201247,
+          "duration_ms": 773.6152319703251,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-f3ecceb7",
+            "batch_size": 1,
+            "queue_ms": 572.23291015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.73223300557584,
+            "ttft_ms": 44.58388593047857,
+            "tpot_ms": 2.112871937690273,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        }
+      ],
+      "repeat": 1
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 20,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 0.7895705060800537,
+      "completion_tokens": 1024,
+      "tokens_s": 1296.907612575105,
+      "client_ttft_p50_ms": 376.08379853190854,
+      "client_ttft_p95_ms": 666.2727929651737,
+      "worker_ttft_p50_ms": 44.66687800595537,
+      "worker_tpot_p50_ms": 2.1079482135569885,
+      "chunk_xadds": 121,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 88.98981695529073,
+          "duration_ms": 210.44865401927382,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 2.097900390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 184.20755001716316,
+            "ttft_ms": 42.95454709790647,
+            "tpot_ms": 2.205081825469813,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 296.44120403099805,
+          "duration_ms": 414.47187401354313,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 201.58203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.3941159741953,
+            "ttft_ms": 45.185905997641385,
+            "tpot_ms": 2.075655936514811,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 291.46811401005834,
+          "duration_ms": 406.34170710109174,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 198.181884765625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.2128279339522,
+            "ttft_ms": 44.80604699347168,
+            "tpot_ms": 2.0965838265265266,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 666.2727929651737,
+          "duration_ms": 784.7506500547752,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 573.715087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.75577302463353,
+            "ttft_ms": 44.527709018439054,
+            "tpot_ms": 2.1304298887058857,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 476.8376719439402,
+          "duration_ms": 588.6004919884726,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 381.580078125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.4914949676022,
+            "ttft_ms": 45.724117080681026,
+            "tpot_ms": 2.07050085725588,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 97.5909159751609,
+          "duration_ms": 224.62447895668447,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 2.35888671875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 192.00859405100346,
+            "ttft_ms": 47.47942497488111,
+            "tpot_ms": 2.193848221814112,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 95.98730504512787,
+          "duration_ms": 222.84784307703376,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 4.9609375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 189.79270698036999,
+            "ttft_ms": 44.0427289577201,
+            "tpot_ms": 2.207694682366555,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 642.232037964277,
+          "duration_ms": 758.9587619295344,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 550.48291015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.80997397191823,
+            "ttft_ms": 44.107594061642885,
+            "tpot_ms": 2.126754697648779,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 93.1848370237276,
+          "duration_ms": 219.5640280842781,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 1.322998046875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 190.0124530075118,
+            "ttft_ms": 45.24429002776742,
+            "tpot_ms": 2.1858372548151586,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 484.9342870293185,
+          "duration_ms": 598.0605080258101,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 391.927978515625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.1127559952438,
+            "ttft_ms": 44.33729196898639,
+            "tpot_ms": 2.0628809847588103,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 482.21207596361637,
+          "duration_ms": 596.0981899406761,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 389.843994140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.68234403431416,
+            "ttft_ms": 44.92503998335451,
+            "tpot_ms": 2.066186413035861,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 276.5768299577758,
+          "duration_ms": 410.87002493441105,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 184.052001953125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.07105798460543,
+            "ttft_ms": 46.07824806589633,
+            "tpot_ms": 2.093722079215305,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 652.9315339867026,
+          "duration_ms": 767.6601810380816,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 562.944091796875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.65712707862258,
+            "ttft_ms": 43.81626402027905,
+            "tpot_ms": 2.106566872772953,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 294.4792389171198,
+          "duration_ms": 413.9427989721298,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 203.090087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 183.82010597269982,
+            "ttft_ms": 45.10337708052248,
+            "tpot_ms": 2.096414174293242,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 665.5976839829236,
+          "duration_ms": 784.2145329341292,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 574.0009765625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 182.67635407391936,
+            "ttft_ms": 44.341595959849656,
+            "tpot_ms": 2.1509481261351278,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 455.72639303281903,
+          "duration_ms": 572.5298059405759,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-4b523bef",
+            "batch_size": 1,
+            "queue_ms": 365.98291015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 180.47658004797995,
+            "ttft_ms": 43.77861600369215,
+            "tpot_ms": 2.109329554341024,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        }
+      ],
+      "repeat": 2
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 20,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 0.8271683090133592,
+      "completion_tokens": 1024,
+      "tokens_s": 1237.9584527620748,
+      "client_ttft_p50_ms": 376.62004854064435,
+      "client_ttft_p95_ms": 674.6657099574804,
+      "worker_ttft_p50_ms": 45.99849495571107,
+      "worker_tpot_p50_ms": 2.1270602065626356,
+      "chunk_xadds": 125,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 83.78935104701668,
+          "duration_ms": 203.36507097817957,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 1.471923828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.78790097590536,
+            "ttft_ms": 42.64940903522074,
+            "tpot_ms": 2.1671663807143293,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 93.43272703699768,
+          "duration_ms": 219.33393005747348,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 1.3310546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 191.98321702424437,
+            "ttft_ms": 46.38744902331382,
+            "tpot_ms": 2.176622205990411,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 290.76762904878706,
+          "duration_ms": 410.915881046094,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 198.90087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 183.22630994953215,
+            "ttft_ms": 45.714180916547775,
+            "tpot_ms": 2.115022285752708,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 674.0147140808403,
+          "duration_ms": 784.6199090126902,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 580.06396484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.3578129252419,
+            "ttft_ms": 47.01769398525357,
+            "tpot_ms": 2.0748460166422382,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 99.00585294235498,
+          "duration_ms": 222.52665599808097,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 4.31689453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 191.43174099735916,
+            "ttft_ms": 46.18253593798727,
+            "tpot_ms": 2.2079163814880074,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 455.29594004619867,
+          "duration_ms": 578.2392030814663,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 366.531005859375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 185.91735197696835,
+            "ttft_ms": 43.69352792855352,
+            "tpot_ms": 2.159653699010729,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 484.0773029718548,
+          "duration_ms": 610.0944100180641,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 395.072021484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 186.3526509841904,
+            "ttft_ms": 42.849074001424015,
+            "tpot_ms": 2.1645055385306478,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 297.94415703509003,
+          "duration_ms": 413.5923460125923,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 201.261962890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 185.1721629500389,
+            "ttft_ms": 45.814453973434865,
+            "tpot_ms": 2.098551064374901,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 481.3668209826574,
+          "duration_ms": 600.2160080242902,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 388.282958984375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 186.05525710154325,
+            "ttft_ms": 48.30483894329518,
+            "tpot_ms": 2.151698603974803,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 673.0304840020835,
+          "duration_ms": 823.3929870184511,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 580.9599609375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 178.9599129697308,
+            "ttft_ms": 46.778620104305446,
+            "tpot_ms": 2.0922879034298516,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 269.64086201041937,
+          "duration_ms": 384.6347749931738,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 181.097900390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 179.32153097353876,
+            "ttft_ms": 45.721621019765735,
+            "tpot_ms": 2.077809603337849,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 94.5581910200417,
+          "duration_ms": 218.6936540529132,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 2.15087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 192.75283894967288,
+            "ttft_ms": 48.53616806212813,
+            "tpot_ms": 2.187131983523686,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 643.8974550692365,
+          "duration_ms": 755.0016940804198,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 555.60888671875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 175.48044899012893,
+            "ttft_ms": 43.36342902388424,
+            "tpot_ms": 2.0745432850653454,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 292.7894979948178,
+          "duration_ms": 407.57913794368505,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 200.5810546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 181.51271401438862,
+            "ttft_ms": 46.72423598822206,
+            "tpot_ms": 2.061396269940786,
+            "completion_tokens": 64,
+            "chunk_writes": 7
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 480.04090692847967,
+          "duration_ms": 599.7952359030023,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 388.89208984375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 185.13019394595176,
+            "ttft_ms": 47.645393991842866,
+            "tpot_ms": 2.139098127372563,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 674.6657099574804,
+          "duration_ms": 784.7189649473876,
+          "usage": {
+            "prompt_tokens": 1,
+            "completion_tokens": 64,
+            "total_tokens": 65
+          },
+          "meta": {
+            "worker_id": "spark-6024-3e6ff973",
+            "batch_size": 1,
+            "queue_ms": 589.43701171875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 172.8568479884416,
+            "ttft_ms": 41.879562893882394,
+            "tpot_ms": 2.0669996202553786,
+            "completion_tokens": 64,
+            "chunk_writes": 8
+          },
+          "finish_reason": "length",
+          "events": 67,
+          "text": "token0 token1 token2 token3 token4 token5 token6 token7 token8 token9 token10 token11 token12 token13 token14 token15 token16 token17 token18 token19 token20 token21 token22 token23 token24 token25 token26 token27 token28 token29 token30 token31 token32 token33 token34 token35 token36 token37 token38 token39 token40 token41 token42 token43 token44 token45 token46 token47 token48 token49 token50 token51 token52 token53 token54 token55 token56 token57 token58 token59 token60 token61 token62 token63 "
+        }
+      ],
+      "repeat": 3
+    }
+  ],
+  "fake_server_settings": {
+    "ttft_ms": 40,
+    "token_ms": 2,
+    "tokens": 64
+  }
+}

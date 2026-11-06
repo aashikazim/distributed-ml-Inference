@@ -5,7 +5,7 @@
 | Inference | Running an already trained model to produce an output |
 | Replica | One running copy of a model-serving worker |
 | Gateway | HTTP service that accepts requests and waits for worker replies |
-| Backend | Implementation that performs model work; fake simulation or real torch classifier |
+| Backend | Implementation that performs model work; fake simulation, torch classifier, or LLM adapter |
 | Stream | Redis sequence of entries with IDs and string fields |
 | Consumer | Named reader in a Redis consumer group; one worker here |
 | Consumer group | Shared delivery ledger that distributes new entries among consumers |
@@ -31,13 +31,13 @@
 | Backpressure | Preventing fast producers from overwhelming slower consumers |
 | Admission control | Rejecting new work before enqueue when retained depth or live capacity is insufficient |
 | Dynamic batching | Gathering independent inputs into a compute batch with a size and wait policy |
-| Continuous batching | Updating the active LLM sequence batch during generation; later vLLM |
+| Continuous batching | Updating the active LLM sequence set during generation, owned by vLLM |
 | Latency | Elapsed time from a defined start to finish |
 | Throughput | Completed work per unit time |
 | SLO | Measured service reliability or latency target; derived in Phase 8 |
 | Autoscaling | Adjusting replica counts using a repeated feedback decision |
 | AOF | Redis append-only persistence log |
-| SSE | HTTP server-sent event stream; Phase 4 |
+| SSE | HTTP server-sent events with data frames separated by blank lines |
 | TTL | Time to live before a Redis key expires |
 | ADR | Architecture decision record explaining a choice and its costs |
 
@@ -75,3 +75,19 @@
 | Redis transaction | MULTI/EXEC group of commands executed without other clients interleaving |
 | Blocking connection pool | Fixed connection budget whose callers wait with a timeout for free slots |
 | Async polling | Fetching the eventual outcome using an accepted request ID |
+
+
+| Term | Plain-language meaning |
+|---|---|
+| Prefill | Processing prompt tokens before generating new content |
+| Decode | Repeatedly generating the next token using previous attention state |
+| KV cache | Stored attention keys and values used to avoid recomputing previous tokens |
+| PagedAttention | Block-based management of attention-cache storage, implemented by vLLM |
+| TTFT | Time to first content token, measured from an explicitly named starting point |
+| TPOT | Time per output token during generation; our HTTP observation is an estimate |
+| Sequence | One prompt and its growing generated output |
+| Semaphore | Counter that limits how many concurrent tasks may enter a protected operation |
+| Chunk coalescing | Bundling original upstream chunks into fewer Redis writes within a short window |
+| Prefix caching | Reusing engine attention state for shared prompt prefixes |
+| Eager execution | Running model operations without CUDA graph replay in this tested server mode |
+| Stream interruption | Explicit failure when a partially emitted answer cannot safely finish or resume |

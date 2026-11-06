@@ -10,7 +10,7 @@ functions; introduce one controlled failure; teach the result without reading no
 | 01 | [Request path](01-request-path.md), [Redis Streams](../concepts/redis-streams.md), E1, ADRs 0001–0003 | Phase 1 |
 | 02 | [Dynamic batching](02-dynamic-batching.md), [batching concept](../concepts/batching.md), E2–E3, [ADR-0004](../adr/0004-dynamic-batching.md) | Phase 2: available |
 | 03 | [Reliability](03-reliability.md), [reliability/backpressure](../concepts/reliability-and-backpressure.md), E4–E5, ADRs 0005–0006 | Phase 3: available |
-| 04 | LLM serving, LLM concept, E6a–E6b, ADR-0007 | Phase 4 |
+| 04 | [LLM serving](04-llm-serving.md), [LLM concept](../concepts/llm-serving.md), E6a–E6b, [ADR-0007](../adr/0007-llm-adapter.md), [GPU verification](../GPU_VERIFICATION.md) | Phase 4: available |
 | 05 | Observability, latency concept, E7, ADR-0008 | Phase 5 |
 | 06 | Autoscaling, controller concept, E8–E10, ADR-0009 | Phase 6 |
 | 07 | Kubernetes, deployment concept, E11–E13, ADR-0010 | Phase 7 |
@@ -20,6 +20,9 @@ functions; introduce one controlled failure; teach the result without reading no
 flowchart LR
     Q[Queue ownership] --> B[Batching]
     B --> L[Latency and throughput]
+    Q --> S[Bounded LLM concurrency]
+    S --> V[vLLM continuous batching]
+    V --> L
     L --> O[Observability]
     O --> A[Autoscaling]
     A --> Q

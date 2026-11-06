@@ -389,3 +389,148 @@ and rerun successfully; new evidence is
 Phase 1 result file was retained. SIGTERM and SIGKILL mid-batch, poison/DLQ,
 malformed envelopes, cancellation/disconnect, shared rate limits, polling,
 duplicate replay, body limits and connection waits are covered by automated tests.
+
+## Phase 4 predictions (before measurement)
+
+**E6a:** With a fake server's fixed simulated first-token and per-token delays,
+increasing bounded concurrency should increase aggregate synthetic tokens/s until
+transport/scheduling overhead dominates. Queueing may raise gateway TTFT while
+worker TTFT remains nearer the configured delay. Real vLLM results, if obtained,
+will be recorded separately with the actual GPU, model, image and settings.
+
+**E6b:** A 20 ms coalescing window should reduce Redis XADD count substantially
+for a fast token source, while preserving exact text, event order, finish reason
+and usage. It may delay first client-visible content. Compare zero and 20 ms
+using identical synthetic output and report worker and gateway observations
+separately. All fake-server throughput/latency results are simulated inference.
+
+
+## E6a — bounded concurrency versus TTFT and aggregate token throughput
+
+**Question:** How does adapter concurrency affect generation throughput and time
+to first content for a burst? **Hypothesis:** Recorded above before measurement.
+
+**Setup:** Measured 2026-11-06 on the same Linux aarch64 host: 20 logical CPUs
+(Cortex-X925/Cortex-A725). Python 3.12.3, real Redis 7.4.12, real TCP gateway and
+HTTP upstream. Runtime source commit 476c46d (full SHA in artifacts). Fake output
+is **simulated inference**, with 40 ms initial delay and 2 ms per synthetic token.
+Real inference uses NVIDIA GB10, driver 580.95.05, Qwen/Qwen2.5-0.5B-Instruct,
+vLLM 0.33.0, CUDA 13.0. Exact image, model revision, memory and flags are in
+[GPU verification](GPU_VERIFICATION.md) and
+[environment](results/p4-gpu-environment.json). Eager execution, context 2048,
+max-num-seqs 32, memory fraction 0.25 and prefix caching enabled. Both scenarios
+run locally; this is not a remote-client network measurement.
+
+**Method:** Each setting receives a simultaneous burst of 16 requests, capped at
+32 output tokens, temperature zero, the same counting prompt, and 20 ms
+coalescing. Sweep max_concurrent 1, 2, 4, 8, 16; repeat each three times. Tables
+show the median of the three per-trial summaries, not percentiles pooled over all
+trials. Client TTFT begins at HTTP submission and ends at first nonempty content;
+worker TTFT begins at dequeue. Tokens/s = total final-usage completion tokens /
+burst elapsed time. Every response must finish with usage and DONE; fake text is
+checked for exact ordered completeness. No tests/builds ran concurrently during
+the measured trials. The vLLM server was warmed before these experiments.
+
+Commands executed from the repository root (UV_CACHE_DIR as in the quickstart):
+
+```bash
+uv run --extra ml python -m tools.llm_experiments E6a --backend fake --output docs/results/e6a-fake.json
+uv run --extra ml python -m tools.llm_experiments E6a --backend vllm --output docs/results/e6a-vllm.json
+```
+
+The real backend requires the running GPU profile. Each command starts its own
+disposable Redis, gateway and adapter; the fake command starts its own TCP server.
+
+**Measured results:**
+
+| Backend | Concurrency | Completion tokens/s | Client TTFT p50 ms | Client TTFT p95 ms | Worker TTFT p50 ms |
+|---|---:|---:|---:|---:|---:|
+| Fake — simulated | 1 | 281.47 | 928.69 | 1769.87 | 43.06 |
+| Fake — simulated | 2 | 545.62 | 491.39 | 891.34 | 43.73 |
+| Fake — simulated | 4 | 977.68 | 263.60 | 459.33 | 44.15 |
+| Fake — simulated | 8 | 1836.78 | 156.76 | 226.90 | 45.03 |
+| Fake — simulated | 16 | 2677.80 | 126.57 | 135.53 | 54.82 |
+| Real GB10 | 1 | 139.15 | 1791.50 | 3498.99 | 18.01 |
+| Real GB10 | 2 | 299.96 | 797.96 | 1536.48 | 18.81 |
+| Real GB10 | 4 | 545.85 | 407.11 | 763.81 | 27.98 |
+| Real GB10 | 8 | 1035.96 | 187.89 | 320.09 | 27.52 |
+| Real GB10 | 16 | 1750.81 | 112.05 | 131.91 | 33.30 |
+
+**Conclusion:** Increasing concurrency increased throughput for this workload and
+reduced client waiting. This does not establish that still higher concurrency is
+always beneficial: worker TTFT on the GPU increased as more sequences competed
+inside the engine. Keep Redis queueing and engine time separate when interpreting
+latency. The cap is a control on admitted work, not an optimizer for every model.
+
+**What surprised us:** The original prediction allowed for rising gateway TTFT;
+this fixed-size burst showed the opposite. At concurrency one, most requests wait
+behind earlier generations; at higher concurrency, reduced queueing dominates.
+The first ever real-model request also had 17289 ms TTFT, versus tens of milliseconds
+after warmup. That cold observation is retained in
+[p4-gpu-first-request.json](results/p4-gpu-first-request.json), not silently mixed
+into warmed throughput. Health checks alone did not establish latency readiness.
+
+Raw trials, per-request content/usage/meta, date, CPU inventory and commit:
+[e6a-fake.json](results/e6a-fake.json), [e6a-vllm.json](results/e6a-vllm.json).
+
+## E6b — chunk coalescing on and off
+
+**Question:** What does a 20 ms relay window save and what does it cost?
+**Hypothesis:** Fewer Redis writes, unchanged text/order/finish/usage, with possible
+extra first-content delay; recorded before measurement above.
+
+**Setup:** Same hardware, versions and runtime source as E6a. Fake inference is
+**simulated**. **Method:** Burst 16 requests, max_concurrent=4, max_tokens=64,
+three trials each with coalesce_ms=0 and 20. Each trial has 1024 completion tokens.
+Compare total chunk XADDs (excluding final entries), final usage and client TTFT.
+The gateway expands bundled chunks, so downstream SSE event count is not reduced.
+Exact synthetic text is asserted. Real output, finish reason and usage are stored
+for inspection; numerical performance is specific to this short counting prompt.
+
+```bash
+uv run --extra ml python -m tools.llm_experiments E6b --backend fake --output docs/results/e6b-fake.json
+uv run --extra ml python -m tools.llm_experiments E6b --backend vllm --output docs/results/e6b-vllm.json
+```
+
+**Measured results:** Medians of three trial summaries.
+
+| Backend | Window ms | Chunk XADDs / burst | Completion tokens/s | Client TTFT p50 ms | Client TTFT p95 ms |
+|---|---:|---:|---:|---:|---:|
+| Fake — simulated | 0 | 1056 | 1346.75 | 341.16 | 614.32 |
+| Fake — simulated | 20 | 125 | 1296.91 | 376.08 | 666.27 |
+| Real GB10 | 0 | 1040 | 605.05 | 671.63 | 1300.72 |
+| Real GB10 | 20 | 256 | 597.71 | 693.24 | 1341.55 |
+
+**Conclusion:** Chunk writes fell by 88.2% for simulated output and
+75.4% on the real GPU path. Client first-content latency increased,
+and aggregate throughput decreased slightly in both comparisons. The default
+20 ms is a bounded trade-off, not a demonstrated universal speedup. A deployment
+valuing immediate text more than Redis write cost can set the window to zero.
+
+**What surprised us:** Fewer Redis operations did not improve throughput here.
+The measurements support a write-cost saving, not an automatic generation-speed
+claim. Client TTFT includes several waves of queueing in this 16-request burst,
+so its change is not simply one added 20 ms window.
+
+Raw evidence: [e6b-fake.json](results/e6b-fake.json),
+[e6b-vllm.json](results/e6b-vllm.json). Role and finish chunks also count toward
+chunk writes; one HTTP event is not necessarily one model token. TPOT values in
+raw metadata are estimates using final engine usage, not per-kernel timings.
+
+**Shared limits:** Three short trials per setting; fixed prompt and output cap;
+local network; ordinary OS scheduling without CPU pinning; default prefix caching
+may reuse the repeated prompt. Sweep order was fixed, not randomized. The engine
+was warmed and runs eager mode. No 32-sequence saturation, long-context test,
+cloud capacity estimate, production SLO or GPU Kubernetes result is implied.
+Fake and real numbers answer different questions and must not be substituted.
+
+## Phase 4 correctness and GPU abort evidence
+
+The final suite passed 46 CPU tests, including real Redis and existing process
+chaos drills; the explicit gpu marker passed one additional real-engine test.
+The GPU test saw one active sequence before client disconnect, then zero plus
+CANCELLED after 41.22 ms in the final warm run (20 ms cancellation polling).
+A ten-token warm completion had 21.73 ms worker TTFT and 76.65 ms upstream duration.
+These are individual observations, not percentile or default-configuration claims.
+[Verification](results/p4-gpu-verification.json) and
+[cold first request](results/p4-gpu-first-request.json) preserve both states.

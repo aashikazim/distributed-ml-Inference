@@ -3,10 +3,12 @@
 A Python 3.12 learning project: HTTP requests travel through Redis Streams to
 pull-based workers and return through per-gateway inboxes.
 
-**Phases 1–3 are implemented:** authenticated sync/async inference, a **simulated**
+**Phases 1–4 are implemented:** authenticated sync/async inference, a **simulated**
 fake backend, real DistilBERT sentiment inference, dynamic batching, live worker
 registry, reclaim/DLQ, deadlines/cancellation, rate limiting and atomic admission.
-LLM streaming, metrics dashboards, autoscaling and Kubernetes are later phases.
+Streaming chat runs through a bounded LLM adapter against a simulated OpenAI
+server or real vLLM. Real Qwen inference and cancellation were verified on NVIDIA
+GB10. Metrics dashboards, autoscaling and Kubernetes are later phases.
 
 ## Run the fake backend
 
@@ -103,7 +105,7 @@ workers. Fake compute results are explicitly labeled simulated.
 ## Learn and stop
 
 Start with [the docs index](docs/README.md), then [architecture](docs/ARCHITECTURE.md),
-[lesson 03](docs/learning/03-reliability.md), [configuration](docs/CONFIG.md)
+[lesson 04](docs/learning/04-llm-serving.md), [configuration](docs/CONFIG.md)
 and [progress](docs/PROGRESS.md).
 
 ```bash
@@ -112,4 +114,33 @@ docker compose -f deploy/docker/docker-compose.yml --profile torch down
 
 This stops containers while retaining Redis and model volumes. E1 remains
 reproducible through scripts/experiment_e1.py; see its historical measured record.
-No GPU or real-vLLM verification is claimed.
+GPU details, image pin, cold-start evidence and pending checks are in
+[GPU verification](docs/GPU_VERIFICATION.md).
+
+
+## Streaming chat
+
+Use one chat profile at a time. The CPU fake profile produces **simulated** text
+and timings; it verifies the same HTTP/Redis path without model weights or CUDA.
+With the demonstration environment above:
+
+```bash
+docker compose -f deploy/docker/docker-compose.yml --profile fake-llm up --build -d --wait
+curl --fail --silent --show-error -N -H 'X-API-Key: phase1-verification-key' -H 'Content-Type: application/json' -d '{"model":"chat","messages":[{"role":"user","content":"Explain queues."}],"max_tokens":32,"stream":true}' http://localhost:8000/v1/chat/completions
+docker compose -f deploy/docker/docker-compose.yml --profile fake-llm down
+```
+
+Expect ordered data events, usage/meta and data: [DONE]. Set stream=false for a
+single chat.completion JSON response. The platform model name is chat; the worker
+uses its configured Qwen engine model. Tokens above 512 are rejected with 422.
+A brief no-worker 503 during registration is expected; /v1/models reports capacity.
+X-Request-ID identifies the cached full result. Clients must inspect SSE errors:
+a failure after headers still has HTTP 200, followed by an error event and DONE.
+Disconnect closes upstream generation; partially emitted streams are not resumed.
+
+For real GPU use the mutually exclusive gpu profile and exact commands in
+[GPU_VERIFICATION.md](docs/GPU_VERIFICATION.md). LLM metrics are exposed; full
+Prometheus/Grafana provisioning remains Phase 5. Learn the boundary in
+[lesson 04](docs/learning/04-llm-serving.md), [LLM concepts](docs/concepts/llm-serving.md),
+and [ADR-0007](docs/adr/0007-llm-adapter.md). E6a/E6b include measured fake and
+real GPU results, separately labeled, with raw per-request artifacts.

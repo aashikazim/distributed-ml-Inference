@@ -110,3 +110,24 @@ Fake server settings use INFER_FAKE_: TTFT_MS=40, TOKEN_MS=5, TOKENS=32,
 SERVED_MODEL=Qwen/Qwen2.5-0.5B-Instruct, ERROR_STATUS=0 (off),
 FAIL_AFTER unset, STALL_AFTER unset. Failure/stall controls are for tests only.
 Fake usage counts synthetic tokens; it is not real tokenizer or GPU performance.
+
+
+Compose-only variables: INFER_VLLM_UID (1000, non-root) selects the engine cache
+owner, and INFER_VLLM_CACHE (/tmp/infer-vllm-cache) selects the host bind mount.
+They are Compose interpolation controls, not pydantic application settings. The
+engine runs with group 0 as supported by the tested official image. Keep the
+cache writable by that non-root UID. The pinned engine image and flags are in
+[GPU verification](GPU_VERIFICATION.md). fake-llm and gpu profiles are mutually
+exclusive because they share port 8100 and the chat model queue.
+
+The gateway returns X-Request-ID for chat requests, including streaming. The final
+result is available through the authenticated result endpoint once cached. Result
+JSON includes stream_started to distinguish reclaim before/after partial
+publication, using the existing result key. Chat does not support async submission
+or stream resumption. Streaming late errors are SSE error frames rather than a
+new HTTP status. Bounded overflow uses INFER_CANCEL_TTL_S for its cancel marker.
+
+The engine has localhost:8100/metrics; the chat worker exposes its LLM counters,
+TTFT/TPOT histograms and active-sequence gauge on internal port 9001. Gateway
+/metrics exposes client-side TTFT. Full platform instrumentation and Prometheus
+scraping configuration arrive in Phase 5.

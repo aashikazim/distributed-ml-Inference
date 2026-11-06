@@ -1,8 +1,10 @@
 # ADR-0007: vLLM owns generation; our adapter owns the platform boundary
 
 ## Status
-Accepted in Phase 4. Verification status and image revision are recorded in
-GPU_VERIFICATION.md; fake-backend results never establish GPU behavior.
+Accepted in Phase 4. Real completion and abort were verified on NVIDIA GB10 with vLLM 0.33.0.
+Verification status and image revision are recorded in
+[GPU_VERIFICATION.md](../GPU_VERIFICATION.md); fake-backend results never establish
+GPU behavior.
 
 ## Context
 A classifier processes a fixed tensor batch once. Autoregressive generation has
@@ -54,7 +56,10 @@ Record a stream_started marker in the existing typed result JSON before its firs
 chunk publication. A reclaimed partial stream is terminated as interrupted/expired,
 not silently restarted into the same HTTP response. Before first publication,
 retry after a process crash remains possible. Cached finals can be returned,
-but partial stream replay/resumption is not supported. Request wire fields and
+but partial stream replay/resumption is not supported. A final text-hash check
+compares emitted content with the complete result, detecting missing/corrupt
+chunk content without retaining another full output in the gateway. It cannot
+retract already emitted text. Request wire fields and
 Redis key names remain unchanged.
 
 TTFT measures dequeue to first nonempty upstream content. Gateway TTFT includes

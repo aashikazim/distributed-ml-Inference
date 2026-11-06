@@ -1,6 +1,52 @@
 # Progress
 
-## Phase 3 — complete
+## Phase 4 — complete
+
+Built the separate httpx LLMAdapter and semaphore-bounded worker, streaming and
+nonstream chat endpoint, per-request SSE routing, coalesced Redis chunk relay,
+independent cancellation polling, deadline handling, bounded event/output/client
+buffers, partial-stream reclaim protection and final-text integrity checking.
+The fake OpenAI TCP server provides configurable simulated TTFT/token delays,
+error/stall injection, diagnostics and synthetic usage. No custom LLM batching
+was added: vLLM owns continuous batching, KV cache and GPU scheduling.
+
+The official immutable vllm/vllm-openai image runs as a non-root process in the
+gpu profile. The fake-llm profile needs no GPU and produces simulated text.
+Both profiles were built, started and exercised through their Compose gateway
+with ordered SSE completion and final usage; real vLLM also returned a normal
+nonstream completion. They are alternatives, sharing localhost port 8100.
+
+Validation on 2026-11-06: Ruff lint/format passed; mypy passed for 35 source files.
+All 46 default CPU tests passed, including cached real sentiment checks, real
+Redis integration and process chaos tests. One additional opt-in real-GPU test
+passed. CPU tests include chunk order/completeness, upstream failure/status and
+stall handling, token cap, concurrency/backlog, normal/stalled disconnect,
+slow-client overflow, missing chunk detection and partial-stream reclaim.
+Async context managers use AsyncGenerator annotations.
+
+**Real GPU verification completed:** NVIDIA GB10, driver 580.95.05, vLLM 0.33.0,
+CUDA 13.0, Qwen/Qwen2.5-0.5B-Instruct. Completion and client disconnect abort were
+actually run through HTTP and Redis. The warm verification saw an active engine
+sequence, then zero and cached CANCELLED in 41.22 ms using test polling of 20 ms
+(default catalog polling is 200 ms). Its 10-token completion had worker TTFT
+21.73 ms; the preserved first cold request had TTFT 17289 ms. Full environment,
+exact image/model revision and pending checks: [GPU_VERIFICATION.md](GPU_VERIFICATION.md).
+
+E6a real GB10 throughput increased from 139.15 to 1750.81 completion tokens/s
+as concurrency rose 1→16 for a 16-request, 32-token burst. Client TTFT p50 fell
+1791.50→112.05 ms as queueing fell; worker TTFT rose 18.01→33.30 ms.
+E6b's 20 ms window reduced real chunk writes 1040→256 (75.4%) and simulated
+writes 1056→125 (88.2%), but slightly reduced throughput and increased client TTFT.
+All four experiment artifacts contain three trials per setting and per-request
+records. These short warmed runs are not capacity claims or SLOs; see
+[EXPERIMENTS.md](EXPERIMENTS.md) for method and caveats.
+
+Delivered lesson 04, LLM concept guide, ADR-0007, diagram 5, GPU verification,
+updated architecture/config/glossary/reading plan and measured E6a/E6b evidence.
+LLM TTFT/TPOT/token/in-flight hooks and /metrics exist; full platform metrics,
+Prometheus scraping and Grafana provisioning remain Phase 5.
+
+## Phase 3 — historical completed phase
 
 Built worker TTL registry and busy/in-flight heartbeats, live worker counts,
 capacity-bounded XAUTOCLAIM with extended XPENDING delivery counts, persistent
@@ -33,7 +79,8 @@ The initial pool-exhaustion run and confirming probe are preserved separately.
 Delivered lesson 03 with command-by-command SIGKILL walkthrough, reliability
 concept guide, ADRs 0005–0006, diagram 4, updated architecture/config/glossary,
 reading plan, measured experiments and raw artifacts. Details and caveats are
-in EXPERIMENTS.md. GPU/vLLM verification remains pending.
+in EXPERIMENTS.md. GPU/vLLM verification was pending at the end of Phase 3;
+Phase 4 results above supersede that historical status.
 
 ## Phase 2 — historical completed phase
 
@@ -105,10 +152,6 @@ Docker required execution-environment escalation, which was granted.
 
 ## Deferred — according to the phase plan
 
-Phase 4: LLM adapter, SSE, fake OpenAI server, chunk coalescing, concurrency caps,
-cancellation of upstream generation, GPU verification instructions.
-**Real-vLLM verification pending.**
-
 Phase 5: metrics/exporter, provisioned dashboards, alerts and richer logging.
 Phases 6–8: autoscaling, Kubernetes/CI, load testing, runbook and measured SLOs.
 
@@ -119,7 +162,13 @@ A killed request therefore times out before default reclaim and is expired later
 Successful synchronous recovery requires a tuned deadline/idle/compute budget;
 E4 records its controlled, shorter idle thresholds rather than hiding this gap.
 
-Cancellation flags are best effort and cannot interrupt CPU executor code.
+Cancellation flags are best effort and cannot interrupt CPU executor code. LLM
+cancellation closes upstream HTTP independently of token arrivals. SSE failures
+after headers cannot change HTTP status; clients must read error frames. Partial
+streams cannot resume, and reclaimed partial generation fails explicitly. Inbox
+trimming/content loss is detected at final text comparison, after any partial
+text has already been shown. Tokens without final usage are not counted as if
+reported. TPOT from HTTP chunks is an estimate, not an engine kernel timing.
 SIGTERM drains accepted work within available grace; SIGKILL or Redis failure
 can leave pending entries. Stale heartbeats and worker shutdown race with admission.
 There is no exactly-once guarantee: duplicate compute, replies or DLQ evidence are
@@ -131,14 +180,15 @@ Redis AOF is not HA or an assurance of zero lost writes. Result and inbox storag
 expire; DLQ retention is approximate and contains original input data. There is
 no DLQ replay endpoint or automatic pruning of all old consumer metadata.
 HTTP body bytes are capped; slow-client/ingress concurrency policies remain a
-deployment concern. Model HTTP probes and Kubernetes termination grace arrive
-in Phase 7. No GPU inference result is claimed.
+deployment concern. Model readiness HTTP probes and Kubernetes termination grace
+arrive in Phase 7. GPU Kubernetes, other models/hardware and long-context
+saturation remain pending; local GB10 inference and abort are verified.
 
 Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 .gitignore modification was preserved and excluded from agent commits.
 
 ## Next
 
-Stop for owner review. Phase 4 will add the LLM worker adapter, SSE gateway,
-fake OpenAI-compatible server, bounded upstream concurrency, streaming
-cancellation and coalescing experiments. Do not begin it automatically.
+Stop for owner review. Phase 5 will add complete metrics/exporter instrumentation,
+Prometheus scraping (including vLLM), provisioned Grafana dashboards, alerts,
+logging context and the bottleneck diagnosis experiment. Do not begin it automatically.

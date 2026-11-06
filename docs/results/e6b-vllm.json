@@ -1,0 +1,2424 @@
+{
+  "metadata": {
+    "date_utc": "2026-11-06T17:35:11.939873+00:00",
+    "backend": "vllm",
+    "simulated": false,
+    "python": "3.12.3",
+    "platform": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+    "cpu_inventory": "Architecture:                         aarch64\nCPU op-mode(s):                       64-bit\nByte Order:                           Little Endian\nCPU(s):                               20\nOn-line CPU(s) list:                  0-19\nVendor ID:                            ARM\nModel name:                           Cortex-X925\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   99%\nCPU max MHz:                          4004.0000\nCPU min MHz:                          1378.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nModel name:                           Cortex-A725\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   104%\nCPU max MHz:                          2860.0000\nCPU min MHz:                          338.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nL1d cache:                            1.3 MiB (20 instances)\nL1i cache:                            1.3 MiB (20 instances)\nL2 cache:                             25 MiB (20 instances)\nL3 cache:                             24 MiB (2 instances)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-19\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; __user pointer sanitization\nVulnerability Spectre v2:             Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+    "commit": "476c46d5a08066863748fd89d0d5757a289b8006",
+    "tracked_changes": [
+      "docs/EXPERIMENTS.md"
+    ],
+    "prompt": "Count integers starting at 1, separated by commas, until you reach 1000. Do not stop early.",
+    "gpu_query_on_client_host": "NVIDIA GB10, 580.95.05"
+  },
+  "rows": [
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 0,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 1.7112354419659823,
+      "completion_tokens": 1024,
+      "tokens_s": 598.398078305087,
+      "client_ttft_p50_ms": 679.3012965354137,
+      "client_ttft_p95_ms": 1325.3892660140991,
+      "worker_ttft_p50_ms": 27.9991629649885,
+      "worker_tpot_p50_ms": 6.051944285106387,
+      "chunk_xadds": 1040,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 42.11029701400548,
+          "duration_ms": 425.8539959555492,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 1.287109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 401.57144994009286,
+            "ttft_ms": 19.104287959635258,
+            "tpot_ms": 6.0467743481110245,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 1298.9721929188818,
+          "duration_ms": 1682.3288010200486,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 1242.949951171875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 409.9698250647634,
+            "ttft_ms": 26.091485982760787,
+            "tpot_ms": 6.057114222101749,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out, we can use Python's `range` function to generate the sequence of numbers and then convert each number to its string representation using the `str()` function. Finally, we join all these strings with commas.\n\nHere is the"
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 56.28035997506231,
+          "duration_ms": 438.13201400917023,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 1.388916015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.86034595314413,
+            "ttft_ms": 27.234181994572282,
+            "tpot_ms": 5.999857968177706,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 473.18829596042633,
+          "duration_ms": 880.1140049472451,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 415.072021484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 436.92987703252584,
+            "ttft_ms": 29.950359952636063,
+            "tpot_ms": 6.436197635983782,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 1325.3892660140991,
+          "duration_ms": 1708.8498099474236,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 1274.096923828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 406.2493999954313,
+            "ttft_ms": 23.094585980288684,
+            "tpot_ms": 6.063009364648708,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 1318.3704030234367,
+          "duration_ms": 1705.134856980294,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 1261.965087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 414.58192002028227,
+            "ttft_ms": 28.4339499194175,
+            "tpot_ms": 6.091355968872825,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 449.5263780700043,
+          "duration_ms": 854.7744280658662,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 400.287109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 426.86893104109913,
+            "ttft_ms": 22.22366805654019,
+            "tpot_ms": 6.3899956820976165,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 473.55805907864124,
+          "duration_ms": 879.421008983627,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 416.465087890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 435.3371140314266,
+            "ttft_ms": 29.315522988326848,
+            "tpot_ms": 6.427520000937557,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 905.480575049296,
+          "duration_ms": 1286.175660090521,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 854.718994140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 403.88602390885353,
+            "ttft_ms": 23.897615959867835,
+            "tpot_ms": 6.017815159072006,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 911.1516999546438,
+          "duration_ms": 1296.188366948627,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 854.22802734375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 414.602511911653,
+            "ttft_ms": 29.888151912018657,
+            "tpot_ms": 6.007627905568197,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 472.89531910791993,
+          "duration_ms": 878.8925730623305,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 415.702880859375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 436.71926797833294,
+            "ttft_ms": 30.442283023148775,
+            "tpot_ms": 6.426649397268655,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 885.0445339921862,
+          "duration_ms": 1267.7333450410515,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 831.66796875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 409.8376010078937,
+            "ttft_ms": 27.5643760105595,
+            "tpot_ms": 6.042148016156658,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 910.3740309365094,
+          "duration_ms": 1297.4653029814363,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 855.05908203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 414.0480119967833,
+            "ttft_ms": 28.77326507586986,
+            "tpot_ms": 6.01856461873958,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 58.037651935592294,
+          "duration_ms": 437.55527399480343,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 2.615966796875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.3984079770744,
+            "ttft_ms": 31.39771393034607,
+            "tpot_ms": 5.920858334912549,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 57.266222895123065,
+          "duration_ms": 436.8957019178197,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 2.77099609375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 406.3202820252627,
+            "ttft_ms": 29.303571907803416,
+            "tpot_ms": 5.921405636601978,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 1322.9575529694557,
+          "duration_ms": 1705.7167328894138,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-8e0f0b8c",
+            "batch_size": 1,
+            "queue_ms": 1274.718994140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 405.60329996515065,
+            "ttft_ms": 22.671911981888115,
+            "tpot_ms": 6.0625364597413745,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        }
+      ],
+      "repeat": 1
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 0,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 1.692432570969686,
+      "completion_tokens": 1024,
+      "tokens_s": 605.0462615555166,
+      "client_ttft_p50_ms": 671.6254655621015,
+      "client_ttft_p95_ms": 1300.7224859902635,
+      "worker_ttft_p50_ms": 23.985320003703237,
+      "worker_tpot_p50_ms": 6.09057384084851,
+      "chunk_xadds": 1040,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 42.28055395651609,
+          "duration_ms": 428.6442849552259,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 0.97607421875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.13894802704453,
+            "ttft_ms": 20.865082973614335,
+            "tpot_ms": 6.121556030675059,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 477.8749810066074,
+          "duration_ms": 863.5830429848284,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 427.368896484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.645574003458,
+            "ttft_ms": 24.007200030609965,
+            "tpot_ms": 6.056712905225891,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 1300.7224859902635,
+          "duration_ms": 1689.7402969188988,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 1250.822998046875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 413.68122305721045,
+            "ttft_ms": 24.09180800896138,
+            "tpot_ms": 6.159119174948761,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 478.49706502165645,
+          "duration_ms": 863.5547689627856,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 428.6298828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 407.9950420418754,
+            "ttft_ms": 23.578157066367567,
+            "tpot_ms": 6.051359238058684,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 891.1134820664302,
+          "duration_ms": 1276.7428549705073,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 842.77099609375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.0601789755747,
+            "ttft_ms": 23.270074976608157,
+            "tpot_ms": 6.083684269383195,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 53.28712402842939,
+          "duration_ms": 439.29771601688117,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 1.193115234375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 413.60231197904795,
+            "ttft_ms": 28.200027998536825,
+            "tpot_ms": 6.097463412313825,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 469.0911619691178,
+          "duration_ms": 853.0118829803541,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 418.360107421875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.2241029506549,
+            "ttft_ms": 27.665880043059587,
+            "tpot_ms": 6.050255474826646,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 864.7538661025465,
+          "duration_ms": 1251.804752042517,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 817.27587890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 410.38636898156255,
+            "ttft_ms": 23.854096070863307,
+            "tpot_ms": 6.103625983029367,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 1299.0580120822415,
+          "duration_ms": 1688.878403045237,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 1254.87109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 409.9790860200301,
+            "ttft_ms": 19.874755991622806,
+            "tpot_ms": 6.166524427484662,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 882.5935050845146,
+          "duration_ms": 1269.8638800065964,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 831.337890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 414.73028692416847,
+            "ttft_ms": 27.44698291644454,
+            "tpot_ms": 6.101841857242915,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 62.29307106696069,
+          "duration_ms": 447.64362706337124,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 1.89892578125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 421.2985390331596,
+            "ttft_ms": 37.17474406585097,
+            "tpot_ms": 6.03566771476633,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 450.03623596858233,
+          "duration_ms": 836.226252024062,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 405.31201171875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.2057469058782,
+            "ttft_ms": 23.05052208248526,
+            "tpot_ms": 6.050710331663371,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 60.54966803640127,
+          "duration_ms": 445.6103179836646,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 4.592041015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 418.0341979954392,
+            "ttft_ms": 34.01867498178035,
+            "tpot_ms": 6.031284683443133,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 888.8023630715907,
+          "duration_ms": 1272.7865400956944,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 842.135009765625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.45590899698436,
+            "ttft_ms": 23.963439976796508,
+            "tpot_ms": 6.075108730574212,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 1277.0286480663344,
+          "duration_ms": 1669.1614560550079,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 1230.281982421875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 415.7709489809349,
+            "ttft_ms": 24.777380982413888,
+            "tpot_ms": 6.177956635679399,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 1297.2855990519747,
+          "duration_ms": 1687.053943052888,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-d07d756c",
+            "batch_size": 1,
+            "queue_ms": 1255.0869140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 409.9521259777248,
+            "ttft_ms": 19.891124917194247,
+            "tpot_ms": 6.170726619616506,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        }
+      ],
+      "repeat": 2
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 0,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 1.6707869450328872,
+      "completion_tokens": 1024,
+      "tokens_s": 612.8848462960931,
+      "client_ttft_p50_ms": 656.76950692432,
+      "client_ttft_p95_ms": 1282.4523899471387,
+      "worker_ttft_p50_ms": 23.365699977148324,
+      "worker_tpot_p50_ms": 6.076123292875728,
+      "chunk_xadds": 1040,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 35.09751392994076,
+          "duration_ms": 421.0797200212255,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 0.93310546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 406.6097670001909,
+            "ttft_ms": 21.01847599260509,
+            "tpot_ms": 6.082485760709951,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 461.5557019133121,
+          "duration_ms": 839.2693239729851,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 419.986083984375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 400.39290906861424,
+            "ttft_ms": 21.798496949486434,
+            "tpot_ms": 5.992136461408957,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 456.23321807943285,
+          "duration_ms": 832.2122850222513,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 413.47607421875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 400.2514519961551,
+            "ttft_ms": 20.689305965788662,
+            "tpot_ms": 6.012359063052351,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 460.20994801074266,
+          "duration_ms": 838.2245320826769,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 419.839111328125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 399.9541860539466,
+            "ttft_ms": 21.69052802491933,
+            "tpot_ms": 5.989399683173923,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 447.41189503110945,
+          "duration_ms": 828.2298580743372,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 404.7529296875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 405.11990094091743,
+            "ttft_ms": 24.159313063137233,
+            "tpot_ms": 6.0197886981306565,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 1266.5254190796986,
+          "duration_ms": 1651.991588063538,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 1225.5849609375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 406.8604230415076,
+            "ttft_ms": 22.567413980141282,
+            "tpot_ms": 6.069760825041504,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 1276.2079800013453,
+          "duration_ms": 1663.7617150554433,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 1232.376953125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.00558708421886,
+            "ttft_ms": 24.68581299763173,
+            "tpot_ms": 6.100542237243009,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 1282.4523899471387,
+          "duration_ms": 1668.7578279525042,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 1238.7900390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 409.66861799824983,
+            "ttft_ms": 24.10772896837443,
+            "tpot_ms": 6.092882000042924,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 51.576552097685635,
+          "duration_ms": 436.2917890539393,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 4.843017578125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.66704799979925,
+            "ttft_ms": 27.9546509264037,
+            "tpot_ms": 6.063934524602715,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 41.8604708975181,
+          "duration_ms": 430.095043964684,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 1.653076171875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.3523910054937,
+            "ttft_ms": 23.16913101822138,
+            "tpot_ms": 6.142163364630607,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 51.774136954918504,
+          "duration_ms": 434.9470119923353,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 1.75,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 415.0896000210196,
+            "ttft_ms": 31.528690946288407,
+            "tpot_ms": 6.063303396490122,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 863.5031649610028,
+          "duration_ms": 1252.8045759536326,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 822.679931640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 410.81053006928414,
+            "ttft_ms": 22.23611599765718,
+            "tpot_ms": 6.103142142473232,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 863.131737918593,
+          "duration_ms": 1252.4805730208755,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 821.6689453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.6730160312727,
+            "ttft_ms": 22.79226400423795,
+            "tpot_ms": 6.106232697631986,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 856.3880779547617,
+          "duration_ms": 1244.9147959705442,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 814.81103515625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.5868080407381,
+            "ttft_ms": 24.399506975896657,
+            "tpot_ms": 6.086069015076473,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 851.983311935328,
+          "duration_ms": 1238.2778389146551,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 811.422119140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.90466200653464,
+            "ttft_ms": 23.56226893607527,
+            "tpot_ms": 6.057531428745105,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 1281.4384310040623,
+          "duration_ms": 1667.0588559936732,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-48cf3357",
+            "batch_size": 1,
+            "queue_ms": 1239.2548828125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.9946619933471,
+            "ttft_ms": 23.721069912426174,
+            "tpot_ms": 6.092622951929649,
+            "completion_tokens": 64,
+            "chunk_writes": 65
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        }
+      ],
+      "repeat": 3
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 20,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 1.7132182760396972,
+      "completion_tokens": 1024,
+      "tokens_s": 597.7055080028067,
+      "client_ttft_p50_ms": 693.2356905308552,
+      "client_ttft_p95_ms": 1341.5515930391848,
+      "worker_ttft_p50_ms": 25.88852500775829,
+      "worker_tpot_p50_ms": 6.108310523568578,
+      "chunk_xadds": 259,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 61.55834603123367,
+          "duration_ms": 433.76858602277935,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 0.592041015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 412.3614350100979,
+            "ttft_ms": 19.570242962799966,
+            "tpot_ms": 6.186014287070268,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 76.54270099010319,
+          "duration_ms": 447.1852509304881,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 1.1640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 418.89536601956934,
+            "ttft_ms": 25.173206930048764,
+            "tpot_ms": 6.173752111545395,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 886.7978759808466,
+          "duration_ms": 1254.8018619418144,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 818.39306640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 410.280796000734,
+            "ttft_ms": 22.92216895148158,
+            "tpot_ms": 6.09980342865345,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 1308.8048780336976,
+          "duration_ms": 1680.283959954977,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 1232.3310546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 421.09115701168776,
+            "ttft_ms": 29.785607010126114,
+            "tpot_ms": 6.139314031257989,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 77.57747592404485,
+          "duration_ms": 444.8578750016168,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 3.2900390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 415.6039039371535,
+            "ttft_ms": 21.946434979327023,
+            "tpot_ms": 6.18028445982389,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 1341.5515930391848,
+          "duration_ms": 1708.4629320306703,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 1266.905029296875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 415.4816149966791,
+            "ttft_ms": 26.77969797514379,
+            "tpot_ms": 6.116938015948685,
+            "completion_tokens": 64,
+            "chunk_writes": 17
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 499.2239819839597,
+          "duration_ms": 867.3132020048797,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 424.8359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 416.0167230293155,
+            "ttft_ms": 27.750169043429196,
+            "tpot_ms": 6.072710920494819,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 499.67350508086383,
+          "duration_ms": 867.6141640171409,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 425.445068359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 415.119837038219,
+            "ttft_ms": 26.46779199130833,
+            "tpot_ms": 6.072955762243105,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 476.0336030740291,
+          "duration_ms": 838.2600160548463,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 411.1689453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 401.6502759186551,
+            "ttft_ms": 19.182174932211637,
+            "tpot_ms": 6.025776015742431,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 920.1491059502587,
+          "duration_ms": 1287.3831680044532,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 849.4560546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.3704999908805,
+            "ttft_ms": 24.89296509884298,
+            "tpot_ms": 6.067047904555996,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 921.1148240137845,
+          "duration_ms": 1286.9689569342881,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 848.7060546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 412.6599970040843,
+            "ttft_ms": 25.675900047644973,
+            "tpot_ms": 6.06578261968458,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 498.0909660225734,
+          "duration_ms": 864.9985300144181,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 424.343994140625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 416.1236999789253,
+            "ttft_ms": 28.281116974540055,
+            "tpot_ms": 6.071148000450598,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 920.4721320420504,
+          "duration_ms": 1285.3573149768636,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 848.01806640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 413.10547094326466,
+            "ttft_ms": 26.26548707485199,
+            "tpot_ms": 6.061414587459276,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 76.35209197178483,
+          "duration_ms": 443.93975706771016,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 2.10693359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 417.9282250115648,
+            "ttft_ms": 23.949087946675718,
+            "tpot_ms": 6.1813933009813935,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 1339.408169966191,
+          "duration_ms": 1707.76273496449,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 1267.5791015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 414.51880894601345,
+            "ttft_ms": 26.101149967871606,
+            "tpot_ms": 6.120290158183447,
+            "completion_tokens": 64,
+            "chunk_writes": 17
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 1337.8887521103024,
+          "duration_ms": 1707.3707811068743,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-3a30faa2",
+            "batch_size": 1,
+            "queue_ms": 1266.256103515625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 416.39926889911294,
+            "ttft_ms": 27.505095000378788,
+            "tpot_ms": 6.116817618483707,
+            "completion_tokens": 64,
+            "chunk_writes": 17
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        }
+      ],
+      "repeat": 1
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 20,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 1.6846878370270133,
+      "completion_tokens": 1024,
+      "tokens_s": 607.8277396523879,
+      "client_ttft_p50_ms": 678.1710584764369,
+      "client_ttft_p95_ms": 1317.9722611093894,
+      "worker_ttft_p50_ms": 24.021927441935986,
+      "worker_tpot_p50_ms": 6.073976555536132,
+      "chunk_xadds": 256,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 61.56404200010002,
+          "duration_ms": 422.8537270100787,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 1.14306640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 402.0753480726853,
+            "ttft_ms": 18.94828595686704,
+            "tpot_ms": 6.047151873760399,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 79.9172519473359,
+          "duration_ms": 436.5540100261569,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 3.84912109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 403.8077599834651,
+            "ttft_ms": 22.144722985103726,
+            "tpot_ms": 6.035338222448315,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 481.4108529826626,
+          "duration_ms": 848.785171052441,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 409.347900390625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.846065052785,
+            "ttft_ms": 20.454983925446868,
+            "tpot_ms": 6.089070364685049,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 78.44049006234854,
+          "duration_ms": 436.5411300677806,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 2.330078125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 406.8278919439763,
+            "ttft_ms": 25.06735105998814,
+            "tpot_ms": 6.034601950973627,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 79.22364689875394,
+          "duration_ms": 436.22819997835904,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 3.262939453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 405.7990540750325,
+            "ttft_ms": 24.104687967337668,
+            "tpot_ms": 6.036013015545905,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 900.4854819504544,
+          "duration_ms": 1266.0016739973798,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 823.3359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 412.30087203439325,
+            "ttft_ms": 26.119117974303663,
+            "tpot_ms": 6.095945332494993,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 480.4205429973081,
+          "duration_ms": 848.8816189346835,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 409.7080078125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.2669409690425,
+            "ttft_ms": 19.6650909492746,
+            "tpot_ms": 6.090281810241914,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 1317.9722611093894,
+          "duration_ms": 1680.8113791048527,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 1238.906005859375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 410.2332099573687,
+            "ttft_ms": 26.418128050863743,
+            "tpot_ms": 6.065945126234539,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 468.83118501864374,
+          "duration_ms": 832.4208850972354,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 394.85107421875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.47971092443913,
+            "ttft_ms": 23.939166916534305,
+            "tpot_ms": 6.082007984837724,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 899.8209820128977,
+          "duration_ms": 1264.6931710187346,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 824.84912109375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 410.4723469354212,
+            "ttft_ms": 24.71163694281131,
+            "tpot_ms": 6.100630572450067,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 1317.670339019969,
+          "duration_ms": 1679.8043170711026,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 1237.344970703125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.20723297353834,
+            "ttft_ms": 27.88791398052126,
+            "tpot_ms": 6.0608050331384655,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 478.34655991755426,
+          "duration_ms": 846.885749953799,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 409.510986328125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.8922729715705,
+            "ttft_ms": 20.32189501915127,
+            "tpot_ms": 6.090009047295011,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 874.9312639702111,
+          "duration_ms": 1237.7778550144285,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 808.763916015625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 402.5313670281321,
+            "ttft_ms": 19.019006984308362,
+            "tpot_ms": 6.05384447604477,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 1316.7460119584575,
+          "duration_ms": 1679.0595279308036,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 1238.070068359375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.4317779894918,
+            "ttft_ms": 27.27832505479455,
+            "tpot_ms": 6.064730395178591,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 897.579638985917,
+          "duration_ms": 1263.7061389395967,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 824.174072265625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 411.7286760592833,
+            "ttft_ms": 25.35330504179001,
+            "tpot_ms": 6.100725792791872,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 1280.6204609805718,
+          "duration_ms": 1648.2106029288843,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-009d0f35",
+            "batch_size": 1,
+            "queue_ms": 1212.2060546875,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 408.374284976162,
+            "ttft_ms": 21.008266950957477,
+            "tpot_ms": 6.1180102546507165,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        }
+      ],
+      "repeat": 2
+    },
+    {
+      "max_concurrent": 4,
+      "coalesce_ms": 20,
+      "requests": 16,
+      "max_tokens": 64,
+      "elapsed_s": 1.723116067936644,
+      "completion_tokens": 1024,
+      "tokens_s": 594.2722136101924,
+      "client_ttft_p50_ms": 694.8258939664811,
+      "client_ttft_p95_ms": 1348.182007088326,
+      "worker_ttft_p50_ms": 26.11486951354891,
+      "worker_tpot_p50_ms": 6.203443666602234,
+      "chunk_xadds": 256,
+      "records": [
+        {
+          "index": 0,
+          "client_ttft_ms": 67.98769999295473,
+          "duration_ms": 427.8582219267264,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1.823974609375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 401.8379049375653,
+            "ttft_ms": 19.301903899759054,
+            "tpot_ms": 6.048816620253972,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 1,
+          "client_ttft_ms": 1338.6024869978428,
+          "duration_ms": 1711.5972390165552,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1260.279052734375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 418.8069129595533,
+            "ttft_ms": 25.008517899550498,
+            "tpot_ms": 6.206385144549939,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 2,
+          "client_ttft_ms": 469.9840060202405,
+          "duration_ms": 845.2546140179038,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 398.303955078125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 417.1474459581077,
+            "ttft_ms": 20.546615938656032,
+            "tpot_ms": 6.230808175464589,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 3,
+          "client_ttft_ms": 914.5910429069772,
+          "duration_ms": 1287.4095059232786,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 835.4189453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 421.4116660878062,
+            "ttft_ms": 27.8352900641039,
+            "tpot_ms": 6.203025618257622,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 4,
+          "client_ttft_ms": 88.71596597600728,
+          "duration_ms": 444.00828203652054,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1.804931640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 412.3580389423296,
+            "ttft_ms": 30.04141605924815,
+            "tpot_ms": 6.046170507380295,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 5,
+          "client_ttft_ms": 84.89792502950877,
+          "duration_ms": 444.2333879414946,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 5.08203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 410.0987119600177,
+            "ttft_ms": 26.18427004199475,
+            "tpot_ms": 6.042210618034005,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 6,
+          "client_ttft_ms": 494.8662359965965,
+          "duration_ms": 870.8979530492797,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 417.259033203125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 424.3088859366253,
+            "ttft_ms": 26.807634043507278,
+            "tpot_ms": 6.243460188945016,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 7,
+          "client_ttft_ms": 83.49978702608496,
+          "duration_ms": 442.8239220287651,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1.02587890625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 413.11433305963874,
+            "ttft_ms": 30.972286011092365,
+            "tpot_ms": 6.036180856874183,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 8,
+          "client_ttft_ms": 494.2546320380643,
+          "duration_ms": 871.9840879784897,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 418.012939453125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 424.04717195313424,
+            "ttft_ms": 26.04546898510307,
+            "tpot_ms": 6.243742348271466,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 9,
+          "client_ttft_ms": 486.8866790784523,
+          "duration_ms": 860.1651299977675,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 416.958984375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 415.5746039468795,
+            "ttft_ms": 20.839722943492234,
+            "tpot_ms": 6.232032556057213,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 10,
+          "client_ttft_ms": 894.7855519363657,
+          "duration_ms": 1264.821004937403,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 820.318115234375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 416.4487689267844,
+            "ttft_ms": 25.347401038743556,
+            "tpot_ms": 6.170476840380283,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 11,
+          "client_ttft_ms": 1348.182007088326,
+          "duration_ms": 1718.2532990118489,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1273.969970703125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 416.2677120184526,
+            "ttft_ms": 23.405963904224336,
+            "tpot_ms": 6.204214715768421,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 12,
+          "client_ttft_ms": 1347.3098250105977,
+          "duration_ms": 1717.5066700438038,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1273.572021484375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 416.0707660485059,
+            "ttft_ms": 23.827294004149735,
+            "tpot_ms": 6.2026258905433,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 13,
+          "client_ttft_ms": 921.213167021051,
+          "duration_ms": 1296.2132289540023,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 846.633056640625,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 422.8252919856459,
+            "ttft_ms": 27.592055033892393,
+            "tpot_ms": 6.20959609532581,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 14,
+          "client_ttft_ms": 1311.807380989194,
+          "duration_ms": 1682.3781019775197,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 1239.7880859375,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 418.4848309960216,
+            "ttft_ms": 26.41763200517744,
+            "tpot_ms": 6.203822333306547,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        },
+        {
+          "index": 15,
+          "client_ttft_ms": 920.4462990164757,
+          "duration_ms": 1294.5137140341103,
+          "usage": {
+            "prompt_tokens": 54,
+            "completion_tokens": 64,
+            "total_tokens": 118
+          },
+          "meta": {
+            "worker_id": "spark-6024-de767938",
+            "batch_size": 1,
+            "queue_ms": 847.014892578125,
+            "batch_wait_ms": 0.0,
+            "inference_ms": 423.2218220131472,
+            "ttft_ms": 28.27866794541478,
+            "tpot_ms": 6.20306499989792,
+            "completion_tokens": 64,
+            "chunk_writes": 16
+          },
+          "finish_reason": "length",
+          "events": 66,
+          "text": "To count the integers starting from 1 up to 1000 and print them out in comma-separated format, we can use Python's `range` function along with a loop. Here is how you can do it:\n\n```python\ncount = 1\nwhile count <= 1000:\n   "
+        }
+      ],
+      "repeat": 3
+    }
+  ]
+}

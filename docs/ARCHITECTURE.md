@@ -1,10 +1,11 @@
-# Architecture — Phase 3
+# Architecture — Phase 4
 
 The current platform serves fake-classifier (**simulated** compute/output) and
 real DistilBERT SST-2 sentiment inference. Both use bounded dynamic batching.
-Phase 3 adds registry, reclaim, DLQ, admission, rate limits, cancellation and
-async result polling. LLM serving, dashboards, autoscaling and Kubernetes
-deployment remain later phases.
+Registry, reclaim, DLQ, admission, rate limits, cancellation and async result
+polling remain shared. Phase 4 adds streaming chat via a separate vLLM adapter,
+verified against both a TCP fake server and real GPU vLLM. Dashboards, autoscaling
+and Kubernetes deployment remain later phases.
 
 ## Diagram 1: containers
 
@@ -15,14 +16,18 @@ flowchart LR
     W[Worker replicas per model] -->|XREADGROUP and XAUTOCLAIM| R
     W -->|Reply, result, heartbeat| R
     R -->|One inbox reader per gateway| G
+    L[LLM worker with semaphore] -->|Pull requests, publish chunks| R
+    L -->|Streaming HTTP| V[vLLM or simulated OpenAI server]
 ```
 
 Gateways never select a worker. Each has a unique response inbox and one reader.
-Each worker has a unique consumer name and one model executor thread. Fresh reads
+Each worker has a unique consumer name. Classifier workers use one model executor
+thread; LLM workers use bounded concurrent HTTP streams. Fresh reads
 and reclaim share a single producer loop and capacity budget. Model load/warmup
 finish before the worker registers as ready. Compose supports three or more
 fake replicas with the scale option; the torch profile adds a CPU sentiment worker.
-Redis has no published host port; HTTP binds localhost.
+Redis has no published host port; HTTP binds localhost. The fake-llm and gpu
+profiles add alternative chat servers and workers. Neither uses DynamicBatcher.
 
 ## Diagram 2: accepted synchronous request
 
@@ -61,8 +66,8 @@ identity and returns 202 while pending, 200 on success, an error on failure, or
 | Key | Type | Current purpose |
 |---|---|---|
 | req:{model} | Stream + group workers | Retained undelivered and pending work, deleted on completion |
-| inbox:{gateway_id} | Stream | Temporary final/error replies, approximate MAXLEN and refreshed expiry |
-| result:{request_id} | String JSON | QUEUED/RUNNING or terminal outcome, owner hash, deadline, TTL 300 s |
+| inbox:{gateway_id} | Stream | Temporary chunk/final/error replies, approximate MAXLEN and refreshed expiry |
+| result:{request_id} | String JSON | QUEUED/RUNNING or terminal outcome, owner hash, deadline, stream_started, TTL 300 s |
 | cancel:{request_id} | String | Best-effort cancellation flag, default TTL 120 s |
 | worker:{model}:{worker_id} | String JSON | Registry with default TTL 10 s, refreshed every 3 s |
 | dlq:{model} | Stream | Original poison envelope, source ID, last error, delivery count; MAXLEN ~10000 |
@@ -196,7 +201,7 @@ low-latency inference when interpreting E5.
 
 SIGTERM stops fresh reads/reclaims and drains accepted compute and response tasks.
 Heartbeat accepting becomes false on refresh, then the key is deleted before
-exit. Compose gives 15 seconds. There is a short signal/heartbeat race and no
+exit. Compose gives classifier workers 15 seconds and chat workers 75 seconds. There is a short signal/heartbeat race and no
 promise of new work completing on a stopping replica. SIGKILL runs no cleanup.
 Kubernetes probes and terminationGracePeriodSeconds are Phase 7 work.
 
@@ -208,6 +213,80 @@ Measure cross-process age with Redis time and local durations with monotonic tim
 Keep inputs and API keys out of logs; protect DLQ contents as input-bearing data.
 Retry with limits and deadlines; do not claim exactly-once execution.
 
-There is no Redis HA, streaming LLM backend, worker HTTP probe, autoscaler, result
+There is no Redis HA, worker readiness HTTP probe, autoscaler, result
 history beyond TTL, or automatic DLQ replay. API body bytes are bounded, while
 slow-client timeouts belong at the server/ingress. See [progress](PROGRESS.md).
+
+
+## Diagram 5: streaming and cancellation
+
+```mermaid
+sequenceDiagram
+    participant C as SSE client
+    participant G as Gateway
+    participant R as Redis
+    participant W as LLM worker
+    participant V as vLLM engine
+    C->>G: POST /v1/chat/completions
+    G->>R: Authenticated admission and XADD req:chat
+    W->>R: XREADGROUP COUNT free slots
+    W->>V: httpx streaming completion
+    V-->>W: Role, content, finish, usage, DONE
+    W->>R: Mark stream_started before first publication
+    loop Bounded coalescing window
+        W->>R: XADD inbox chunk bundle
+        R-->>G: XREAD and route by request_id
+        G-->>C: Original ordered SSE events
+    end
+    alt Client stays connected
+        W->>R: XADD final, SET result, XACK and XDEL
+        G-->>C: Usage and meta, DONE
+    else Client disconnects
+        G->>R: SET cancel with TTL
+        W->>R: Independent periodic EXISTS cancel
+        W->>V: Close HTTP stream
+        W->>R: Cache CANCELLED, publish error, ACK and delete
+    end
+```
+
+The diagram shows logical stages; upstream parsing and publication overlap.
+Always-streamed upstream requests allow TTFT observation even for a nonstream
+client. Those clients receive an OpenAI-shaped chat.completion plus timing meta.
+Streaming clients receive original chunk events, one usage/meta event, and DONE.
+The API supports text system/user/assistant messages, max_tokens, temperature and
+stream, not the full OpenAI API. The allowlisted platform name is chat; the
+adapter substitutes the configured engine model. Token-cap violations return 422.
+
+An asyncio.Semaphore and capacity-limited fresh/reclaim reads bound active work.
+The catalog cap is 32, matching vLLM max-num-seqs; HTTP event/output buffers and
+per-request gateway queues are bounded separately. A full client queue cancels
+only that request. The gateway compares emitted text's hash with the final output
+to detect missing/corrupt content after inbox trimming. Before headers, upstream
+failures map to HTTP status; afterward they are SSE error objects followed by DONE.
+
+A stream_started marker in the existing cached result prevents restarting an
+unfinished partially published answer on reclaim. Reclaim fails it as
+STREAM_INTERRUPTED (or EXPIRED), while a cached final can be replayed. There is no
+resumable stream or exactly-once generation guarantee. The chat reclaim idle is
+90 seconds, exceeding its 60-second request deadline, so defaults prioritize
+avoiding live-work theft over synchronous crash recovery. SIGTERM drains HTTP
+work within the 75-second Compose grace; disconnect/deadline closes upstream.
+
+LLM worker TTFT is dequeue to first nonempty content. TPOT is an estimate from
+content arrival span and final completion-token usage; network chunks may contain
+multiple tokens. Gateway TTFT includes waiting and coalescing. Batch size is one
+at the adapter boundary and batch_wait_ms is zero; vLLM's internal active batch
+is a different concept. Worker inference_ms covers the whole upstream operation.
+Metrics are exposed at gateway /metrics and chat worker :9001/metrics. Engine
+/metrics is available on localhost:8100; Prometheus scraping arrives in Phase 5.
+
+| Streaming failure | Detection | Recovery | Client effect |
+|---|---|---|---|
+| Upstream unavailable before data | HTTP status/timeout | Release slot; publish terminal error | HTTP 503/504 as appropriate |
+| Broken upstream after content | Missing finish/DONE or invalid event | Close upstream, cache failure | SSE error then DONE |
+| Worker killed after chunk publication | Reclaim reads stream_started | End partial request, no regeneration | Interrupted error if still connected/deadline permits |
+| Missing inbox text | Emitted/final text hash mismatch | Cached full result remains available | STREAM_INTERRUPTED, no silent truncated success |
+| Slow client | Bounded waiter overflow | Cancel upstream without blocking other waiters | SLOW_CONSUMER if connection remains readable |
+
+See [ADR-0007](adr/0007-llm-adapter.md), [GPU evidence](GPU_VERIFICATION.md) and
+[LLM concepts](concepts/llm-serving.md) for the boundary and measurement limits.

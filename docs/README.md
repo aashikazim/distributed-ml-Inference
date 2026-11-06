@@ -1,7 +1,8 @@
 # Learn the inference platform
 
-Phase 3 has a real distributed request path, dynamic batching, real CPU-verified
-DistilBERT, and bounded reliability controls. The fake model remains **simulated**. Start with
+Phase 4 has a real distributed request path, dynamic batching, CPU-verified
+DistilBERT, bounded reliability controls, and streaming chat verified on real GB10
+vLLM and a fake TCP server. Fake inference remains **simulated**. Start with
 [the repository quickstart](../README.md), then follow this order:
 
 1. [Big picture](learning/00-big-picture.md): responsibilities and boundaries.
@@ -19,7 +20,9 @@ and E2/E3 in the experiment record.
 Continue with [lesson 03](learning/03-reliability.md),
 [reliability/backpressure](concepts/reliability-and-backpressure.md),
 [ADR-0005](adr/0005-delivery-semantics.md), [ADR-0006](adr/0006-admission-control.md),
-and E4/E5 before studying the later roadmap.
+and E4/E5. Then read [lesson 04](learning/04-llm-serving.md),
+[LLM concepts](concepts/llm-serving.md), [ADR-0007](adr/0007-llm-adapter.md),
+[GPU verification](GPU_VERIFICATION.md), and E6a/E6b.
 
 Use the [study plan](learning/README.md) for the full roadmap. Keep the
 [glossary](GLOSSARY.md) nearby. Read [configuration](CONFIG.md) before changing
@@ -30,6 +33,6 @@ then explaining the observation aloud. Copying commands alone does not establish
 understanding: predict XPENDING and XLEN first, then compare the actual result.
 
 Future document slots are explicit: BENCHMARKS.md and RUNBOOK.md arrive in Phase 8,
-GPU_VERIFICATION.md in Phase 4, dashboards.md in Phase 5. Later lessons, concept
+dashboards.md in Phase 5. Later lessons, concept
 documents and ADRs are written when their implementation exists, not prefilled
 with unverified claims.
