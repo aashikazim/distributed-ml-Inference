@@ -7,6 +7,17 @@ dependencies = [
   "fastapi", "uvicorn[standard]", "pydantic>=2", "pydantic-settings",
   "redis[hiredis]>=5", "structlog", "pyyaml", "prometheus-client",
 ]
+[project.optional-dependencies]
+ml = ["torch>=2.6,<3", "transformers>=4.48,<5"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
 [dependency-groups]
 dev = ["pytest", "pytest-asyncio", "testcontainers[redis]", "httpx", "ruff", "mypy", "types-PyYAML"]
 [build-system]
@@ -31,7 +42,7 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 addopts = "-m 'not gpu'"
-markers = ["integration: real Redis", "chaos: process failure", "slow: lengthy test", "gpu: requires GPU"]
+markers = ["integration: real Redis", "chaos: process failure", "slow: lengthy test", "model: real model, requires cached weights", "gpu: requires GPU"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/integration/*" = ["ASYNC109", "ASYNC110"]

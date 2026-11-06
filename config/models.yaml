@@ -1,7 +1,18 @@
 models:
+  sentiment:
+    backend: torch
+    task: classification
+    hf_id: distilbert-base-uncased-finetuned-sst-2-english
+    max_batch_size: 16
+    max_wait_ms: 10
+    max_input_chars: 4000
+    request_timeout_ms: 5000
+    max_queue_depth: 200
   fake-classifier:
     backend: fake
     fake: {base_ms: 20, per_item_ms: 2, jitter_ms: 3}
+    max_batch_size: 32
+    max_wait_ms: 10
     max_input_chars: 4000
     request_timeout_ms: 5000
     max_queue_depth: 500

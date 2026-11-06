@@ -12,7 +12,8 @@ from infer_platform.common.schemas import InboxMessage, RequestMessage
 from infer_platform.common.settings import FakeConfig, ModelConfig, Settings
 from infer_platform.gateway.app import create_app
 from infer_platform.gateway.response_router import ResponseRouter
-from infer_platform.worker.main import Worker
+from infer_platform.worker.batcher import BatchItem, BatchResult
+from infer_platform.worker.main import Delivery, Worker
 
 pytestmark = pytest.mark.integration
 
@@ -145,7 +146,6 @@ async def test_expired_work_skips_runner(settings):
 
 
 async def test_reply_failure_leaves_request_pending(settings):
-    from concurrent.futures import ThreadPoolExecutor
     from unittest.mock import AsyncMock, patch
 
     from redis.exceptions import ConnectionError
@@ -171,10 +171,10 @@ async def test_reply_failure_leaves_request_pending(settings):
     )
     assert delivered
     try:
-        with ThreadPoolExecutor(max_workers=1) as executor:
-            with patch.object(redis, "xadd", AsyncMock(side_effect=ConnectionError("offline"))):
-                with pytest.raises(ConnectionError):
-                    await worker.process(entry_id, message.fields(), executor)
+        item = BatchItem(message.request_id, message.payload, 0, Delivery(entry_id, message, 0))
+        with patch.object(redis, "xadd", AsyncMock(side_effect=ConnectionError("offline"))):
+            with pytest.raises(ConnectionError):
+                await worker.finish(item, BatchResult(output={"echo": "x"}, batch_size=1))
         assert (await redis.xpending(request_stream(model), GROUP))["pending"] == 1
         assert await redis.xlen(request_stream(model)) == 1
     finally:

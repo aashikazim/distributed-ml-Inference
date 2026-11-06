@@ -38,5 +38,28 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+  worker-sentiment:
+    profiles: ["torch"]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+      args:
+        INSTALL_ML: "1"
+    command: ["python", "-m", "infer_platform.worker.main"]
+    environment:
+      INFER_REDIS_URL: redis://redis:6379/0
+      INFER_API_KEYS: ${INFER_API_KEYS:?Set INFER_API_KEYS as a JSON array in your environment}
+      INFER_WORKER_MODEL: sentiment
+      INFER_DEVICE: cpu
+      INFER_TORCH_THREADS: "1"
+      INFER_MODEL_CACHE: /models
+      HF_HUB_ETAG_TIMEOUT: "10"
+      HF_HUB_DOWNLOAD_TIMEOUT: "30"
+    volumes:
+      - model-cache:/models
+    depends_on:
+      redis:
+        condition: service_healthy
 volumes:
+  model-cache:
   redis-data:

@@ -11,6 +11,12 @@ class FakeRunner:
     def __init__(self, config: FakeConfig) -> None:
         self.config = config
 
+    def load(self) -> None:
+        pass
+
+    def warmup(self) -> None:
+        pass
+
     def predict_batch(self, inputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         delay = self.config.base_ms + self.config.per_item_ms * len(inputs)
         delay += random.uniform(0, self.config.jitter_ms)

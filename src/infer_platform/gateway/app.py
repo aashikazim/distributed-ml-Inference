@@ -102,7 +102,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return error(422, "INVALID_INPUT", "Input exceeds model character limit")
         if request.query_params:
             return error(
-                400, "UNSUPPORTED_MODE", "Only synchronous inference is available in Phase 1"
+                400, "UNSUPPORTED_MODE", "Only synchronous inference is currently available"
             )
         router = state.router
         if len(router.waiters) >= state.config.max_gateway_inflight:
@@ -124,7 +124,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if response.type == "error":
                 failure = json.loads(response.data)
                 return error(
-                    504 if failure["code"] == "EXPIRED" else 500,
+                    {"EXPIRED": 504, "CANCELLED": 400, "INVALID_INPUT": 422}.get(
+                        failure["code"], 500
+                    ),
                     failure["code"],
                     failure["message"],
                     request_id,

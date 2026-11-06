@@ -23,3 +23,30 @@ INFER_SMOKE_API_KEY is consumed only by scripts/smoke.sh.
 Redis has no published Compose port. Production needs authentication
 (requirepass or ACLs), TLS, durable storage, and a separate availability design.
 Do not use the example API key for an exposed deployment.
+
+## Phase 2 settings
+
+| Variable | Default | Purpose |
+|---|---|---|
+| INFER_DEVICE | auto | cuda if available, otherwise cpu; cpu/cuda force selection |
+| INFER_TORCH_THREADS | 1 | PyTorch intra-op CPU threads per worker |
+| INFER_TORCH_FP16 | false | Optional half precision on CUDA only; rejected on CPU |
+| INFER_MODEL_CACHE | /tmp/infer-model-cache | Trusted Hugging Face cache location |
+| INFER_MODEL_LOCAL_FILES_ONLY | false | Prevent network downloads and require cached weights |
+
+Torch model fields: hf_id (required trusted model name), revision (default main),
+task (classification), max_batch_size (default 1), max_wait_ms (default 0),
+prefetch_bound (default twice max_batch_size; must be at least max_batch_size).
+The bound counts active, staged and queued items together. The default catalog
+now enables sentiment (torch, batch 16, wait 10 ms) and fake-classifier (simulated,
+batch 32, wait 10 ms). Existing minimal fake configurations remain batch size one.
+
+The ml optional dependency extra installs CPU PyTorch and Transformers. The
+worker-sentiment Compose service is enabled with the torch profile and uses a
+persistent writable /models cache, CPU device and one intra-op thread.
+Weights must be safetensors; remote model code is disabled. Model downloads use
+Hugging Face Hub's connection/read timeouts (HF_HUB_ETAG_TIMEOUT=10 and
+HF_HUB_DOWNLOAD_TIMEOUT=30 in Compose); the inference hot path makes no model HTTP
+calls after warmup. These HF_* variables are library download controls, not
+application settings. Transformers is constrained to major version 4 to keep the
+implemented runner API stable; the exact dependency versions are locked.

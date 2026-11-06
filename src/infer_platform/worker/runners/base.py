@@ -1,0 +1,9 @@
+from typing import Any, Protocol
+
+
+class ModelRunner(Protocol):
+    """Synchronous model lifecycle; every method runs in the dedicated executor."""
+
+    def load(self) -> None: ...
+    def warmup(self) -> None: ...
+    def predict_batch(self, inputs: list[dict[str, Any]]) -> list[dict[str, Any]]: ...
