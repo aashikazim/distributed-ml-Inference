@@ -12,12 +12,26 @@ class FakeConfig(BaseModel):
     jitter_ms: float = Field(default=3, ge=0)
 
 
+class LLMConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    base_url: str = "http://vllm:8000/v1"
+    served_model: str = "Qwen/Qwen2.5-0.5B-Instruct"
+    max_concurrent: int = Field(default=32, gt=0)
+    max_tokens_cap: int = Field(default=512, gt=0)
+    coalesce_ms: float = Field(default=20, ge=0)
+    max_buffered_chunks: int = Field(default=128, gt=0)
+    max_output_chars: int = Field(default=262144, gt=0)
+    cancel_poll_ms: float = Field(default=200, gt=0)
+    http_timeout_s: float = Field(default=60, gt=0)
+
+
 class ModelConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    backend: Literal["fake", "torch"]
+    backend: Literal["fake", "torch", "llm"]
+    llm: LLMConfig | None = None
     hf_id: str | None = None
     revision: str = "main"
-    task: Literal["classification"] = "classification"
+    task: Literal["classification", "chat"] = "classification"
     max_batch_size: int = Field(default=1, gt=0)
     max_wait_ms: float = Field(default=0, ge=0)
     prefetch_bound: int | None = Field(default=None, gt=0)
@@ -31,6 +45,8 @@ class ModelConfig(BaseModel):
 
     @model_validator(mode="after")
     def validate_backend(self) -> "ModelConfig":
+        if self.backend == "llm" and self.llm is None:
+            raise ValueError("llm backend requires llm configuration")
         if self.backend == "torch" and not self.hf_id:
             raise ValueError("torch backend requires a trusted hf_id")
         if self.prefetch_bound is not None and self.prefetch_bound < self.max_batch_size:
@@ -67,6 +83,10 @@ class Settings(BaseSettings):
         if self.heartbeat_interval_s >= self.heartbeat_ttl_s:
             raise ValueError("heartbeat interval must be shorter than TTL")
         return self
+
+    llm_base_url: str | None = None
+    gateway_stream_buffer: int = Field(default=128, ge=2)
+    worker_metrics_port: int = Field(default=9001, ge=1, le=65535)
 
     device: Literal["auto", "cpu", "cuda"] = "auto"
     torch_threads: int = Field(default=1, gt=0)

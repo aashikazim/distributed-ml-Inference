@@ -90,3 +90,23 @@ The default 5-second classifier request deadline is shorter than the default
 30-second reclaim idle threshold. Successful synchronous recovery needs a tuned
 deadline longer than reclaim wait, scheduling delay and inference. E4 uses
 controlled shorter idle thresholds for its measured small fake batches.
+
+## Phase 4 LLM and streaming
+
+| Variable | Default | Purpose |
+|---|---|---|
+| INFER_LLM_BASE_URL | unset | Override this worker's trusted LLM upstream URL |
+| INFER_GATEWAY_STREAM_BUFFER | 128 | Maximum buffered Redis chunk bundles per streaming waiter |
+| INFER_WORKER_METRICS_PORT | 9001 | LLM worker Prometheus endpoint, internal |
+
+LLM models require llm configuration: base_url, served_model, max_concurrent (32),
+max_tokens_cap (512), coalesce_ms (20), max_buffered_chunks (128),
+max_output_chars (262144), cancel_poll_ms (200), http_timeout_s (60).
+Chat request bodies are limited by the existing byte cap and per-model aggregate
+message-character limit. Invalid max_tokens above the model cap returns 422.
+The chat catalog uses reclaim_idle_ms=90000, above its 60000 ms request deadline.
+
+Fake server settings use INFER_FAKE_: TTFT_MS=40, TOKEN_MS=5, TOKENS=32,
+SERVED_MODEL=Qwen/Qwen2.5-0.5B-Instruct, ERROR_STATUS=0 (off),
+FAIL_AFTER unset, STALL_AFTER unset. Failure/stall controls are for tests only.
+Fake usage counts synthetic tokens; it is not real tokenizer or GPU performance.

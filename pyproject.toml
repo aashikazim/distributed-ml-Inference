@@ -5,7 +5,7 @@ description = "A learning-oriented Redis Streams inference platform"
 requires-python = ">=3.12"
 dependencies = [
   "fastapi", "uvicorn[standard]", "pydantic>=2", "pydantic-settings",
-  "redis[hiredis]>=5", "structlog", "pyyaml", "prometheus-client",
+  "redis[hiredis]>=5", "structlog", "pyyaml", "prometheus-client", "httpx",
 ]
 [project.optional-dependencies]
 ml = ["torch>=2.6,<3", "transformers>=4.48,<5"]
@@ -19,7 +19,7 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [dependency-groups]
-dev = ["pytest", "pytest-asyncio", "testcontainers[redis]", "httpx", "ruff", "mypy", "types-PyYAML"]
+dev = ["pytest", "pytest-asyncio", "testcontainers[redis]", "ruff", "mypy", "types-PyYAML"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

@@ -62,9 +62,10 @@ class Worker:
         self.clock = clock or SystemClock()
         self.worker_id = f"{socket.gethostname()}-{uuid4().hex[:8]}"
         if runner is None:
-            if config.backend != "fake":
+            if config.backend == "torch":
                 raise ValueError("Torch worker requires an explicitly configured runner")
-            runner = FakeRunner(config.fake)
+            if config.backend == "fake":
+                runner = FakeRunner(config.fake)
         self.runner = runner
         self.stop = asyncio.Event()
         self.ready = asyncio.Event()
@@ -81,6 +82,7 @@ class Worker:
                 raise
 
     async def run(self) -> None:
+        assert self.runner is not None, "LLM workers use their adapter lifecycle"
         executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="inference")
         try:
             loop = asyncio.get_running_loop()
@@ -438,18 +440,39 @@ async def main() -> None:
     settings = Settings()
     redis = create_redis(settings)
     config = settings.load_models()[settings.worker_model]
-    worker = Worker(
-        redis,
-        settings.worker_model,
-        config,
-        runner=make_runner(config, settings),
-        settings=settings,
-    )
+    worker: Worker
+    metrics_registry = None
+    if config.backend == "llm":
+        from infer_platform.worker.llm_worker import LLMWorker
+
+        llm_worker = LLMWorker(redis, settings.worker_model, config, settings)
+        worker = llm_worker
+        metrics_registry = llm_worker.metrics.registry
+    else:
+        worker = Worker(
+            redis,
+            settings.worker_model,
+            config,
+            runner=make_runner(config, settings),
+            settings=settings,
+        )
     for sig in (signal.SIGTERM, signal.SIGINT):
         asyncio.get_running_loop().add_signal_handler(sig, worker.stop.set)
+    metrics_server = None
+    if metrics_registry is not None:
+        from prometheus_client import start_http_server
+
+        metrics_server, _ = await asyncio.to_thread(
+            start_http_server,
+            settings.worker_metrics_port,
+            registry=metrics_registry,
+        )
     try:
         await worker.run()
     finally:
+        if metrics_server:
+            await asyncio.to_thread(metrics_server.shutdown)
+            metrics_server.server_close()
         await redis.aclose()
 
 

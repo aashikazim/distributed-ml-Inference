@@ -8,12 +8,14 @@ from uuid import uuid4
 import structlog
 from fastapi import FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
+from prometheus_client import CollectorRegistry, Histogram, generate_latest
 from redis.exceptions import RedisError
 
 from infer_platform.common.clock import Clock, SystemClock
 from infer_platform.common.keys import cancel_key, inbox, request_stream, result_key
 from infer_platform.common.logging import configure_logging
+from infer_platform.common.metrics import LATENCY_BUCKETS
 from infer_platform.common.redis import create_redis, server_ms
 from infer_platform.common.registry import live_workers
 from infer_platform.common.schemas import (
@@ -59,6 +61,14 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         app.state.models = config.load_models()
         app.state.auth = Authenticator(config.api_keys)
         app.state.limiter = RateLimiter(redis, config.rate_limit_per_s, config.rate_limit_burst)
+        app.state.metrics_registry = CollectorRegistry()
+        app.state.chat_ttft = Histogram(
+            "gateway_ttft_seconds",
+            "Request to first SSE content",
+            ["model"],
+            buckets=LATENCY_BUCKETS,
+            registry=app.state.metrics_registry,
+        )
         app.state.redis = redis
         app.state.router = router
         try:
@@ -96,6 +106,13 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         if not router.connected or router.task is None or router.task.done():
             return error(503, "NOT_READY", "Inbox reader unavailable")
         return {"status": "ready"}
+
+    @app.get("/metrics")
+    async def metrics(request: Request) -> Response:
+        return Response(
+            generate_latest(request.app.state.metrics_registry),
+            media_type="text/plain; version=0.0.4",
+        )
 
     @app.get("/v1/models")
     async def models(request: Request) -> Any:
@@ -171,6 +188,8 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         model_config = state.models.get(model)
         if model_config is None:
             return error(404, "UNKNOWN_MODEL", "Unknown model")
+        if model_config.backend == "llm":
+            return error(400, "INVALID_INPUT", "Use /v1/chat/completions for LLM models")
         if len(body.input) > model_config.max_input_chars:
             return error(422, "INVALID_INPUT", "Input exceeds model character limit")
         if any(key != "async" for key in request.query_params):
@@ -230,7 +249,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             await mark_cancelled(request, request_id)
             raise
         finally:
-            router.waiters.pop(request_id, None)
+            router.unregister(request_id)
             structlog.get_logger().info(
                 "request_wait_finished",
                 component="gateway",
@@ -242,18 +261,34 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
                 async_mode=async_mode,
             )
 
+    from infer_platform.gateway.chat import install_chat_routes
+
+    install_chat_routes(app, config, clock, mark_cancelled, wait_reply)
     return app
 
 
 def render(response: Any) -> Any:
     if response.type == "error":
         failure = json.loads(response.data)
-        status = {"EXPIRED": 504, "CANCELLED": 400, "INVALID_INPUT": 422, "DEAD_LETTERED": 500}.get(
-            failure["code"], 500
-        )
+        status = {
+            "EXPIRED": 504,
+            "CANCELLED": 400,
+            "INVALID_INPUT": 422,
+            "DEAD_LETTERED": 500,
+            "UPSTREAM_BAD_REQUEST": 422,
+            "UPSTREAM_ERROR": 502,
+            "UPSTREAM_PROTOCOL": 502,
+            "UPSTREAM_UNAVAILABLE": 503,
+            "UPSTREAM_TIMEOUT": 504,
+            "STREAM_INTERRUPTED": 502,
+            "SLOW_CONSUMER": 503,
+        }.get(failure["code"], 500)
         return error(status, failure["code"], failure["message"], response.request_id)
+    output = json.loads(response.data)
+    if output.get("object") == "chat.completion":
+        return {**output, "meta": json.loads(response.meta)}
     return InferResponse(
         request_id=response.request_id,
-        output=json.loads(response.data),
+        output=output,
         meta=Meta.model_validate_json(response.meta),
     )

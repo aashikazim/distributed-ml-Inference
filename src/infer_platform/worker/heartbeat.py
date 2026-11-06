@@ -1,11 +1,20 @@
 import asyncio
+from typing import Protocol
 
 from redis.asyncio import Redis
 
 from infer_platform.common.clock import Clock
 from infer_platform.common.keys import worker_key
 from infer_platform.common.schemas import Heartbeat
-from infer_platform.worker.batcher import DynamicBatcher
+
+
+class WorkerLoad(Protocol):
+    @property
+    def outstanding(self) -> int: ...
+    @property
+    def busy_seconds(self) -> float: ...
+    @property
+    def busy_started(self) -> float | None: ...
 
 
 class Heartbeats:
@@ -17,7 +26,7 @@ class Heartbeats:
         backend: str,
         device: str,
         started_at: float,
-        batcher: DynamicBatcher,
+        batcher: WorkerLoad,
         clock: Clock,
         stop: asyncio.Event,
         interval: float = 3,

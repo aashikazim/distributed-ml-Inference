@@ -16,3 +16,17 @@ models:
     max_input_chars: 4000
     request_timeout_ms: 5000
     max_queue_depth: 500
+
+  chat:
+    backend: llm
+    task: chat
+    llm:
+      base_url: http://vllm:8000/v1
+      served_model: Qwen/Qwen2.5-0.5B-Instruct
+      max_concurrent: 32
+      max_tokens_cap: 512
+      coalesce_ms: 20
+    max_input_chars: 16000
+    request_timeout_ms: 60000
+    max_queue_depth: 100
+    reclaim_idle_ms: 90000

@@ -37,6 +37,9 @@ class InboxMessage(BaseModel):
     data: str
     meta: str
 
+    def fields(self) -> dict[str, str]:
+        return {key: str(value) for key, value in self.model_dump().items()}
+
 
 class InferResponse(BaseModel):
     request_id: str
@@ -62,3 +65,71 @@ class ResultRecord(BaseModel):
     deadline_ms: float
     response: InboxMessage | None = None
     last_error: str | None = None
+    stream_started: bool = False
+
+
+class ChatMessage(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    role: Literal["system", "user", "assistant"]
+    content: str
+
+
+class ChatRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    model: str
+    messages: list[ChatMessage] = Field(min_length=1, max_length=64)
+    max_tokens: int = Field(default=128, ge=1)
+    temperature: float = Field(default=1, ge=0, le=2)
+    stream: bool = False
+
+
+class Usage(BaseModel):
+    prompt_tokens: int = Field(ge=0)
+    completion_tokens: int = Field(ge=0)
+    total_tokens: int = Field(ge=0)
+
+
+class Delta(BaseModel):
+    role: Literal["assistant"] | None = None
+    content: str | None = None
+
+
+class ChunkChoice(BaseModel):
+    index: Literal[0] = 0
+    delta: Delta
+    finish_reason: str | None = None
+
+
+class ChatChunk(BaseModel):
+    id: str
+    object: Literal["chat.completion.chunk"] = "chat.completion.chunk"
+    created: int
+    model: str
+    choices: list[ChunkChoice] = Field(max_length=1)
+    usage: Usage | None = None
+
+
+class ChunkBundle(BaseModel):
+    chunks: list[ChatChunk]
+
+
+class LLMMeta(Meta):
+    ttft_ms: float | None = None
+    tpot_ms: float | None = None
+    completion_tokens: int | None = None
+    chunk_writes: int = 0
+
+
+class CompletionChoice(BaseModel):
+    index: Literal[0] = 0
+    message: ChatMessage
+    finish_reason: str
+
+
+class ChatCompletion(BaseModel):
+    id: str
+    object: Literal["chat.completion"] = "chat.completion"
+    created: int
+    model: str
+    choices: list[CompletionChoice]
+    usage: Usage | None = None
