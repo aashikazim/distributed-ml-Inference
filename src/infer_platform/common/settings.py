@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     api_keys: list[SecretStr] = Field(min_length=1)
     models_path: Path = Path("config/models.yaml")
     worker_model: str = "fake-classifier"
+    redis_max_connections: int = Field(default=64, ge=2)
     redis_timeout_s: float = Field(default=3, gt=1)
     inbox_ttl_s: int = Field(default=120, ge=10)
     max_gateway_inflight: int = Field(default=1000, gt=0)

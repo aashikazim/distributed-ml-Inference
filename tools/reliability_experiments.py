@@ -151,6 +151,7 @@ async def overload_trial(url: str, root: Path, enabled: bool) -> dict[str, Any]:
                             "status": response.status_code,
                             "latency_ms": (loop.time() - start) * 1000,
                             "retry_after": response.headers.get("Retry-After"),
+                            "error_code": response.json().get("error", {}).get("code"),
                         }
                     )
 

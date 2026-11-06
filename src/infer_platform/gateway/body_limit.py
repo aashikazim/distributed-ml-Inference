@@ -11,31 +11,29 @@ class BodyLimit:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
-        chunks: list[Message] = []
-        size = 0
+        body = bytearray()
         while True:
             message = await receive()
             if message["type"] == "http.disconnect":
                 return
-            size += len(message.get("body", b""))
-            if size > self.limit:
+            chunk = message.get("body", b"")
+            if len(body) + len(chunk) > self.limit:
                 from infer_platform.gateway.app import error
 
                 await error(422, "INVALID_INPUT", "Request body exceeds byte limit")(
                     scope, receive, send
                 )
                 return
-            chunks.append(message)
+            body.extend(chunk)
             if not message.get("more_body", False):
                 break
-        index = 0
+        delivered = False
 
         async def bounded_receive() -> Message:
-            nonlocal index
-            if index < len(chunks):
-                message = chunks[index]
-                index += 1
-                return message
+            nonlocal delivered
+            if not delivered:
+                delivered = True
+                return {"type": "http.request", "body": bytes(body), "more_body": False}
             return await receive()
 
         await self.app(scope, bounded_receive, send)

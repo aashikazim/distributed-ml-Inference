@@ -79,3 +79,14 @@ it skips queued work or discards its eventual output. API polling is authenticat
 and restricted to the key that accepted the request; rate limits apply to inference
 submissions. Cached pending state expires at its request deadline logically and at
 result TTL physically. Final cache writes refresh the result TTL.
+
+INFER_REDIS_MAX_CONNECTIONS (default 64, minimum 2) bounds each process's blocking
+Redis connection pool. Callers wait for a connection up to INFER_REDIS_TIMEOUT_S
+rather than immediately receiving a pool-exhaustion error. Dedicated blocking
+stream reads consume pool slots too. Handler deadline accounting includes the
+token-bucket wait; queue work receives the remaining budget.
+
+The default 5-second classifier request deadline is shorter than the default
+30-second reclaim idle threshold. Successful synchronous recovery needs a tuned
+deadline longer than reclaim wait, scheduling delay and inference. E4 uses
+controlled shorter idle thresholds for its measured small fake batches.

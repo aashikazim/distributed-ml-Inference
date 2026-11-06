@@ -175,9 +175,17 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             return error(422, "INVALID_INPUT", "Input exceeds model character limit")
         if any(key != "async" for key in request.query_params):
             return error(400, "INVALID_INPUT", "Unknown query parameter")
-        retry = await state.limiter.check(key_id)
+        started = clock.monotonic()
+        try:
+            async with asyncio.timeout(model_config.request_timeout_ms / 1000):
+                retry = await state.limiter.check(key_id)
+        except TimeoutError:
+            return error(504, "TIMEOUT", "Request deadline exceeded")
         if retry:
             return error(429, "RATE_LIMITED", "API key rate limit exceeded", retry_after=retry)
+        remaining_s = max(
+            0.001, model_config.request_timeout_ms / 1000 - (clock.monotonic() - started)
+        )
         router = state.router
         if not async_mode and len(router.waiters) >= config.max_gateway_inflight:
             return error(503, "OVERLOADED", "Gateway waiter capacity reached", retry_after=1)
@@ -187,13 +195,13 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             request_id=request_id,
             reply_to=router.inbox,
             payload=body.model_dump_json(),
-            timeout_ms=model_config.request_timeout_ms,
+            timeout_ms=max(1, int(remaining_s * 1000)),
             key_id=key_id,
             trace_id=uuid4().hex,
         )
         accepted = False
         try:
-            async with asyncio.timeout(model_config.request_timeout_ms / 1000):
+            async with asyncio.timeout(remaining_s):
                 outcome = await enqueue(
                     state.redis,
                     model,

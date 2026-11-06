@@ -7,6 +7,7 @@ import platform
 import subprocess
 import sys
 import tempfile
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -18,6 +19,7 @@ from redis.asyncio import Redis
 from testcontainers.community.redis import RedisContainer
 
 from infer_platform.common.redis import create_redis
+from infer_platform.common.registry import live_workers
 from infer_platform.common.settings import Settings
 from infer_platform.gateway.app import create_app
 
@@ -83,6 +85,9 @@ async def experiment(url: str, root: Path) -> None:
                 transport=httpx.ASGITransport(app=app), base_url="http://e1", timeout=10
             ) as client:
                 process = launch()
+                async with asyncio.timeout(10):
+                    while not await live_workers(redis, model):
+                        await asyncio.sleep(0.01)
                 response = await client.post(
                     f"/v1/infer/{model}",
                     json={"input": "hello"},
@@ -111,6 +116,9 @@ async def experiment(url: str, root: Path) -> None:
                 # Slow simulated compute creates a deterministic window to kill after delivery.
                 path.write_text(path.read_text().replace("base_ms: 20", "base_ms: 2000"))
                 process = launch()
+                async with asyncio.timeout(10):
+                    while not await live_workers(redis, model):
+                        await asyncio.sleep(0.01)
                 request = asyncio.create_task(
                     client.post(
                         f"/v1/infer/{model}",
@@ -137,7 +145,7 @@ async def experiment(url: str, root: Path) -> None:
                 subprocess.check_output, ["git", "rev-parse", "HEAD"], text=True
             )
         ).strip()
-        report["date"] = "2026-11-06"
+        report["date"] = datetime.now(UTC).date().isoformat()
         await asyncio.to_thread(
             Path("docs/e1-results.json").write_text, json.dumps(report, indent=2) + "\n"
         )

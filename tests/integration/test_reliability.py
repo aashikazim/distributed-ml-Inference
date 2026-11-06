@@ -333,3 +333,14 @@ async def test_malformed_envelope_eventually_quarantined(redis_url, tmp_path):
             ResultRecord.model_validate_json(await redis.get(result_key(rid))).status
             == "DEAD_LETTERED"
         )
+
+
+async def test_bounded_redis_pool_waits_instead_of_rejecting(redis_url, tmp_path):
+    settings = settings_for(tmp_path, redis_url, redis_max_connections=4)
+    redis = create_redis(settings)
+    try:
+        replies = await asyncio.gather(*(redis.ping() for _ in range(120)))
+        assert all(replies)
+        assert redis.connection_pool.max_connections == 4
+    finally:
+        await redis.aclose()
