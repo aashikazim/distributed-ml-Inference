@@ -99,3 +99,24 @@ verification does not establish Kubernetes GPU scheduling.
 Primary references: [vLLM Docker deployment](https://docs.vllm.ai/en/stable/deployment/docker/),
 [vLLM GPU installation](https://docs.vllm.ai/en/stable/getting_started/installation/gpu/),
 and [online serving](https://docs.vllm.ai/en/stable/serving/online_serving/).
+
+
+## Phase 8 final regression
+
+The final source passed real GB10 completion and disconnect abort again, and the
+rebuilt Compose stack returned real chat with gateway timing metadata. Prometheus
+actually scraped the real vLLM endpoint with a healthy target and positive sample
+count: [Compose/engine evidence](results/p8-compose-real-vllm.json). The warmed
+opt-in test recorded 21.24 ms worker TTFT and 34.20 ms disconnect-to-zero/CANCELLED
+with its 20 ms test polling. Its cold restart result is separately preserved.
+These are individual observations, not default-poll or percentile guarantees.
+
+While the GPU server is running, the executed command below preserves historical
+Phase 4 output by selecting a different test artifact:
+
+```bash
+INFER_GPU_BASE_URL=http://127.0.0.1:8100 INFER_GPU_REPORT_PATH=docs/results/p8-gpu-verification.json uv run --extra ml pytest -m gpu -vv
+```
+
+See [final verification](results/p8-gpu-verification.json) and
+[cold run](results/p8-gpu-cold-run.json). GPU Kubernetes remains untested.

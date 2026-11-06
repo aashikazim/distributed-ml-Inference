@@ -1,0 +1,22 @@
+[2026-11-06 15:30:23,301] spark-6024/INFO/locust.main: Starting Locust 2.47.0
+[2026-11-06 15:30:23,302] spark-6024/INFO/locust.runners: Shape test starting.
+[2026-11-06 15:30:23,302] spark-6024/INFO/locust.runners: Shape worker starting
+[2026-11-06 15:30:23,302] spark-6024/INFO/locust.runners: Shape test updating to 4 users at 16.00 spawn rate
+[2026-11-06 15:30:23,302] spark-6024/INFO/locust.runners: Ramping to 4 users at a rate of 16.00 per second
+[2026-11-06 15:30:23,302] spark-6024/INFO/locust.runners: All users spawned: {"InferenceUser": 4} (4 total users)
+[2026-11-06 15:30:53,332] spark-6024/INFO/locust.runners: Shape test stopping
+[2026-11-06 15:30:53,376] spark-6024/INFO/locust.main: Shape test completed, shutting down
+[2026-11-06 15:30:53,376] spark-6024/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+POST     /v1/infer/fake-classifier                                                        935     0(0.00%) |     78      68     126     78 |   31.09        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                       935     0(0.00%) |     78      68     126     78 |   31.09        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+POST     /v1/infer/fake-classifier                                                              78     80     81     81     83     85     89    100    130    130    130    935
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                             78     80     81     81     83     85     89    100    130    130    130    935
+

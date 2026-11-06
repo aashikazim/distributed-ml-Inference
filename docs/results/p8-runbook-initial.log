@@ -1,0 +1,66 @@
+2026-11-06 15:26:21 [info     ] worker_ready                   backend=fake component=worker model=drill-814c243d565e433e83d73a33109db3e0 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:22 [info     ] request_finished               batch_size=1 component=worker model=drill-814c243d565e433e83d73a33109db3e0 outcome=SUCCEEDED request_id=123807ca0bf542a0a23c2b7429718bc4 trace_id=877abe105ac84344a6f8637d2ef97247 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:22 [info     ] request_finished               batch_size=1 component=worker model=drill-814c243d565e433e83d73a33109db3e0 outcome=SUCCEEDED request_id=68c5d00bdd2a4714b0a40abcdaf14f82 trace_id=2bbc86ecb6a848ff8831ed609f566f04 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:22 [info     ] request_finished               batch_size=1 component=worker model=drill-814c243d565e433e83d73a33109db3e0 outcome=SUCCEEDED request_id=40ab4648fcd84342992ec5e9529123cf trace_id=d1bc55b9c96f4f4da0e15be5a64ce814 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:22 [info     ] request_finished               batch_size=1 component=worker model=drill-814c243d565e433e83d73a33109db3e0 outcome=SUCCEEDED request_id=e5a3130c74884464a1efcda61a9b87da trace_id=24de17a071d646738b8459c7d15e9e97 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:23 [info     ] request_finished               batch_size=1 component=worker model=drill-814c243d565e433e83d73a33109db3e0 outcome=SUCCEEDED request_id=82a93b5d8fb04648bc15c601509cb3ba trace_id=da15ad25145f4ebcb5c8def8d58dc1b7 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:23 [info     ] request_finished               batch_size=1 component=worker model=drill-814c243d565e433e83d73a33109db3e0 outcome=SUCCEEDED request_id=4fdaf03ad21e4b92b4f5b3d1cdfa954c trace_id=c58b3ec9f9cb4b5299fe34e5dad1b055 worker_id=spark-6024-a9c9a45e
+2026-11-06 15:26:23 [info     ] worker_ready                   backend=fake component=worker model=drill-8de94eb69c714cf39bb047122edc3305 worker_id=spark-6024-143206d0
+2026-11-06 15:26:24 [info     ] request_finished               batch_size=1 component=worker model=drill-8de94eb69c714cf39bb047122edc3305 outcome=SUCCEEDED request_id=b64ca157c9bf406c83ceaca0faaf9e20 trace_id=5bd2788034ac4b89ba9568749b20fbb9 worker_id=spark-6024-143206d0
+2026-11-06 15:26:24 [info     ] request_finished               batch_size=1 component=worker model=drill-8de94eb69c714cf39bb047122edc3305 outcome=SUCCEEDED request_id=b6058940c20842cebc54c53aa9a4f285 trace_id=e5c51e8f87c0441298ba3d68b9ba9d96 worker_id=spark-6024-143206d0
+2026-11-06 15:26:24 [info     ] worker_ready                   backend=fake component=worker model=drill-f2ceb2023ade4ac290436205e73a52d0 worker_id=spark-6024-162bb026
+2026-11-06 15:26:25 [info     ] request_reclaimed              component=worker delivery_count=2 model=drill-f2ceb2023ade4ac290436205e73a52d0 request_id=05d37151c1bd4218b51990c74b9342ba worker_id=spark-6024-162bb026
+2026-11-06 15:26:25 [info     ] request_reclaimed              component=worker delivery_count=3 model=drill-f2ceb2023ade4ac290436205e73a52d0 request_id=05d37151c1bd4218b51990c74b9342ba worker_id=spark-6024-162bb026
+2026-11-06 15:26:25 [info     ] request_finished               batch_size=0 component=worker model=drill-f2ceb2023ade4ac290436205e73a52d0 outcome=DEAD_LETTERED request_id=05d37151c1bd4218b51990c74b9342ba trace_id=ae211e4a4f3749a6afa6e9532e532923 worker_id=spark-6024-162bb026
+2026-11-06 15:26:25 [warning  ] request_dead_lettered          component=worker delivery_count=4 model=drill-f2ceb2023ade4ac290436205e73a52d0 reason=INFERENCE_FAILED worker_id=spark-6024-162bb026
+2026-11-06 15:26:25 [info     ] worker_ready                   backend=fake component=worker model=drill-845d537aac7b4904829bd7258b68148f worker_id=spark-6024-a14620a7
+2026-11-06 15:26:25 [info     ] request_reclaimed              component=worker delivery_count=2 model=drill-845d537aac7b4904829bd7258b68148f request_id=c0f635eb5bc54ab2a60548f0f90af3d9 worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_reclaimed              component=worker delivery_count=2 model=drill-845d537aac7b4904829bd7258b68148f request_id=cdfa9a3651744607896a85fb67463545 worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_reclaimed              component=worker delivery_count=2 model=drill-845d537aac7b4904829bd7258b68148f request_id=4156eee76e454f9d8db7e67a5a0cab3b worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_reclaimed              component=worker delivery_count=3 model=drill-845d537aac7b4904829bd7258b68148f request_id=c0f635eb5bc54ab2a60548f0f90af3d9 worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_reclaimed              component=worker delivery_count=3 model=drill-845d537aac7b4904829bd7258b68148f request_id=cdfa9a3651744607896a85fb67463545 worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_reclaimed              component=worker delivery_count=3 model=drill-845d537aac7b4904829bd7258b68148f request_id=4156eee76e454f9d8db7e67a5a0cab3b worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_finished               batch_size=0 component=worker model=drill-845d537aac7b4904829bd7258b68148f outcome=DEAD_LETTERED request_id=c0f635eb5bc54ab2a60548f0f90af3d9 trace_id=b2f99ec2489f4c7387b06836f01fc3d5 worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [warning  ] request_dead_lettered          component=worker delivery_count=4 model=drill-845d537aac7b4904829bd7258b68148f reason=INFERENCE_FAILED worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_finished               batch_size=0 component=worker model=drill-845d537aac7b4904829bd7258b68148f outcome=DEAD_LETTERED request_id=cdfa9a3651744607896a85fb67463545 trace_id=25a623a611a9477c87e2e1d413fe1c5e worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [warning  ] request_dead_lettered          component=worker delivery_count=4 model=drill-845d537aac7b4904829bd7258b68148f reason=INFERENCE_FAILED worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] request_finished               batch_size=0 component=worker model=drill-845d537aac7b4904829bd7258b68148f outcome=DEAD_LETTERED request_id=4156eee76e454f9d8db7e67a5a0cab3b trace_id=a60210d91fb7451abc4b71c413e254f8 worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [warning  ] request_dead_lettered          component=worker delivery_count=4 model=drill-845d537aac7b4904829bd7258b68148f reason=INFERENCE_FAILED worker_id=spark-6024-a14620a7
+2026-11-06 15:26:26 [info     ] worker_ready                   backend=fake component=worker model=drill-264f32e9bfb644998ba9fd8a3cde104c worker_id=spark-6024-0c345f5c
+2026-11-06 15:26:27 [info     ] request_finished               batch_size=1 component=worker model=drill-264f32e9bfb644998ba9fd8a3cde104c outcome=SUCCEEDED request_id=7dc00221a7cb4c17a7646e0c596b081b trace_id=6a47449565a9475da2607c14d8522136 worker_id=spark-6024-0c345f5c
+Traceback (most recent call last):
+  File "/home/aashik/Github/distributed-ml-Inference/tools/reliability.py", line 28, in eventually
+    await asyncio.sleep(0.01)
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 665, in sleep
+    return await future
+           ^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/aashik/Github/distributed-ml-Inference/tools/runbook_drills.py", line 231, in <module>
+    main()
+  File "/home/aashik/Github/distributed-ml-Inference/tools/runbook_drills.py", line 224, in main
+    "drills": asyncio.run(run(Path(directory), container, url)),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/aashik/Github/distributed-ml-Inference/tools/runbook_drills.py", line 189, in run
+    await state["gateway"].ready("/readyz")
+  File "/home/aashik/Github/distributed-ml-Inference/tools/llm_lab.py", line 58, in ready
+    await eventually(healthy, seconds=20)
+  File "/home/aashik/Github/distributed-ml-Inference/tools/reliability.py", line 23, in eventually
+    async with asyncio.timeout(seconds):
+  File "/usr/lib/python3.12/asyncio/timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError

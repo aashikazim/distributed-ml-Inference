@@ -161,7 +161,14 @@ async def test_cached_duplicate_is_replayed_without_compute(redis_url, tmp_path)
         await eventually(empty)
         assert runner.calls == 1
         assert not app.state.router.waiters
-        assert (await client.get(f"/v1/results/{rid}")).json() == response.json()
+        cached_response = (await client.get(f"/v1/results/{rid}")).json()
+        live_response = response.json()
+        # Gateway elapsed timing belongs to this HTTP delivery, while the
+        # worker-owned cache preserves the canonical outcome and worker timings.
+        for name in ("total_ms", "gateway_overhead_ms"):
+            assert cached_response["meta"].pop(name) is None
+            assert live_response["meta"].pop(name) is not None
+        assert cached_response == live_response
         assert (await client.post(f"/v1/infer/{model}", json={"input": "next"})).status_code == 200
 
 
@@ -175,7 +182,7 @@ async def test_poison_redelivery_limit_dead_letters_with_reply(redis_url, tmp_pa
     model = settings.worker_model
     config = settings.load_models()[model]
     runner = PoisonRunner(config.fake)
-    async with system(settings, runner) as (redis, _, client, _):
+    async with system(settings, runner) as (redis, worker, client, _):
         accepted = await client.post(f"/v1/infer/{model}?async=true", json={"input": "poison"})
         rid = accepted.json()["request_id"]
 
@@ -195,6 +202,11 @@ async def test_poison_redelivery_limit_dead_letters_with_reply(redis_url, tmp_pa
             return (await redis.xpending(request_stream(model), GROUP))["pending"] == 0
 
         await eventually(acked)
+        assert (
+            worker.metrics.registry.get_sample_value("worker_reclaimed_total", {"model": model})
+            == 3
+        )
+        assert worker.metrics.registry.get_sample_value("worker_dlq_total", {"model": model}) == 1
 
 
 async def test_timeout_and_cancelled_handler_discard_late_output(redis_url, tmp_path):

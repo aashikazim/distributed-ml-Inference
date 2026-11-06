@@ -1,0 +1,332 @@
+{
+  "date_utc": "2026-11-06T21:12:12Z",
+  "kind_ready_pods": 11,
+  "pods": [
+    {
+      "name": "autoscaler-6b554d766-dmx2x",
+      "phase": "Running"
+    },
+    {
+      "name": "exporter-6bbb78cf74-gvffk",
+      "phase": "Running"
+    },
+    {
+      "name": "fake-openai-8564b96d98-hfvps",
+      "phase": "Running"
+    },
+    {
+      "name": "gateway-5ccc946488-2t5vk",
+      "phase": "Running"
+    },
+    {
+      "name": "gateway-5ccc946488-6l2mx",
+      "phase": "Running"
+    },
+    {
+      "name": "grafana-7bd6f567d4-jqgx8",
+      "phase": "Running"
+    },
+    {
+      "name": "prometheus-7dd5f69ff4-w6hzl",
+      "phase": "Running"
+    },
+    {
+      "name": "redis-0",
+      "phase": "Running"
+    },
+    {
+      "name": "worker-chat-7d45cd9c5-wmwcl",
+      "phase": "Running"
+    },
+    {
+      "name": "worker-fake-587dbccc74-nxjck",
+      "phase": "Running"
+    },
+    {
+      "name": "worker-sentiment-58d96f5df-kfhkd",
+      "phase": "Running"
+    }
+  ],
+  "targets": [
+    {
+      "discoveredLabels": {
+        "__address__": "autoscaler:9003",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "autoscaler"
+      },
+      "labels": {
+        "instance": "autoscaler:9003",
+        "job": "autoscaler"
+      },
+      "scrapePool": "autoscaler",
+      "scrapeUrl": "http://autoscaler:9003/metrics",
+      "globalUrl": "http://autoscaler:9003/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:09.200149315Z",
+      "lastScrapeDuration": 0.001494376,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "exporter:9002",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "exporter"
+      },
+      "labels": {
+        "instance": "exporter:9002",
+        "job": "exporter"
+      },
+      "scrapePool": "exporter",
+      "scrapeUrl": "http://exporter:9002/metrics",
+      "globalUrl": "http://exporter:9002/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:12.119889905Z",
+      "lastScrapeDuration": 0.000654835,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.65:8000",
+        "__meta_dns_name": "gateway-metrics",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "gateway"
+      },
+      "labels": {
+        "instance": "10.244.0.65:8000",
+        "job": "gateway"
+      },
+      "scrapePool": "gateway",
+      "scrapeUrl": "http://10.244.0.65:8000/metrics",
+      "globalUrl": "http://10.244.0.65:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:11.091355015Z",
+      "lastScrapeDuration": 0.00115551,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.73:8000",
+        "__meta_dns_name": "gateway-metrics",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "gateway"
+      },
+      "labels": {
+        "instance": "10.244.0.73:8000",
+        "job": "gateway"
+      },
+      "scrapePool": "gateway",
+      "scrapeUrl": "http://10.244.0.73:8000/metrics",
+      "globalUrl": "http://10.244.0.73:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:10.334998634Z",
+      "lastScrapeDuration": 0.001228167,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.96.255.233:8000",
+        "__meta_dns_name": "fake-openai",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "vllm"
+      },
+      "labels": {
+        "instance": "10.96.255.233:8000",
+        "job": "vllm"
+      },
+      "scrapePool": "vllm",
+      "scrapeUrl": "http://10.96.255.233:8000/metrics",
+      "globalUrl": "http://10.96.255.233:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:11.524815633Z",
+      "lastScrapeDuration": 0.001790138,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.67:9001",
+        "__meta_dns_name": "worker-chat",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "10.244.0.67:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://10.244.0.67:9001/metrics",
+      "globalUrl": "http://10.244.0.67:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:09.718633205Z",
+      "lastScrapeDuration": 0.001191799,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.66:9001",
+        "__meta_dns_name": "worker-fake",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "10.244.0.66:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://10.244.0.66:9001/metrics",
+      "globalUrl": "http://10.244.0.66:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:08.136697917Z",
+      "lastScrapeDuration": 0.002257069,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "10.244.0.71:9001",
+        "__meta_dns_name": "worker-sentiment",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "10.244.0.71:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://10.244.0.71:9001/metrics",
+      "globalUrl": "http://10.244.0.71:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:12:08.653139494Z",
+      "lastScrapeDuration": 0.001337,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    }
+  ],
+  "dashboards": [
+    {
+      "id": 1,
+      "uid": "bg3ij0coe1bswb",
+      "orgId": 1,
+      "title": "Inference",
+      "uri": "db/inference",
+      "url": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "slug": "",
+      "type": "dash-folder",
+      "tags": [],
+      "isStarred": false,
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 2,
+      "uid": "inference-autoscaler",
+      "orgId": 1,
+      "title": "Autoscaler",
+      "uri": "db/autoscaler",
+      "url": "/d/inference-autoscaler/autoscaler",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 3,
+      "uid": "inference-batching",
+      "orgId": 1,
+      "title": "Batching",
+      "uri": "db/batching",
+      "url": "/d/inference-batching/batching",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 4,
+      "uid": "inference-llm",
+      "orgId": 1,
+      "title": "LLM",
+      "uri": "db/llm",
+      "url": "/d/inference-llm/llm",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 5,
+      "uid": "inference-overview",
+      "orgId": 1,
+      "title": "Overview",
+      "uri": "db/overview",
+      "url": "/d/inference-overview/overview",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "bg3ij0coe1bswb",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/bg3ij0coe1bswb/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    }
+  ],
+  "compose_stopped": true,
+  "temporary_gpu_server_stopped": true
+}

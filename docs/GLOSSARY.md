@@ -133,3 +133,12 @@
 | RBAC | Role-based authorization limiting which API operations a service account can perform |
 | Headless Service | DNS discovery of individual ready Pod IPs rather than one load-balanced service address |
 | Kustomize | Composition of Kubernetes resources and focused overlay changes |
+
+
+| Term | Plain-language meaning |
+|---|---|
+| Open-loop load | Arrivals scheduled independently of earlier response completion |
+| Closed-loop load | A fixed user population issues more work after earlier work and think time |
+| Coordinated omission | A slow system also slows closed-loop arrivals, hiding some fixed-rate waiting |
+| System boundary | Exact entry/exit points and population included in a measurement |
+| Service-level proposal | A candidate target requiring representative operation and review before acceptance |

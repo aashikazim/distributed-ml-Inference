@@ -51,7 +51,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     config = settings or Settings()
     clock = clock or SystemClock()
 
-    from infer_platform.gateway.metrics import GatewayMetrics, ObserveHTTP
+    from infer_platform.gateway.metrics import GatewayMetrics, ObserveHTTP, timed_reply
 
     observed = GatewayMetrics()
 
@@ -79,7 +79,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
 
     app = FastAPI(lifespan=lifespan)
     app.add_middleware(BodyLimit, limit=config.max_body_bytes)
-    app.add_middleware(ObserveHTTP, metrics=observed, models=set(config.load_models()))
+    app.add_middleware(ObserveHTTP, metrics=observed, models=set(config.load_models()), clock=clock)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
@@ -237,7 +237,9 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
                 if async_mode:
                     return JSONResponse(status_code=202, content={"request_id": request_id})
                 assert queue is not None
-                return render(await wait_reply(queue, request))
+                reply = await wait_reply(queue, request)
+                elapsed = (clock.monotonic() - request.scope.get("metric_started", started)) * 1000
+                return render(timed_reply(reply, elapsed))
         except TimeoutError:
             await mark_cancelled(request, request_id)
             return error(504, "TIMEOUT", "Request deadline exceeded", request_id)

@@ -13,6 +13,7 @@ from infer_platform.common.clock import Clock
 from infer_platform.common.schemas import ChatRequest, ChunkBundle, InboxMessage, RequestMessage
 from infer_platform.common.settings import Settings
 from infer_platform.gateway.admission import enqueue
+from infer_platform.gateway.metrics import timed_reply
 from infer_platform.gateway.sse import ManagedStream, frame
 
 Cancel = Callable[[Request, str], Awaitable[None]]
@@ -92,6 +93,11 @@ def install_chat_routes(
                         return
                     else:
                         complete = True
+                        current = timed_reply(
+                            current,
+                            (clock.monotonic() - request.scope.get("metric_started", started))
+                            * 1000,
+                        )
                         request.scope["metric_meta"] = json.loads(current.meta)
                         final = json.loads(current.data)
                         expected = final["choices"][0]["message"]["content"]
@@ -167,7 +173,13 @@ def install_chat_routes(
                 first = await wait(queue, request)
                 if not body.stream or first.type == "error":
                     complete = True
-                    rendered = render(first)
+                    rendered = render(
+                        timed_reply(
+                            first,
+                            (clock.monotonic() - request.scope.get("metric_started", started))
+                            * 1000,
+                        )
+                    )
                     if isinstance(rendered, JSONResponse):
                         rendered.headers["X-Request-ID"] = rid
                         return rendered

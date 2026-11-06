@@ -46,9 +46,9 @@ An **SLI** is a measured service indicator, such as the proportion of valid
 accepted requests that finish within a chosen duration. An **SLO** is a target
 for that indicator over a time window. The **error budget** is the permitted
 fraction that can fail that target. A local short benchmark supports a proposal,
-not a production promise. Phase 8 chooses measured local targets and explains
-which rejected/failed requests count. Until then the SLO comparison has no target
-series and intentionally cannot fire.
+not a production promise. Phase 8 now proposes measured local targets and explains
+which rejected/failed requests count in [SLO.md](../SLO.md). The Phase 5 rule
+initially had no target; measured recording series now enable that comparison.
 
 ## Little's Law and labels
 

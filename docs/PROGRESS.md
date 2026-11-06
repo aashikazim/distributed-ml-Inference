@@ -1,6 +1,47 @@
 # Progress
 
-## Phase 7 — implementation and local verification complete
+## Phase 8 — implementation and local verification complete
+
+Delivered bounded steady/ramp/spike/mixed Locust scenarios, open-loop HTTP
+benchmarking, independent occupancy sampling and a prediction-first Little's Law
+worksheet, real measured BENCHMARKS.md, six executed isolated operational drills,
+tuning guide, scoped SLO proposal, capstone quiz/design review, final architecture
+and README refresh, and section-19 item-by-item VERIFICATION.md.
+
+The three-repeat fixed-kind baseline completed 3900 simulated classifier and
+300 real CPU sentiment requests successfully; a separate 600-request capacity
+trace passed. Predicted occupancy 0.670 versus sampled 0.74274 and measured
+lambda W 0.75309. Four Locust scenarios had zero reported failures (including
+339 simulated streamed chats). Closed-loop results and fake compute are labeled.
+After timing enrichment, rebuilt-image spot checks completed another 800 fake
+and 100 real CPU requests; p95 110.42/60.76 ms. The candidate 250 ms target is
+derived from doubling worst trial p95 then rounding to shared buckets; 99%
+availability is a scoped review proposal, not an observed month-long result.
+
+Live response total/residual timing was added without changing canonical cached
+outcomes or ACK ordering. Reclaim metrics now include the quarantine claim;
+real-Redis regression checks verify three claims for delivery-4 quarantine.
+Ruff, mypy (48 source files), all 62 CPU tests and one explicit real-vLLM GPU
+test passed. The final GPU test measured active→zero/CANCELLED in 34.20 ms with
+20 ms test polling; the default catalog poll remains 200 ms. Rebuilt Compose
+served real GPU chat with timing and Prometheus actually scraped engine metrics.
+CPU/fake combined Compose also passed current smoke/SSE/sentiment verification.
+The temporary GPU server was stopped after verification.
+
+All six runbook drills passed: no workers, slow model, overload, poison input,
+DLQ growth and Redis loss/recovery. Initial outage diagnostics exposed Docker
+random-port remapping and a reused stale in-process pool; artifacts preserve
+those attempts. The final isolated drill uses a fixed loopback endpoint and a
+fresh worker pool, matching process restart. AOF preserved its pre-outage final;
+this is not a production zero-loss/HA guarantee. promtool accepted all rules and
+synthetic sustained-alert tests, including checks against early firing.
+
+**Not fully signed off:** hosted CI/GHCR publication, GPU Kubernetes, production
+HA/cloud/soak and actual human teach-back remain unverified. The Definition of
+Done audit distinguishes implementation, measured checks and these limits.
+All eight phases now have code/docs; no stretch feature is started.
+
+## Phase 7 — historical local implementation and verification
 
 Built role-specific multi-stage non-root image targets, locked mutually exclusive
 CPU/CUDA extras, worker warmup/drain HTTP probes, complete Compose health/restart
@@ -229,8 +270,10 @@ Docker required execution-environment escalation, which was granted.
 
 ## Deferred — according to the phase plan
 
-Phase 8: load testing, runbook and measured SLO proposal.
-Hosted GitHub Actions/registry publication and GPU Kubernetes verification pending.
+Hosted GitHub Actions/registry publication, GPU Kubernetes verification,
+production HA/cloud/soak and human teach-back remain pending. See VERIFICATION.md.
+Production auth/TLS/notification routing and durable monitoring retention are
+explicit deployment work, not silently completed local guarantees.
 
 ## Current limitations
 
@@ -266,6 +309,7 @@ Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 
 ## Next
 
-Owner authorized continuation through Phase 8. Next: Locust scenarios and real
-load benchmarks, executed runbook drills, Little's Law prediction/measurement,
-measured local SLO proposal and the final Definition of Done audit.
+Stop after Phase 8 for owner review. The next action is reviewing the measured
+scope and capstone answers; no automatic Phase 9 or stretch implementation.
+The full project checklist remains partially open for the explicitly unverified
+hosted/production/GPU-cluster and human-learning items.

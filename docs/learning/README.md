@@ -14,7 +14,7 @@ functions; introduce one controlled failure; teach the result without reading no
 | 05 | [Observability](05-observability.md), [latency concept](../concepts/latency-and-observability.md), E7, [ADR-0008](../adr/0008-metrics.md), [dashboards](../dashboards.md) | Phase 5: available |
 | 06 | [Autoscaling](06-autoscaling.md), [controller concept](../concepts/autoscaling.md), E8–E10, [ADR-0009](../adr/0009-autoscaling.md) | Phase 6: available |
 | 07 | [Kubernetes](07-kubernetes-deployment.md), [deployment concept](../concepts/deploying-ml-workloads.md), E11–E13, [ADR-0010](../adr/0010-deployment.md) | Phase 7: available |
-| 08 | Capstone, benchmarks, runbook and self-assessment | Phase 8 |
+| 08 | [Capstone](08-capstone.md), [benchmarks](../BENCHMARKS.md), [capacity worksheet](../CAPACITY_PLANNING.md), [runbook](../RUNBOOK.md), [audit](../VERIFICATION.md) | Phase 8: available |
 
 ```mermaid
 flowchart LR
@@ -48,6 +48,14 @@ disposable Redis 7 container.
 | XLEN stream | Retained entries, not just undelivered work |
 | XACK stream workers id | Remove the group's pending ownership record |
 | XDEL stream id | Remove the stream entry itself |
+| XAUTOCLAIM stream workers consumer idle-ms cursor COUNT n | Recover idle deliveries within free capacity |
+| XPENDING stream workers min-id max-id count | Inspect delivery count and owner per entry |
+| XRANGE stream exclusive-delivery-id + COUNT 1 | Find oldest undelivered entry |
+| SCAN cursor MATCH worker:model:* COUNT n | Discover candidate heartbeat keys without KEYS |
+| GET / SET result:id JSON EX seconds | Read/write typed result outcome with TTL |
+| EXISTS cancel:id | Check a best-effort cancellation flag |
+| SET autoscaler:lock token NX PX milliseconds | Acquire an expiring leadership token |
+| EVAL script keys args | Atomic admission/rate limiting and token-owned lease renew/release |
 | TIME | Shared Redis clock for cross-process age |
 | EXPIRE inbox seconds | Keep temporary response storage from living forever |
 

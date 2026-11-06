@@ -1,0 +1,216 @@
+{
+  "date_utc": "2026-11-06T20:30:19Z",
+  "host": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+  "commit": "1fcfcba5b38d4d350435b2e321a682388d82f854",
+  "real_redis_and_tcp": true,
+  "simulated_compute": true,
+  "drills": {
+    "no_workers": {
+      "status": 503,
+      "retry_after": "1",
+      "data": {
+        "error": {
+          "code": "NO_WORKERS",
+          "message": "No worker capacity available",
+          "request_id": "c91900a3b13b415d85d8c692dd1f436b"
+        }
+      }
+    },
+    "slow_model": {
+      "responses": [
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "34469197de534ed787736a5007d6a98e",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-860fbb13",
+              "batch_size": 1,
+              "queue_ms": 0.717041015625,
+              "batch_wait_ms": 1.0152989998459816,
+              "inference_ms": 201.60650496836752
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "b595f03d7ab04e1f8eaec35eda7849f9",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-860fbb13",
+              "batch_size": 1,
+              "queue_ms": 1029.656005859375,
+              "batch_wait_ms": 1.0448520770296454,
+              "inference_ms": 201.31624792702496
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "1e619f90006c4f46a79c32d93f9bbe91",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-860fbb13",
+              "batch_size": 1,
+              "queue_ms": 407.281005859375,
+              "batch_wait_ms": 0.76113804243505,
+              "inference_ms": 201.35595998726785
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "91080d3be60043909e3be1014f9f8b3d",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-860fbb13",
+              "batch_size": 1,
+              "queue_ms": 822.700927734375,
+              "batch_wait_ms": 0.7835390279069543,
+              "inference_ms": 201.35978399775922
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "cbb0cba0167349829f6d265794462ce1",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-860fbb13",
+              "batch_size": 1,
+              "queue_ms": 615.610107421875,
+              "batch_wait_ms": 1.9689350156113505,
+              "inference_ms": 201.48424804210663
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "90f0dd69b5d546aeb448615fc28c565b",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-860fbb13",
+              "batch_size": 1,
+              "queue_ms": 201.419921875,
+              "batch_wait_ms": 1.1793000157922506,
+              "inference_ms": 201.34483894798905
+            }
+          }
+        }
+      ],
+      "last_inference_ms": 201.34483894798905,
+      "max_queue_ms": 1029.656005859375
+    },
+    "overload": {
+      "peak_retained": 2,
+      "statuses": {
+        "200": 2,
+        "503": 18
+      }
+    },
+    "poison_input": {
+      "quarantined": 1,
+      "reclaimed_attempts": 3.0,
+      "responses": [
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "9a29cb40bc794c07a449c7fbcaada47d"
+            }
+          }
+        }
+      ]
+    },
+    "dlq_growth": {
+      "quarantined": 3,
+      "reclaimed_attempts": 9.0,
+      "responses": [
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "35ff25f8b80f41e0a99c5b254be8502e"
+            }
+          }
+        },
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "c98ee7aa82bf4fda90a8ffacaee7fea9"
+            }
+          }
+        },
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "308dc1e4ea42457db97bde94c2e22822"
+            }
+          }
+        }
+      ]
+    },
+    "redis_down": {
+      "liveness": 200,
+      "readiness": 503,
+      "inference": {
+        "status": 503,
+        "retry_after": "1",
+        "data": {
+          "error": {
+            "code": "UNAVAILABLE",
+            "message": "Redis unavailable",
+            "request_id": null
+          }
+        }
+      },
+      "recovered_status": 200,
+      "preserved_final_cache_status": 200,
+      "worker_restart_required": true
+    }
+  },
+  "failure_type": "ExceptionGroup"
+}

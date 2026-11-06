@@ -1,0 +1,62 @@
+{
+  "chat": {
+    "id": "chatcmpl-9e4c46bae5eb139a",
+    "object": "chat.completion",
+    "created": 1793998173,
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Hello! It's great to meet you. How can I assist you today?"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 32,
+      "completion_tokens": 17,
+      "total_tokens": 49
+    },
+    "meta": {
+      "worker_id": "4efc8b8db20c-d960d6fc",
+      "batch_size": 1,
+      "queue_ms": 0.968017578125,
+      "batch_wait_ms": 0.0,
+      "inference_ms": 126.92683492787182,
+      "total_ms": 132.57867994252592,
+      "gateway_overhead_ms": 4.6838274365291,
+      "ttft_ms": 21.732780965976417,
+      "tpot_ms": 6.04865830973722,
+      "completion_tokens": 17,
+      "chunk_writes": 0
+    }
+  },
+  "vllm_target_up": [
+    {
+      "metric": {
+        "__name__": "up",
+        "instance": "172.22.0.5:8000",
+        "job": "vllm"
+      },
+      "value": [
+        1793998173.938,
+        "1"
+      ]
+    }
+  ],
+  "engine_samples_scraped": [
+    {
+      "metric": {
+        "__name__": "scrape_samples_scraped",
+        "instance": "172.22.0.5:8000",
+        "job": "vllm"
+      },
+      "value": [
+        1793998173.945,
+        "445"
+      ]
+    }
+  ]
+}

@@ -118,7 +118,9 @@ async def test_real_vllm_completion_and_disconnect_abort(redis_url, tmp_path):
                 "worker_outcome": "CANCELLED",
             }
             await asyncio.to_thread(
-                Path("docs/results/p4-gpu-verification.json").write_text,
+                Path(
+                    os.environ.get("INFER_GPU_REPORT_PATH", "docs/results/p4-gpu-verification.json")
+                ).write_text,
                 json.dumps(report, indent=2) + "\n",
             )
     finally:

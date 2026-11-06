@@ -1,0 +1,23 @@
+{
+  "gpu_inference_verified": true,
+  "completion_usage": {
+    "prompt_tokens": 33,
+    "completion_tokens": 10,
+    "total_tokens": 43
+  },
+  "completion_meta": {
+    "worker_id": "spark-6024-0aa169bd",
+    "batch_size": 1,
+    "queue_ms": 0.81689453125,
+    "batch_wait_ms": 0.0,
+    "inference_ms": 17510.468579013832,
+    "ttft_ms": 17454.55168595072,
+    "tpot_ms": 5.24847111147311,
+    "completion_tokens": 10,
+    "chunk_writes": 0
+  },
+  "active_sequences_before_disconnect": 1.0,
+  "active_sequences_after_disconnect": 0,
+  "disconnect_to_zero_and_cancelled_ms": 34.34798901434988,
+  "worker_outcome": "CANCELLED"
+}

@@ -119,7 +119,8 @@ histograms are an alternative for a future deployment compatibility review.
 Our localhost Grafana allows anonymous read-only viewing for learning. It is not
 a production authentication configuration. Alerts for configured models without
 started workers are expected in partial development profiles. The latency alert
-waits for a measured SLO series from Phase 8, rather than an invented threshold.
+was introduced without an invented threshold; Phase 8 now supplies a measured
+local proposal, described in [SLO.md](../SLO.md).
 
 ## 8. Check your understanding
 

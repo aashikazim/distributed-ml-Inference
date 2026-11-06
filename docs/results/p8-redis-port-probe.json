@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-06",
+  "old_port": 32959,
+  "new_port": 32960,
+  "same_container_restart": true,
+  "old_client_probe_results": [
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError",
+    "ConnectionError"
+  ],
+  "interpretation": "Docker remapped the randomly published host port. A stable service endpoint is required to test reconnection rather than an endpoint change."
+}

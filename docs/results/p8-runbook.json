@@ -1,0 +1,232 @@
+{
+  "date_utc": "2026-11-06T21:06:30Z",
+  "host": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+  "commit": "1fcfcba5b38d4d350435b2e321a682388d82f854",
+  "real_redis_and_tcp": true,
+  "simulated_compute": true,
+  "drills": {
+    "no_workers": {
+      "status": 503,
+      "retry_after": "1",
+      "data": {
+        "error": {
+          "code": "NO_WORKERS",
+          "message": "No worker capacity available",
+          "request_id": "b231c1df604d410eb03a0b0c4ceb0542"
+        }
+      },
+      "recovered_status": 200
+    },
+    "slow_model": {
+      "responses": [
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "d9657f14923f4100af8a961d6d48f6a0",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-826ea81d",
+              "batch_size": 1,
+              "queue_ms": 1.2451171875,
+              "batch_wait_ms": 0.7921489886939526,
+              "inference_ms": 201.52343600057065,
+              "total_ms": 209.60465096868575,
+              "gateway_overhead_ms": 6.043948791921139
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "b978d7a7ed1e436b9111ff2a888f1ee9",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-826ea81d",
+              "batch_size": 1,
+              "queue_ms": 814.221923828125,
+              "batch_wait_ms": 0.32424204982817173,
+              "inference_ms": 201.33511605672538,
+              "total_ms": 1028.6132879555225,
+              "gateway_overhead_ms": 12.732006020843983
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "d32265268c2944329bd174327a277f6b",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-826ea81d",
+              "batch_size": 1,
+              "queue_ms": 406.60888671875,
+              "batch_wait_ms": 0.4828029777854681,
+              "inference_ms": 201.32969098631293,
+              "total_ms": 619.8416620027274,
+              "gateway_overhead_ms": 11.420281319878995
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "77f6d6897cac445a932240ba0c56260c",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-826ea81d",
+              "batch_size": 1,
+              "queue_ms": 1019.56005859375,
+              "batch_wait_ms": 0.2837450010702014,
+              "inference_ms": 201.3942040503025,
+              "total_ms": 1232.8360039973632,
+              "gateway_overhead_ms": 11.597996352240443
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "9a84b4767492400da880469c8cfc6ca7",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-826ea81d",
+              "batch_size": 1,
+              "queue_ms": 201.597900390625,
+              "batch_wait_ms": 1.0334299877285957,
+              "inference_ms": 201.31490693893284,
+              "total_ms": 415.38721695542336,
+              "gateway_overhead_ms": 11.440979638136923
+            }
+          }
+        },
+        {
+          "status": 200,
+          "retry_after": null,
+          "data": {
+            "request_id": "8eb1031de4cc4558b67e0509b075021f",
+            "output": {
+              "label": "SIMULATED",
+              "input_chars": 9
+            },
+            "meta": {
+              "worker_id": "spark-6024-826ea81d",
+              "batch_size": 1,
+              "queue_ms": 610.888916015625,
+              "batch_wait_ms": 0.3298899391666055,
+              "inference_ms": 201.2939000269398,
+              "total_ms": 823.5183099750429,
+              "gateway_overhead_ms": 11.005603993311524
+            }
+          }
+        }
+      ],
+      "last_inference_ms": 201.2939000269398,
+      "max_queue_ms": 1019.56005859375,
+      "restored_inference_ms": 11.374497087672353
+    },
+    "overload": {
+      "peak_retained": 2,
+      "statuses": {
+        "200": 2,
+        "503": 18
+      },
+      "recovered_status": 200
+    },
+    "poison_input": {
+      "quarantined": 1,
+      "reclaimed_attempts": 3.0,
+      "responses": [
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "5be6eba51feb4b3d8c07590316cce07f"
+            }
+          }
+        }
+      ],
+      "healthy_input_status": 200
+    },
+    "dlq_growth": {
+      "quarantined": 3,
+      "reclaimed_attempts": 9.0,
+      "responses": [
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "f7a05c03d3514aacb3544e5ce67a1980"
+            }
+          }
+        },
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "985df303d3dc495db7669ec7ff8c9608"
+            }
+          }
+        },
+        {
+          "status": 500,
+          "retry_after": null,
+          "data": {
+            "error": {
+              "code": "DEAD_LETTERED",
+              "message": "Request could not complete",
+              "request_id": "b18ae32343c44887a087a46594e1abb9"
+            }
+          }
+        }
+      ],
+      "healthy_input_status": 200
+    },
+    "redis_down": {
+      "liveness": 200,
+      "readiness": 503,
+      "inference": {
+        "status": 503,
+        "retry_after": "1",
+        "data": {
+          "error": {
+            "code": "UNAVAILABLE",
+            "message": "Redis unavailable",
+            "request_id": null
+          }
+        }
+      },
+      "recovered_status": 200,
+      "preserved_final_cache_status": 200,
+      "worker_restart_required": true
+    }
+  }
+}

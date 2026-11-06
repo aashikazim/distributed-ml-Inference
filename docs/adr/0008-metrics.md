@@ -53,3 +53,14 @@ average replica p95 values. Redis polling and scrape delay mean graphs trail
 reality. Missing/stale metrics must not be interpreted as a zero queue. Grafana
 runs anonymous read-only viewing on localhost for development; production auth,
 TLS, retention, Redis requirepass/TLS and HA need deployment-specific setup.
+
+
+## Phase 8 measurement follow-up
+
+The local classifier proposal now supplies measured 250 ms recording targets;
+[SLO.md](../SLO.md) records the data, derivation and limited scope. Live replies
+add gateway elapsed/residual metadata at final construction. Canonical cached
+worker outcomes do not acquire delivery-specific timings; poll fields remain
+null rather than inventing the original gateway duration. The duplicate replay
+regression still verifies canonical outcome equality and no extra compute.
+All reclaimed attempts now count, including the claim that triggers quarantine.

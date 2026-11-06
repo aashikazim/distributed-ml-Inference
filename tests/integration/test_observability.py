@@ -44,6 +44,13 @@ async def test_metrics_separate_pending_backlog_and_preserve_label_bounds(redis_
                     json={"input": "private-input-" + uuid4().hex},
                 )
                 assert response.status_code == 200
+                timing = response.json()["meta"]
+                assert timing["total_ms"] > 0
+                assert sum(
+                    timing[name]
+                    for name in ("queue_ms", "batch_wait_ms", "inference_ms", "gateway_overhead_ms")
+                ) == pytest.approx(timing["total_ms"])
+
                 await client.post("/v1/infer/untrusted-user-label", json={"input": "x"})
                 text = (await client.get("/metrics")).text
                 assert "gateway_requests_total" in text

@@ -1,24 +1,38 @@
-# Architecture — Phase 7
+# Architecture — completed implementation, verified local scope
 
 The current platform serves fake-classifier (**simulated** compute/output) and
 real DistilBERT SST-2 sentiment inference. Both use bounded dynamic batching.
 Registry, reclaim, DLQ, admission, rate limits, cancellation and async result
-polling remain shared. Phase 4 adds streaming chat via a separate vLLM adapter,
-verified against both a TCP fake server and real GPU vLLM. Dashboards, autoscaling
-and real kind deployment are implemented; diagrams 6–8 describe their boundaries.
+polling remain shared. Streaming chat uses a separate vLLM adapter, verified on
+a TCP fake server and real GB10 vLLM. Dashboards and actual kind autoscaling,
+rollout and process-loss recovery are implemented. Phase 8 adds executed runbook
+drills, open/closed-loop benchmarks, a measured capacity worksheet and a local
+SLO proposal. Hosted CI, GPU Kubernetes and production HA/soak remain unverified;
+see [the audit](VERIFICATION.md).
 
 ## Diagram 1: containers
 
 ```mermaid
 flowchart LR
-    C[HTTP client] --> G[FastAPI gateways]
-    G -->|Lua admission and XADD| R[(Redis 7)]
-    W[Worker replicas per model] -->|XREADGROUP and XAUTOCLAIM| R
-    W -->|Reply, result, heartbeat| R
-    R -->|One inbox reader per gateway| G
-    L[LLM worker with semaphore] -->|Pull requests, publish chunks| R
+    C[HTTP and SSE clients] --> G[FastAPI gateways]
+    G -->|Admission and XADD| R[(Redis Streams and state)]
+    R -->|Per-gateway inbox XREAD| G
+    W[Classifier worker replicas] -->|XREADGROUP and XAUTOCLAIM| R
+    L[LLM adapter replicas] -->|Pull requests and publish chunks| R
     L -->|Streaming HTTP| V[vLLM or simulated OpenAI server]
+    A[Autoscaler] -->|Queue and heartbeat signals| R
+    A -->|Scale mapped Deployment| W
+    E[Exporter] -->|Redis snapshots| R
+    P[Prometheus] -->|Scrape| E
+    P -->|Scrape| G
+    P -->|Scrape| W
+    F[Grafana] -->|Query| P
 ```
+
+Prometheus also scrapes the LLM adapter, engine and controller; diagram 6 shows
+that focused pipeline. The current Kubernetes scale map manages the fake
+classifier only; configured replica intent and ready capacity are separate.
+
 
 Gateways never select a worker. Each has a unique response inbox and one reader.
 Each worker has a unique consumer name. Classifier workers use one model executor
@@ -72,8 +86,9 @@ identity and returns 202 while pending, 200 on success, an error on failure, or
 | worker:{model}:{worker_id} | String JSON | Registry with default TTL 10 s, refreshed every 3 s |
 | dlq:{model} | Stream | Original poison envelope, source ID, last error, delivery count; MAXLEN ~10000 |
 | rl:{key_id} | Hash | Atomic token-bucket tokens and update time |
+| autoscaler:lock | String | Token-owned NX leadership lease, default 30 s, renewed/released by Lua |
 
-autoscaler:lock remains Phase 6 work. No Redis KEYS command is used.
+The leader lease is implemented. No Redis KEYS command is used.
 
 Heartbeats include device, backend, in_flight (all locally outstanding items),
 busy_ratio (recent compute fraction), Redis started_at and accepting. Inference
@@ -276,8 +291,8 @@ content arrival span and final completion-token usage; network chunks may contai
 multiple tokens. Gateway TTFT includes waiting and coalescing. Batch size is one
 at the adapter boundary and batch_wait_ms is zero; vLLM's internal active batch
 is a different concept. Worker inference_ms covers the whole upstream operation.
-Metrics are exposed at gateway /metrics and chat worker :9001/metrics. Engine
-/metrics is available on localhost:8100; Prometheus scraping arrives in Phase 5.
+Metrics are exposed at gateway /metrics and worker :9001/metrics. Engine
+/metrics is available on localhost:8100 in Compose and is scraped by Prometheus.
 
 | Streaming failure | Detection | Recovery | Client effect |
 |---|---|---|---|
@@ -308,12 +323,12 @@ Per-process registries avoid global test contamination. Worker DNS discovery
 scrapes each replica IP; counters use bounded labels, never request identity.
 Logs carry request_id/trace_id and component context. Queue gauges are best-effort
 Redis snapshots; exporter freshness must accompany their interpretation.
-Histograms aggregate buckets before quantiles. The SLO rule waits for a measured
-Phase 8 target series. Metrics endpoints and Grafana are development-local/internal;
+Histograms aggregate buckets before quantiles. Phase 8 recording rules now supply measured local candidate targets; their
+limited scope and failure budget are in SLO.md. Metrics endpoints and Grafana are development-local/internal;
 production authentication, notification routing and retention remain deployment work.
 See [panel queries](dashboards.md), [ADR-0008](adr/0008-metrics.md) and
-[lesson 05](learning/05-observability.md). Autoscaler metrics are defined/tested;
-its dashboard receives live control-loop data in Phase 6.
+[lesson 05](learning/05-observability.md). The Autoscaler dashboard receives live control-loop metrics; E13 verifies actual
+Deployment growth and contraction.
 
 
 ## Diagram 7: autoscaler feedback loop
@@ -332,8 +347,7 @@ flowchart LR
 
 Compose runs dry-run by default; no virtual replica count is claimed as real.
 The Kubernetes adapter uses an explicit model/deployment map and official-client
-scale calls in threads with network timeouts. It is fake-client-tested in Phase 6;
-actual cluster verification follows in Phase 7. The leader lease renews separately
+scale calls in threads with network timeouts. It is fake-client-tested and verified against a real kind cluster in E13. The leader lease renews separately
 and stops on ownership loss. It is coordination, not API fencing. Restart seeds
 history with current capacity to avoid immediate contraction. Simulation plots
 show delayed ready capacity separately from desired capacity; their inference
@@ -381,3 +395,43 @@ publication on main pushes. Hosted CI and publication are not verified because
 no push was performed. See [lesson 07](learning/07-kubernetes-deployment.md),
 [deployment concepts](concepts/deploying-ml-workloads.md), [ADR-0010](adr/0010-deployment.md)
 and [real kind experiments](EXPERIMENTS.md).
+
+
+## Final latency contract and measured operation
+
+Every successful live classifier/chat final contains worker_id, batch_size,
+queue_ms, batch_wait_ms and inference_ms. queue_ms uses Redis time minus the
+request stream ID timestamp through local worker acceptance; it includes some
+consumer bookkeeping. Local wait/compute use the injected monotonic Clock.
+Shared batch inference duration is reported in full for each item, not divided
+by batch size. LLM batch size one denotes the adapter boundary, not vLLM's private
+continuous batch; its batch_wait_ms is zero.
+
+Phase 8 adds total_ms and gateway_overhead_ms for a live HTTP delivery. total_ms
+runs from the gateway's ASGI entry until constructing its final reply; it excludes
+later serialization/send and client transport. The residual is total minus the
+three worker components. Clock resolution/boundaries can make a small residual
+negative; it is not a separately profiled function. HTTP metrics measure the full
+handler/stream lifetime, and benchmark clients measure their own elapsed time.
+Never add component percentiles to reconstruct an overall percentile.
+
+Canonical worker outcomes stay in the existing result cache. Polling/replay keeps
+those worker timings and leaves delivery-specific gateway timing null; it does
+not invent the original gateway's elapsed time. This does not alter ACK ordering,
+Redis key names or outcome ownership. The duplicate replay test still verifies
+all canonical fields and no extra compute.
+
+Final-image spot checks completed 800 fake and 100 real CPU requests with p95
+110.42 and 60.76 ms. Three-repeat baseline, Locust, Little's Law and the local
+250 ms candidate are documented in [BENCHMARKS.md](BENCHMARKS.md),
+[CAPACITY_PLANNING.md](CAPACITY_PLANNING.md) and [SLO.md](SLO.md). All simulated
+compute is labeled. Runbook drills cover Redis loss, no workers, poison input,
+slow compute, DLQ growth and overload through real TCP/Redis. Worker reclaims
+count every claimed attempt, including the claim that leads to quarantine.
+
+The final local verification suite passes 62 CPU tests plus one explicit real
+GB10/vLLM test. A real GPU engine scrape and current Compose round trip are
+recorded separately. This is a learning deployment: Redis and monitoring are not
+HA, stream resumption and automatic DLQ replay are absent, production ingress/
+TLS/notification/retention policies are deployment work, and no hosted CI or GPU
+cluster run is claimed. The GPU overlay is rendered, explicitly untested.

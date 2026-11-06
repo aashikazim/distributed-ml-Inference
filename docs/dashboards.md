@@ -213,7 +213,7 @@ are real with vLLM, simulated with fake-openai; check the enabled profile.
 
 Autoscaler desired/current are deployment recommendations and observed spec
 replicas, not ready pod counts. Read Workers alive alongside them. Decisions are
-bounded up/down/hold directions. These panels become populated in Phase 6.
+bounded up/down/hold directions. These panels are populated by the implemented controller; E13 verifies real kind changes.
 
 E7 diagnosis uses only saved Overview/Batching expressions and their Prometheus
 responses. See [the measured record](EXPERIMENTS.md) and
@@ -229,7 +229,32 @@ NoWorkersAlive identifies configured models without accepting heartbeats for
 30 seconds; partial dev profiles intentionally leave some configured models idle.
 DeadLetterQueueNonEmpty signals retained evidence, not necessarily a current
 request storm. ExporterStale warns about frozen gauges. InferenceLatencyAboveMeasuredSLO
-compares p95 against platform_latency_slo_seconds for five minutes; Phase 8 adds a
-measured proposal series. There is no invented latency threshold in Phase 5.
+compares p95 against platform_latency_slo_seconds for five minutes; Phase 8 now supplies
+measured local candidate series, 250 ms for the tested classifier scopes; see SLO.md.
 Alert rules evaluate in Prometheus; an external notification receiver is not
 configured. Diagnosis still requires the panels, not just the alert name.
+
+
+Phase 8 adds InferenceFailureBudgetExceeded for sustained valid-submission
+429/5xx fraction above the local candidate budget. Histogram duration includes
+errors too, so inspect this alongside latency. Promtool synthetic-series tests
+verify all sustained alerts, including no early five-minute firing. The target
+series and alert pair are an operational approximation of the scoped proposal;
+no 30-day reliability window or notification delivery was verified.
+
+
+## Inspect the verified kind stack
+
+When the dedicated cluster is running, these executed commands expose its
+monitoring services on localhost. Use separate terminals and avoid starting a
+second forward if that port is already active:
+
+```bash
+kubectl --context kind-infer-platform -n infer-platform port-forward service/grafana 13000:3000
+kubectl --context kind-infer-platform -n infer-platform port-forward service/prometheus 19090:9090
+```
+
+Use KUBECONFIG=/tmp/infer-kind-kubeconfig as in the deployment lesson. A Pod
+replacement can invalidate an existing port-forward; restart the forward if it
+reports a lost Pod connection. This is local access tooling, not a production
+ingress or availability mechanism.

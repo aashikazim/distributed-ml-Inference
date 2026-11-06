@@ -54,8 +54,8 @@ objects followed by [DONE]; the HTTP status cannot be changed retroactively.
 
 Record a stream_started marker in the existing typed result JSON before its first
 chunk publication. A reclaimed partial stream is terminated as interrupted/expired,
-not silently restarted into the same HTTP response. Before first publication,
-retry after a process crash remains possible. Cached finals can be returned,
+not silently restarted into the same HTTP response. Before recording the marker, retry after a crash remains possible. Once the
+marker exists, interruption is conservative even if no chunk reached the client. Cached finals can be returned,
 but partial stream replay/resumption is not supported. A final text-hash check
 compares emitted content with the complete result, detecting missing/corrupt
 chunk content without retaining another full output in the gateway. It cannot

@@ -764,3 +764,76 @@ Prometheus scrapes both gateways through a separate headless metrics service,
 plus worker Pod IPs: [monitoring evidence](results/p7-kind-monitoring.json).
 RBAC permitted named worker scale writes and denied general Deployment writes.
 GPU overlay rendered successfully but remains **untested on a GPU cluster**.
+
+
+## Phase 8 — load, occupancy, operational recovery and final regression
+
+**Questions/predictions:** At low fake load, 50 ms base + 2 ms/item + 10 ms local
+wait + a 5 ms transport allowance predicts 67 ms mean HTTP time, hence 0.67
+in-flight calls at 10 requests/s. Recorded before traffic in
+[p8-capacity-prediction.json](results/p8-capacity-prediction.json). Fixed replicas
+should handle the chosen modest rates; overload should reject early when depth
+is deliberately tiny. A stable Redis service endpoint should allow gateway
+reconnection, with fresh failed-worker restart and cached final retention.
+
+**Setup/method:** 2026-11-06, same ARM/20-core kind hardware as E11–E13. Client
+Python 3.12.3, serving container Python 3.12.16, CPU torch 2.15.0+cpu and
+Transformers 4.57.6. Serving baseline 1fcfcba; final source/image spot checks are
+separately identified. Real HTTP/Redis/Kubernetes; fake compute is **simulated**,
+DistilBERT is real CPU inference. Exact methods, rates, lengths, repeats,
+quantile definitions, controller state and artifacts are in BENCHMARKS.md.
+
+Three 20-second traces per setting completed 3900 fake and 300 real CPU requests,
+all successful; the separate worksheet trace completed 600. Fake raw p95 medians
+were 72.14/74.56/111.95 ms at 5/20/40 req/s. Real CPU sentiment p95 median was
+64.38 ms at 5 req/s. Final rebuilt images completed another 800 fake/100 real CPU
+requests, p95 110.42/60.76 ms, including the new gateway timing fields.
+
+**Occupancy result:** sampled mean 0.74274, versus measured lambda W 0.75309.
+The 0.67 prediction was 10.86% below the sampled result relative to its own
+predicted value. Mean duration was 75.278 ms, above the assumed 67 ms. The sampler
+is independent of summing the duration observations; the remaining 1.37%
+difference reflects finite-window/sampling boundaries rather than an algebraic
+identity being presented as validation.
+
+**Locust:** steady/ramp/spike/mixed completed 933/2063/3088/1367 requests, zero
+reported failures. Mixed had 339 simulated streamed chat calls. These closed-loop
+users slow arrivals when service slows; they are not a fixed-rate burst capacity
+claim. Raw CSV, request population and rounded percentile semantics are preserved.
+
+**Runbook results:** all six final drills passed against an isolated real Redis
+and TCP gateway. No worker returned 503 with Retry-After; a slow configured
+runner showed about 201 ms compute; depth two accepted 2/rejected 18; one poison
+and three-poison scenarios produced 1/3 DLQ entries, with 3/9 reclaimed attempts.
+Redis outage left liveness 200, readiness/inference 503; restoring the same endpoint
+and a fresh worker pool produced inference 200 and preserved cached-final 200.
+
+**What surprised us:** Docker assigned a new random published port after a container
+restart. The first readiness timeout therefore tested a changed endpoint, not
+reconnection to one service. A probe reproduced old port 32959→32960 and ten old-
+client connection failures. A second diagnostic reused a stale in-process pool
+instead of modeling process restart and failed during cleanup. Both records are
+retained. The final drill uses a fixed loopback port and a fresh worker pool.
+
+Another audit found the reclaimed counter omitted the claim that triggers DLQ
+quarantine. It now counts that attempt, with a real-Redis regression check for
+three reclaims at delivery four. Gateway timing enrichment preserves canonical
+cached worker outcomes; cached polls do not fabricate original HTTP elapsed time.
+
+**Conclusion:** The chosen local workloads and operational transitions passed,
+with explicit population/clock boundaries. A 250 ms candidate comes from doubling
+the worst raw per-model trial p95 and rounding up to shared histogram buckets.
+The 99% availability candidate is a limited review proposal, not an observed
+30-day result. promtool validates sustained latency/failure/backlog/no-worker/
+DLQ/staleness alerts, including that five-minute rules do not fire early.
+
+Final source also passed 62 CPU tests and one additional real GB10 vLLM test.
+The warm GPU test saw an active sequence, then zero and CANCELLED after 34.20 ms
+with its 20 ms test polling. Rebuilt Compose served real GPU chat and Prometheus
+actually scraped engine metrics. Combined CPU/fake Compose served real sentiment
+and synthetic SSE; no GPU cluster execution is claimed.
+
+See [benchmarks](BENCHMARKS.md), [worksheet](CAPACITY_PLANNING.md),
+[runbook](RUNBOOK.md), [SLO proposal](SLO.md), [audit](VERIFICATION.md) and their
+linked raw artifacts. Short/local/synthetic traces do not establish production
+capacity, Redis HA, arbitrary input latency, hosted CI or human understanding.

@@ -1,28 +1,58 @@
 groups:
-  - name: inference
-    rules:
-      - alert: InferenceLatencyAboveMeasuredSLO
-        expr: histogram_quantile(0.95, sum by (le, model) (rate(gateway_request_duration_seconds_bucket{endpoint="/v1/infer/{model}"}[5m]))) > on(model) platform_latency_slo_seconds
-        for: 5m
-        labels: {severity: warning}
-        annotations: {summary: 'p95 exceeds the measured SLO; inspect queue and compute panels'}
-      - alert: BacklogGrowing
-        expr: deriv(queue_backlog[5m]) > 0
-        for: 5m
-        labels: {severity: warning}
-        annotations: {summary: 'Backlog has grown for five minutes'}
-      - alert: NoWorkersAlive
-        expr: workers_alive == 0
-        for: 30s
-        labels: {severity: critical}
-        annotations: {summary: 'Configured model has no accepting workers'}
-      - alert: DeadLetterQueueNonEmpty
-        expr: queue_dlq_entries > 0
-        for: 10s
-        labels: {severity: warning}
-        annotations: {summary: 'Poison request evidence requires investigation'}
-      - alert: ExporterStale
-        expr: time() - exporter_last_success_timestamp_seconds > 15
-        for: 15s
-        labels: {severity: critical}
-        annotations: {summary: 'Redis observations are stale, do not trust frozen gauges'}
+- name: inference
+  rules:
+  - alert: InferenceLatencyAboveMeasuredSLO
+    expr: histogram_quantile(0.95, sum by (le, model) (rate(gateway_request_duration_seconds_bucket{endpoint="/v1/infer/{model}"}[5m])))
+      > on(model) platform_latency_slo_seconds
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: p95 exceeds the measured SLO; inspect queue and compute panels
+  - alert: BacklogGrowing
+    expr: deriv(queue_backlog[5m]) > 0
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: Backlog has grown for five minutes
+  - alert: NoWorkersAlive
+    expr: workers_alive == 0
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: Configured model has no accepting workers
+  - alert: DeadLetterQueueNonEmpty
+    expr: queue_dlq_entries > 0
+    for: 10s
+    labels:
+      severity: warning
+    annotations:
+      summary: Poison request evidence requires investigation
+  - alert: ExporterStale
+    expr: time() - exporter_last_success_timestamp_seconds > 15
+    for: 15s
+    labels:
+      severity: critical
+    annotations:
+      summary: Redis observations are stale, do not trust frozen gauges
+  - alert: InferenceFailureBudgetExceeded
+    expr: sum by (model) (rate(gateway_requests_total{endpoint="/v1/infer/{model}",status=~"429|5.."}[5m]))
+      / sum by (model) (rate(gateway_requests_total{endpoint="/v1/infer/{model}",status=~"2..|429|5.."}[5m]))
+      > 0.01
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: Valid inference failure fraction exceeds the local candidate budget
+- name: measured-local-targets
+  rules:
+  - record: platform_latency_slo_seconds
+    expr: '0.25'
+    labels:
+      model: fake-classifier
+  - record: platform_latency_slo_seconds
+    expr: '0.25'
+    labels:
+      model: sentiment

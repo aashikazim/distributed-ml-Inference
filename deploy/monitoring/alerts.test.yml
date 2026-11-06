@@ -1,0 +1,86 @@
+rule_files:
+- alerts.yml
+evaluation_interval: 1m
+tests:
+- interval: 1m
+  input_series:
+  - series: gateway_request_duration_seconds_bucket{model="fake-classifier",endpoint="/v1/infer/{model}",le="0.1"}
+    values: 0+0x15
+  - series: gateway_request_duration_seconds_bucket{model="fake-classifier",endpoint="/v1/infer/{model}",le="0.25"}
+    values: 0+0x15
+  - series: gateway_request_duration_seconds_bucket{model="fake-classifier",endpoint="/v1/infer/{model}",le="1"}
+    values: 0+100x15
+  - series: gateway_request_duration_seconds_bucket{model="fake-classifier",endpoint="/v1/infer/{model}",le="+Inf"}
+    values: 0+100x15
+  alert_rule_test:
+  - eval_time: 4m
+    alertname: InferenceLatencyAboveMeasuredSLO
+    exp_alerts: []
+  - eval_time: 7m
+    alertname: InferenceLatencyAboveMeasuredSLO
+    exp_alerts:
+    - exp_labels:
+        model: fake-classifier
+        severity: warning
+      exp_annotations:
+        summary: p95 exceeds the measured SLO; inspect queue and compute panels
+- interval: 1m
+  input_series:
+  - series: queue_backlog{model="fake-classifier"}
+    values: 0+10x15
+  - series: workers_alive{model="fake-classifier"}
+    values: 0+0x15
+  - series: queue_dlq_entries{model="fake-classifier"}
+    values: 1+0x15
+  alert_rule_test:
+  - eval_time: 7m
+    alertname: BacklogGrowing
+    exp_alerts:
+    - exp_labels:
+        model: fake-classifier
+        severity: warning
+      exp_annotations:
+        summary: Backlog has grown for five minutes
+  - eval_time: 2m
+    alertname: NoWorkersAlive
+    exp_alerts:
+    - exp_labels:
+        model: fake-classifier
+        severity: critical
+      exp_annotations:
+        summary: Configured model has no accepting workers
+  - eval_time: 2m
+    alertname: DeadLetterQueueNonEmpty
+    exp_alerts:
+    - exp_labels:
+        model: fake-classifier
+        severity: warning
+      exp_annotations:
+        summary: Poison request evidence requires investigation
+- interval: 1m
+  input_series:
+  - series: gateway_requests_total{model="fake-classifier",endpoint="/v1/infer/{model}",status="200"}
+    values: 0+99x15
+  - series: gateway_requests_total{model="fake-classifier",endpoint="/v1/infer/{model}",status="503"}
+    values: 0+2x15
+  - series: exporter_last_success_timestamp_seconds
+    values: 0+0x15
+  alert_rule_test:
+  - eval_time: 4m
+    alertname: InferenceFailureBudgetExceeded
+    exp_alerts: []
+  - eval_time: 7m
+    alertname: InferenceFailureBudgetExceeded
+    exp_alerts:
+    - exp_labels:
+        model: fake-classifier
+        severity: warning
+      exp_annotations:
+        summary: Valid inference failure fraction exceeds the local candidate budget
+  - eval_time: 2m
+    alertname: ExporterStale
+    exp_alerts:
+    - exp_labels:
+        severity: critical
+      exp_annotations:
+        summary: Redis observations are stale, do not trust frozen gauges

@@ -1,12 +1,13 @@
 import json
-import time
 from uuid import uuid4
 
 import structlog
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from infer_platform.common.clock import Clock
 from infer_platform.common.metrics import LATENCY_BUCKETS
+from infer_platform.common.schemas import InboxMessage
 
 
 class GatewayMetrics:
@@ -50,8 +51,10 @@ class GatewayMetrics:
 class ObserveHTTP:
     """Observe complete SSE lifetime without buffering a streaming response."""
 
-    def __init__(self, app: ASGIApp, metrics: GatewayMetrics, models: set[str]) -> None:
-        self.app, self.metrics, self.models = app, metrics, models
+    def __init__(
+        self, app: ASGIApp, metrics: GatewayMetrics, models: set[str], clock: Clock
+    ) -> None:
+        self.app, self.metrics, self.models, self.clock = app, metrics, models, clock
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http" or not scope["path"].startswith("/v1/"):
@@ -61,7 +64,8 @@ class ObserveHTTP:
         structlog.contextvars.bind_contextvars(
             component="gateway", worker_id=None, request_id=uuid4().hex, trace_id=uuid4().hex
         )
-        started = time.monotonic()
+        started = self.clock.monotonic()
+        scope["metric_started"] = started
         status = 500
         payload = bytearray()
         streaming = False
@@ -99,7 +103,7 @@ class ObserveHTTP:
                 path.rsplit("/", 1)[-1] if endpoint == "/v1/infer/{model}" else "unknown",
             )
             model = candidate if candidate in self.models else "unknown"
-            elapsed = time.monotonic() - started
+            elapsed = self.clock.monotonic() - started
             self.metrics.inflight.dec()
             self.metrics.requests.labels(model, endpoint, str(status)).inc()
             self.metrics.duration.labels(model, endpoint).observe(elapsed)
@@ -116,3 +120,13 @@ class ObserveHTTP:
                 "http_finished", model=model, endpoint=endpoint, status=status, duration_s=elapsed
             )
             structlog.contextvars.clear_contextvars()
+
+
+def timed_reply(message: InboxMessage, elapsed_ms: float) -> InboxMessage:
+    """Gateway elapsed when constructing a final reply, excluding later send/transport."""
+    meta = json.loads(message.meta)
+    meta["total_ms"] = elapsed_ms
+    meta["gateway_overhead_ms"] = elapsed_ms - sum(
+        meta.get(name, 0) for name in ("queue_ms", "batch_wait_ms", "inference_ms")
+    )
+    return message.model_copy(update={"meta": json.dumps(meta)})

@@ -1,0 +1,16 @@
+{
+  "date_utc": "2026-11-06T20:24:59Z",
+  "model": "fake-classifier",
+  "boundary": "Client HTTP start through final body, including transport and local waiting",
+  "arrival_rps": 10,
+  "assumed_mean_s": 0.067,
+  "assumed_components_s": {
+    "base": 0.05,
+    "per_item": 0.002,
+    "batch_wait": 0.01,
+    "transport_allowance": 0.005
+  },
+  "predicted_mean_inflight": 0.67,
+  "simulated_model_cost": true,
+  "note": "Prediction recorded before traffic; measured sampling is independent of duration summation."
+}

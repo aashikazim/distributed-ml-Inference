@@ -192,6 +192,8 @@ class Worker:
     async def accept(
         self, entry_id: str, fields: dict[str, str], deliveries: int, batcher: DynamicBatcher
     ) -> None:
+        if deliveries > 1:
+            self.metrics.reclaimed.labels(self.model).inc()
         try:
             message = RequestMessage.model_validate(fields)
         except ValidationError:
@@ -226,7 +228,6 @@ class Worker:
             )
         )
         if deliveries > 1:
-            self.metrics.reclaimed.labels(self.model).inc()
             log.info(
                 "request_reclaimed",
                 component="worker",

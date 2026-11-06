@@ -1,0 +1,27 @@
+{
+  "status": "local candidate, not production SLO verification",
+  "source_commit": "1fcfcba5b38d4d350435b2e321a682388d82f854",
+  "method": "Double worst per-model trial p95, round up to shared histogram boundary. Failure budget rounds rough 3/N independent-trial estimate up to a percentage; correlated short runs do not establish month-long reliability.",
+  "window_proposal_days": 30,
+  "availability_target": 0.99,
+  "failure_budget_fraction": 0.01,
+  "scope": "kind fixed 2 fake workers / 1 CPU sentiment worker / 2 gateways, short text; tested offered rates only; 429/5xx count as failures for valid submissions. No chat SLO derived from fake token output.",
+  "models": {
+    "fake-classifier": {
+      "observations": 3900,
+      "failures": 0,
+      "worst_trial_raw_p95_s": 0.11396228999365121,
+      "latency_target_s": 0.25,
+      "measured_max_offered_rps": 40,
+      "simulated_compute": true
+    },
+    "sentiment": {
+      "observations": 300,
+      "failures": 0,
+      "worst_trial_raw_p95_s": 0.06496592389885336,
+      "latency_target_s": 0.25,
+      "measured_max_offered_rps": 5,
+      "simulated_compute": false
+    }
+  }
+}

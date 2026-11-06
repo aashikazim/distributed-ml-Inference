@@ -1,0 +1,429 @@
+{
+  "dashboards": {
+    "Batching": [
+      {
+        "panel": "Batch size mean",
+        "expr": "sum by (model) (rate(worker_batch_size_sum[1m])) / sum by (model) (rate(worker_batch_size_count[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Batch size distribution",
+        "expr": "sum by (le,model) (rate(worker_batch_size_bucket[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Batch wait mean",
+        "expr": "sum by (model) (rate(worker_batch_wait_seconds_sum[1m])) / sum by (model) (rate(worker_batch_wait_seconds_count[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Inference mean",
+        "expr": "sum by (model) (rate(worker_inference_seconds_sum[1m])) / sum by (model) (rate(worker_inference_seconds_count[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Busy ratio",
+        "expr": "worker_busy_ratio",
+        "status": "success"
+      },
+      {
+        "panel": "Outcomes / second",
+        "expr": "sum by (model,outcome) (rate(worker_items_total[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Reclaims",
+        "expr": "sum by (model) (increase(worker_reclaimed_total[5m]))",
+        "status": "success"
+      }
+    ],
+    "LLM": [
+      {
+        "panel": "Worker TTFT p95",
+        "expr": "histogram_quantile(0.95, sum by (le,model) (rate(worker_ttft_seconds_bucket[1m])))",
+        "status": "success"
+      },
+      {
+        "panel": "Gateway TTFT p95",
+        "expr": "histogram_quantile(0.95, sum by (le,model) (rate(gateway_ttft_seconds_bucket[1m])))",
+        "status": "success"
+      },
+      {
+        "panel": "TPOT mean",
+        "expr": "sum by (model) (rate(worker_tpot_seconds_sum[1m])) / sum by (model) (rate(worker_tpot_seconds_count[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Completion tokens / second",
+        "expr": "sum by (model) (rate(worker_tokens_generated_total[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Active sequences",
+        "expr": "worker_inflight_sequences",
+        "status": "success"
+      },
+      {
+        "panel": "Engine active sequences",
+        "expr": "vllm:num_requests_running",
+        "status": "success"
+      }
+    ],
+    "Overview": [
+      {
+        "panel": "RPS",
+        "expr": "sum by (model,status) (rate(gateway_requests_total[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Latency p50",
+        "expr": "histogram_quantile(0.5, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "status": "success"
+      },
+      {
+        "panel": "Latency p95",
+        "expr": "histogram_quantile(0.95, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "status": "success"
+      },
+      {
+        "panel": "Latency p99",
+        "expr": "histogram_quantile(0.99, sum by (le,model) (rate(gateway_request_duration_seconds_bucket[1m])))",
+        "status": "success"
+      },
+      {
+        "panel": "Errors / second",
+        "expr": "sum by (model,status) (rate(gateway_requests_total{status=~\"4..|5..\"}[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Backlog",
+        "expr": "queue_backlog",
+        "status": "success"
+      },
+      {
+        "panel": "Workers alive",
+        "expr": "workers_alive",
+        "status": "success"
+      },
+      {
+        "panel": "Queue wait mean",
+        "expr": "sum by (model) (rate(gateway_queue_wait_seconds_sum[1m])) / sum by (model) (rate(gateway_queue_wait_seconds_count[1m]))",
+        "status": "success"
+      },
+      {
+        "panel": "Head age",
+        "expr": "queue_head_age_seconds",
+        "status": "success"
+      },
+      {
+        "panel": "Pending",
+        "expr": "queue_pending",
+        "status": "success"
+      },
+      {
+        "panel": "DLQ entries",
+        "expr": "queue_dlq_entries",
+        "status": "success"
+      }
+    ],
+    "Autoscaler": [
+      {
+        "panel": "Desired replicas",
+        "expr": "autoscaler_desired_replicas",
+        "status": "success"
+      },
+      {
+        "panel": "Current replicas",
+        "expr": "autoscaler_current_replicas",
+        "status": "success"
+      },
+      {
+        "panel": "Backlog",
+        "expr": "queue_backlog",
+        "status": "success"
+      },
+      {
+        "panel": "Decisions / second",
+        "expr": "sum by (model,direction) (rate(autoscaler_decisions_total[1m]))",
+        "status": "success"
+      }
+    ]
+  },
+  "targets": [
+    {
+      "discoveredLabels": {
+        "__address__": "autoscaler:9003",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "autoscaler"
+      },
+      "labels": {
+        "instance": "autoscaler:9003",
+        "job": "autoscaler"
+      },
+      "scrapePool": "autoscaler",
+      "scrapeUrl": "http://autoscaler:9003/metrics",
+      "globalUrl": "http://autoscaler:9003/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:56.546602403Z",
+      "lastScrapeDuration": 0.001702954,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "exporter:9002",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "exporter"
+      },
+      "labels": {
+        "instance": "exporter:9002",
+        "job": "exporter"
+      },
+      "scrapePool": "exporter",
+      "scrapeUrl": "http://exporter:9002/metrics",
+      "globalUrl": "http://exporter:9002/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:59.455279957Z",
+      "lastScrapeDuration": 0.001439608,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "gateway:8000",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "gateway"
+      },
+      "labels": {
+        "instance": "gateway:8000",
+        "job": "gateway"
+      },
+      "scrapePool": "gateway",
+      "scrapeUrl": "http://gateway:8000/metrics",
+      "globalUrl": "http://gateway:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:56.805026851Z",
+      "lastScrapeDuration": 0.001929052,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "172.22.0.4:8000",
+        "__meta_dns_name": "fake-openai",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "vllm"
+      },
+      "labels": {
+        "instance": "172.22.0.4:8000",
+        "job": "vllm"
+      },
+      "scrapePool": "vllm",
+      "scrapeUrl": "http://172.22.0.4:8000/metrics",
+      "globalUrl": "http://172.22.0.4:8000/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:57.040944026Z",
+      "lastScrapeDuration": 0.000654932,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "172.22.0.9:9001",
+        "__meta_dns_name": "worker-fake",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "172.22.0.9:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://172.22.0.9:9001/metrics",
+      "globalUrl": "http://172.22.0.9:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:56.834297331Z",
+      "lastScrapeDuration": 0.001351128,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "172.22.0.8:9001",
+        "__meta_dns_name": "worker-chat-fake",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "172.22.0.8:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://172.22.0.8:9001/metrics",
+      "globalUrl": "http://172.22.0.8:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:56.100595802Z",
+      "lastScrapeDuration": 0.001397241,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    },
+    {
+      "discoveredLabels": {
+        "__address__": "172.22.0.11:9001",
+        "__meta_dns_name": "worker-sentiment",
+        "__metrics_path__": "/metrics",
+        "__scheme__": "http",
+        "__scrape_interval__": "5s",
+        "__scrape_timeout__": "5s",
+        "job": "workers"
+      },
+      "labels": {
+        "instance": "172.22.0.11:9001",
+        "job": "workers"
+      },
+      "scrapePool": "workers",
+      "scrapeUrl": "http://172.22.0.11:9001/metrics",
+      "globalUrl": "http://172.22.0.11:9001/metrics",
+      "lastError": "",
+      "lastScrape": "2026-11-06T21:03:56.687581493Z",
+      "lastScrapeDuration": 0.00154145,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+    }
+  ],
+  "grafana_dashboards": [
+    {
+      "id": 1,
+      "uid": "fg3in89rohvy8b",
+      "orgId": 1,
+      "title": "Inference",
+      "uri": "db/inference",
+      "url": "/dashboards/f/fg3in89rohvy8b/inference",
+      "slug": "",
+      "type": "dash-folder",
+      "tags": [],
+      "isStarred": false,
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 2,
+      "uid": "inference-autoscaler",
+      "orgId": 1,
+      "title": "Autoscaler",
+      "uri": "db/autoscaler",
+      "url": "/d/inference-autoscaler/autoscaler",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "fg3in89rohvy8b",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/fg3in89rohvy8b/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 3,
+      "uid": "inference-batching",
+      "orgId": 1,
+      "title": "Batching",
+      "uri": "db/batching",
+      "url": "/d/inference-batching/batching",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "fg3in89rohvy8b",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/fg3in89rohvy8b/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 4,
+      "uid": "inference-llm",
+      "orgId": 1,
+      "title": "LLM",
+      "uri": "db/llm",
+      "url": "/d/inference-llm/llm",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "fg3in89rohvy8b",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/fg3in89rohvy8b/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    },
+    {
+      "id": 5,
+      "uid": "inference-overview",
+      "orgId": 1,
+      "title": "Overview",
+      "uri": "db/overview",
+      "url": "/d/inference-overview/overview",
+      "slug": "",
+      "type": "dash-db",
+      "tags": [],
+      "isStarred": false,
+      "folderId": 1,
+      "folderUid": "fg3in89rohvy8b",
+      "folderTitle": "Inference",
+      "folderUrl": "/dashboards/f/fg3in89rohvy8b/inference",
+      "sortMeta": 0,
+      "isDeleted": false
+    }
+  ],
+  "slo_targets": [
+    {
+      "metric": {
+        "__name__": "platform_latency_slo_seconds",
+        "model": "fake-classifier"
+      },
+      "value": [
+        1793999040.713,
+        "0.25"
+      ]
+    },
+    {
+      "metric": {
+        "__name__": "platform_latency_slo_seconds",
+        "model": "sentiment"
+      },
+      "value": [
+        1793999040.713,
+        "0.25"
+      ]
+    }
+  ]
+}

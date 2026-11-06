@@ -29,6 +29,8 @@ class Meta(BaseModel):
     queue_ms: float = 0
     batch_wait_ms: float = 0
     inference_ms: float = 0
+    total_ms: float | None = None
+    gateway_overhead_ms: float | None = None
 
 
 class InboxMessage(BaseModel):
