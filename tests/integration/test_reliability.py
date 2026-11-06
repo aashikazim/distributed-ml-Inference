@@ -1,17 +1,23 @@
 import asyncio
 import json
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 from uuid import uuid4
 
+import httpx
 import pytest
+from fastapi import FastAPI
+from redis.asyncio import Redis
 
 from infer_platform.common.keys import GROUP, request_stream, result_key
 from infer_platform.common.redis import create_redis
 from infer_platform.common.schemas import RequestMessage, ResultRecord
+from infer_platform.common.settings import Settings
 from infer_platform.gateway.app import create_app
 from infer_platform.gateway.rate_limit import RateLimiter
 from infer_platform.worker.main import Worker
+from infer_platform.worker.runners.base import ModelRunner
 from infer_platform.worker.runners.fake import FakeRunner
 from tools.reliability import client_for, eventually, settings_for
 
@@ -19,7 +25,10 @@ pytestmark = pytest.mark.integration
 
 
 @asynccontextmanager
-async def system(settings, runner=None):
+async def system(
+    settings: Settings,
+    runner: ModelRunner | None = None,
+) -> AsyncGenerator[tuple[Redis, Worker, httpx.AsyncClient, FastAPI]]:
     redis = create_redis(settings)
     model = settings.worker_model
     worker = Worker(redis, model, settings.load_models()[model], runner=runner, settings=settings)

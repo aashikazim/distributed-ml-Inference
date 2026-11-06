@@ -1,6 +1,6 @@
 import asyncio
 import threading
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from typing import Any
@@ -102,7 +102,7 @@ class Harness:
 @asynccontextmanager
 async def harness(
     size: int = 2, wait: float = 10, bound: int | None = None, block: bool = False
-) -> AsyncIterator[Harness]:
+) -> AsyncGenerator[Harness]:
     h = Harness(size, wait, bound, block)
     task = asyncio.create_task(h.batcher.run())
     try:

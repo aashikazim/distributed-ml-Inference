@@ -1,6 +1,6 @@
 import asyncio
 import json
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager, suppress
 from typing import Any
 from uuid import uuid4
@@ -51,7 +51,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     clock = clock or SystemClock()
 
     @asynccontextmanager
-    async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         configure_logging()
         redis = create_redis(config)
         router = ResponseRouter(redis, inbox(uuid4().hex), config.inbox_ttl_s)
