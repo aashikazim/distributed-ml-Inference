@@ -1,6 +1,41 @@
 # Progress
 
-## Phase 2 — complete
+## Phase 3 — complete
+
+Built worker TTL registry and busy/in-flight heartbeats, live worker counts,
+capacity-bounded XAUTOCLAIM with extended XPENDING delivery counts, persistent
+poison retries and DLQ quarantine, cached duplicate replay, deadlines and
+cancellation before/after compute, and tested graceful SIGTERM draining.
+
+Gateway now has Redis Lua token buckets, atomic retained-depth admission,
+no-worker rejection, body-byte limits, async acceptance/result polling with
+API-key ownership, cancellation on timeout/disconnect, and a bounded blocking
+Redis connection pool. Response and cache publication precede transactional
+XACK/XDEL cleanup. Compose workers have a 15-second stop grace.
+
+Validation on 2026-11-06: 32 tests passed, including two real-process chaos tests,
+real Redis, fake-clock batch/heartbeat tests and cached real CPU model correctness.
+Ruff lint/format and strict-common mypy passed (26 source files). Redis 7.4.12,
+redis-py 8.1.0, Python 3.12.3 on the ARM aarch64 host. No model downloads in tests.
+
+Three Compose replicas served 120 real HTTP requests across all three worker IDs;
+the distribution drill also verified async 202 acceptance and 200 result polling.
+E1 compatibility was rerun while retaining its historical Phase 1 measurements.
+The CPU sentiment integration and final container curl remain green.
+
+E4 median SIGKILL recovery: 723.87/1239.40/2242.55 ms for 500/1000/2000 ms idle
+thresholds, with all 36 requests recovered and pending/retained work cleared.
+E5 with admission held depth at eight and completed all eight accepted requests
+per trial; without admission, depth reached 120 and 100–104 requests timed out.
+Compute is simulated; Redis, processes, signals and HTTP handlers are real.
+The initial pool-exhaustion run and confirming probe are preserved separately.
+
+Delivered lesson 03 with command-by-command SIGKILL walkthrough, reliability
+concept guide, ADRs 0005–0006, diagram 4, updated architecture/config/glossary,
+reading plan, measured experiments and raw artifacts. Details and caveats are
+in EXPERIMENTS.md. GPU/vLLM verification remains pending.
+
+## Phase 2 — historical completed phase
 
 Built ModelRunner, TorchClassifierRunner and DynamicBatcher. DistilBERT SST-2
 loads from trusted safetensors, selects the configured device, uses eval and
@@ -70,39 +105,40 @@ Docker required execution-environment escalation, which was granted.
 
 ## Deferred — according to the phase plan
 
-Phase 3: heartbeat registry/live worker counts, admission using max_queue_depth,
-rate limiting, reclaim, retry counts/DLQ, result cache/polling, gateway-driven cancellation,
-and tested failure recovery. A graceful stop flag already lets the current fake
-accepted batches finish, but the full shutdown contract and chaos suite remain Phase 3.
-Malformed stream envelopes can stop a worker; poison-message recovery is not
-implemented. Runner invocation failures are now isolated with bounded individual retries;
-response/transport failures can still leave pending work.
+Phase 4: LLM adapter, SSE, fake OpenAI server, chunk coalescing, concurrency caps,
+cancellation of upstream generation, GPU verification instructions.
+**Real-vLLM verification pending.**
 
-Phase 4: LLM/SSE adapter, fake OpenAI server, GPU verification instructions and
-real-vLLM verification. **Real-vLLM verification pending.**
+Phase 5: metrics/exporter, provisioned dashboards, alerts and richer logging.
+Phases 6–8: autoscaling, Kubernetes/CI, load testing, runbook and measured SLOs.
 
-Phase 5: metrics endpoint/exporter, dashboards and structured logging enhancements.
-Current JSON application logs carry correlation fields and actual batch sizes
-for completed requests.
+## Current limitations
 
-Phases 6–8: autoscaling, Kubernetes/CI, load tests, operational runbook and measured
-SLOs. No production readiness or automatic recovery claim.
+The default classifier deadline is 5 seconds versus 30 seconds for reclaim idle.
+A killed request therefore times out before default reclaim and is expired later.
+Successful synchronous recovery requires a tuned deadline/idle/compute budget;
+E4 records its controlled, shorter idle thresholds rather than hiding this gap.
 
-## Known limitations
+Cancellation flags are best effort and cannot interrupt CPU executor code.
+SIGTERM drains accepted work within available grace; SIGKILL or Redis failure
+can leave pending entries. Stale heartbeats and worker shutdown race with admission.
+There is no exactly-once guarantee: duplicate compute, replies or DLQ evidence are
+possible around crashes. Conditional RUNNING cache updates do not erase finals,
+but concurrent final writers can still race.
 
-HTTP timeout does not cancel queued or running work. New workers read only new
-deliveries and cannot recover a dead consumer's pending entry. Reply/ACK/delete
-are separate operations, so failures can leave duplicates or retained entries.
-Queue depth policy is not enforced yet; HTTP bodies are not byte-capped before
-JSON parsing. /v1/models reports retained stream depth, not live worker counts.
-A gateway crash loses its local waiters; there is no durable client result lookup.
-Inbox trimming is approximate. Local Redis AOF is not HA.
+Retained-depth admission is conservative and includes pending entries. Local
+Redis AOF is not HA or an assurance of zero lost writes. Result and inbox storage
+expire; DLQ retention is approximate and contains original input data. There is
+no DLQ replay endpoint or automatic pruning of all old consumer metadata.
+HTTP body bytes are capped; slow-client/ingress concurrency policies remain a
+deployment concern. Model HTTP probes and Kubernetes termination grace arrive
+in Phase 7. No GPU inference result is claimed.
 
-Existing owner .env was left untouched and excluded from Git and Docker context.
-AGENTS.md was read as the source of truth and left as an owner-provided file.
+Owner .env remains untouched and excluded from Git/Docker. The owner's staged
+.gitignore modification was preserved and excluded from agent commits.
 
 ## Next
 
-Stop here for owner review. Phase 3 will add heartbeats, worker registry,
-reclaim/DLQ, admission control, rate limiting, async result lookup, gateway-driven
-cancellation, and reliability experiments E4/E5. Do not begin it automatically.
+Stop for owner review. Phase 4 will add the LLM worker adapter, SSE gateway,
+fake OpenAI-compatible server, bounded upstream concurrency, streaming
+cancellation and coalescing experiments. Do not begin it automatically.

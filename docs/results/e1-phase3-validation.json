@@ -1,0 +1,176 @@
+{
+  "success": {
+    "request_id": "80ab25b848ce43eb9f00298c2de79e97",
+    "output": {
+      "label": "SIMULATED",
+      "input_chars": 5
+    },
+    "meta": {
+      "worker_id": "spark-6024-69910683",
+      "batch_size": 1,
+      "queue_ms": 1.2119140625,
+      "batch_wait_ms": 1.2079859152436256,
+      "inference_ms": 20.275218063034117
+    }
+  },
+  "after_success": {
+    "xinfo_stream": {
+      "length": 0,
+      "radix-tree-keys": 0,
+      "radix-tree-nodes": 1,
+      "last-generated-id": "1793982435496-0",
+      "max-deleted-entry-id": "1793982435496-0",
+      "entries-added": 1,
+      "recorded-first-entry-id": "0-0",
+      "groups": 1,
+      "first-entry": null,
+      "last-entry": null
+    },
+    "xinfo_groups": [
+      {
+        "name": "workers",
+        "consumers": 1,
+        "pending": 0,
+        "last-delivered-id": "1793982435496-0",
+        "entries-read": 1,
+        "lag": 0
+      }
+    ],
+    "xpending": {
+      "pending": 0,
+      "min": null,
+      "max": null,
+      "consumers": []
+    },
+    "xlen": 0
+  },
+  "bad_key_status": 401,
+  "unknown_model_status": 404,
+  "before_kill": {
+    "xinfo_stream": {
+      "length": 1,
+      "radix-tree-keys": 1,
+      "radix-tree-nodes": 2,
+      "last-generated-id": "1793982436711-0",
+      "max-deleted-entry-id": "1793982435496-0",
+      "entries-added": 2,
+      "recorded-first-entry-id": "1793982436711-0",
+      "groups": 1,
+      "first-entry": [
+        "1793982436711-0",
+        {
+          "request_id": "b2c7fe4bc7cb48b08859f950ddf03263",
+          "reply_to": "inbox:e5a00881f49b4d3c9dadee38db5b9e2b",
+          "kind": "infer",
+          "payload": "{\"input\":\"kill during simulated compute\",\"options\":{}}",
+          "timeout_ms": "999",
+          "stream": "0",
+          "key_id": "c6e4a4cfc4e721d277ae94e1ddf1e918d72179cc8c1d69f1f01b443e02b886c8",
+          "trace_id": "7ee90f2bfbb44abeae1978e3bb1a4359"
+        }
+      ],
+      "last-entry": [
+        "1793982436711-0",
+        {
+          "request_id": "b2c7fe4bc7cb48b08859f950ddf03263",
+          "reply_to": "inbox:e5a00881f49b4d3c9dadee38db5b9e2b",
+          "kind": "infer",
+          "payload": "{\"input\":\"kill during simulated compute\",\"options\":{}}",
+          "timeout_ms": "999",
+          "stream": "0",
+          "key_id": "c6e4a4cfc4e721d277ae94e1ddf1e918d72179cc8c1d69f1f01b443e02b886c8",
+          "trace_id": "7ee90f2bfbb44abeae1978e3bb1a4359"
+        }
+      ]
+    },
+    "xinfo_groups": [
+      {
+        "name": "workers",
+        "consumers": 2,
+        "pending": 1,
+        "last-delivered-id": "1793982436711-0",
+        "entries-read": 2,
+        "lag": 0
+      }
+    ],
+    "xpending": {
+      "pending": 1,
+      "min": "1793982436711-0",
+      "max": "1793982436711-0",
+      "consumers": [
+        {
+          "name": "spark-6024-a6da8116",
+          "pending": 1
+        }
+      ]
+    },
+    "xlen": 1
+  },
+  "killed_request_status": 504,
+  "after_kill": {
+    "xinfo_stream": {
+      "length": 1,
+      "radix-tree-keys": 1,
+      "radix-tree-nodes": 2,
+      "last-generated-id": "1793982436711-0",
+      "max-deleted-entry-id": "1793982435496-0",
+      "entries-added": 2,
+      "recorded-first-entry-id": "1793982436711-0",
+      "groups": 1,
+      "first-entry": [
+        "1793982436711-0",
+        {
+          "request_id": "b2c7fe4bc7cb48b08859f950ddf03263",
+          "reply_to": "inbox:e5a00881f49b4d3c9dadee38db5b9e2b",
+          "kind": "infer",
+          "payload": "{\"input\":\"kill during simulated compute\",\"options\":{}}",
+          "timeout_ms": "999",
+          "stream": "0",
+          "key_id": "c6e4a4cfc4e721d277ae94e1ddf1e918d72179cc8c1d69f1f01b443e02b886c8",
+          "trace_id": "7ee90f2bfbb44abeae1978e3bb1a4359"
+        }
+      ],
+      "last-entry": [
+        "1793982436711-0",
+        {
+          "request_id": "b2c7fe4bc7cb48b08859f950ddf03263",
+          "reply_to": "inbox:e5a00881f49b4d3c9dadee38db5b9e2b",
+          "kind": "infer",
+          "payload": "{\"input\":\"kill during simulated compute\",\"options\":{}}",
+          "timeout_ms": "999",
+          "stream": "0",
+          "key_id": "c6e4a4cfc4e721d277ae94e1ddf1e918d72179cc8c1d69f1f01b443e02b886c8",
+          "trace_id": "7ee90f2bfbb44abeae1978e3bb1a4359"
+        }
+      ]
+    },
+    "xinfo_groups": [
+      {
+        "name": "workers",
+        "consumers": 2,
+        "pending": 1,
+        "last-delivered-id": "1793982436711-0",
+        "entries-read": 2,
+        "lag": 0
+      }
+    ],
+    "xpending": {
+      "pending": 1,
+      "min": "1793982436711-0",
+      "max": "1793982436711-0",
+      "consumers": [
+        {
+          "name": "spark-6024-a6da8116",
+          "pending": 1
+        }
+      ]
+    },
+    "xlen": 1
+  },
+  "redis_version": "7.4.12",
+  "platform": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+  "cpu": "aarch64",
+  "python": "3.12.3",
+  "commit": "d188dc20c1ab1eed68026ae0c33472fe6a60ebb7",
+  "date": "2026-11-06"
+}

@@ -1,0 +1,13 @@
+{
+  "live_workers": 3,
+  "successful_requests": 120,
+  "requests_per_worker": {
+    "2997fda5ec7d-edf0ea0b": 41,
+    "8c76e6361017-151392a3": 37,
+    "cfd354a81af0-e2ee918a": 42
+  },
+  "simulated_compute": true,
+  "async_submit_status": 202,
+  "async_final_status": 200,
+  "async_request_id": "a22d1f69c1e141e8b84ab6011c05c395"
+}

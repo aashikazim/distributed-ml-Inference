@@ -1,0 +1,5213 @@
+{
+  "metadata": {
+    "date_utc": "2026-11-06T16:23:34.263320+00:00",
+    "platform": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+    "python": "3.12.3",
+    "cpu_inventory": "Architecture:                         aarch64\nCPU op-mode(s):                       64-bit\nByte Order:                           Little Endian\nCPU(s):                               20\nOn-line CPU(s) list:                  0-19\nVendor ID:                            ARM\nModel name:                           Cortex-X925\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   109%\nCPU max MHz:                          4004.0000\nCPU min MHz:                          1378.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nModel name:                           Cortex-A725\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   98%\nCPU max MHz:                          2860.0000\nCPU min MHz:                          338.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nL1d cache:                            1.3 MiB (20 instances)\nL1i cache:                            1.3 MiB (20 instances)\nL2 cache:                             25 MiB (20 instances)\nL3 cache:                             24 MiB (2 instances)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-19\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; __user pointer sanitization\nVulnerability Spectre v2:             Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+    "commit": "d188dc20c1ab1eed68026ae0c33472fe6a60ebb7",
+    "tracked_changes": [
+      "docs/ARCHITECTURE.md",
+      "docs/EXPERIMENTS.md"
+    ],
+    "simulated_compute": true
+  },
+  "redis_version": "7.4.12",
+  "rows": [
+    {
+      "admission_enabled": true,
+      "requests": 120,
+      "max_queue_depth": 8,
+      "request_timeout_ms": 450,
+      "fake": {
+        "base_ms": 60,
+        "per_item_ms": 1,
+        "jitter_ms": 0
+      },
+      "max_batch_size": 4,
+      "prefetch_bound": 4,
+      "elapsed_s": 0.29543996194843203,
+      "statuses": {
+        "503": 112,
+        "200": 8
+      },
+      "observed_max_xlen": 8,
+      "success_p50_ms": 184.2329460196197,
+      "success_p95_ms": 282.79734298121184,
+      "reject_p95_ms": 134.38468298409134,
+      "timeout_p95_ms": null,
+      "after_drain_pending": 0,
+      "records": [
+        {
+          "index": 0,
+          "status": 503,
+          "latency_ms": 144.6965940995142,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 1,
+          "status": 503,
+          "latency_ms": 139.79297399055213,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 2,
+          "status": 503,
+          "latency_ms": 141.20417507365346,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 3,
+          "status": 503,
+          "latency_ms": 139.80354997329414,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 4,
+          "status": 503,
+          "latency_ms": 139.5482700318098,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 5,
+          "status": 200,
+          "latency_ms": 282.79734298121184,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 6,
+          "status": 503,
+          "latency_ms": 134.38468298409134,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 7,
+          "status": 503,
+          "latency_ms": 133.76439397688955,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 8,
+          "status": 503,
+          "latency_ms": 132.74528901092708,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 9,
+          "status": 503,
+          "latency_ms": 130.3752389503643,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 10,
+          "status": 503,
+          "latency_ms": 130.7619910221547,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 11,
+          "status": 503,
+          "latency_ms": 129.26223000977188,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 12,
+          "status": 503,
+          "latency_ms": 128.72274091932923,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 13,
+          "status": 503,
+          "latency_ms": 124.95112209580839,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 14,
+          "status": 503,
+          "latency_ms": 124.05160197522491,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 15,
+          "status": 503,
+          "latency_ms": 124.63841901626438,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 16,
+          "status": 503,
+          "latency_ms": 122.30339308734983,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 17,
+          "status": 503,
+          "latency_ms": 120.89529598597437,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 18,
+          "status": 503,
+          "latency_ms": 121.69273593463004,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 19,
+          "status": 503,
+          "latency_ms": 120.44540699571371,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 20,
+          "status": 503,
+          "latency_ms": 117.75486101396382,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 21,
+          "status": 503,
+          "latency_ms": 116.605420014821,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 22,
+          "status": 200,
+          "latency_ms": 259.4965089811012,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 23,
+          "status": 200,
+          "latency_ms": 184.2329460196197,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 24,
+          "status": 503,
+          "latency_ms": 115.13905099127442,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 25,
+          "status": 503,
+          "latency_ms": 113.86272998061031,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 26,
+          "status": 503,
+          "latency_ms": 110.80765502993017,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 27,
+          "status": 503,
+          "latency_ms": 110.33770395442843,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 28,
+          "status": 503,
+          "latency_ms": 108.55107801035047,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 29,
+          "status": 200,
+          "latency_ms": 175.28001102618873,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 30,
+          "status": 503,
+          "latency_ms": 106.55313997995108,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 31,
+          "status": 503,
+          "latency_ms": 105.99154001101851,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 32,
+          "status": 200,
+          "latency_ms": 246.48888304363936,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 33,
+          "status": 503,
+          "latency_ms": 106.46712500602007,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 34,
+          "status": 503,
+          "latency_ms": 107.00699710287154,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 35,
+          "status": 503,
+          "latency_ms": 101.76369606051594,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 36,
+          "status": 200,
+          "latency_ms": 168.57738210819662,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 37,
+          "status": 503,
+          "latency_ms": 101.8649130128324,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 38,
+          "status": 503,
+          "latency_ms": 102.05312096513808,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 39,
+          "status": 503,
+          "latency_ms": 97.84329298418015,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 40,
+          "status": 200,
+          "latency_ms": 246.0656020557508,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 41,
+          "status": 200,
+          "latency_ms": 159.3673259485513,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 42,
+          "status": 503,
+          "latency_ms": 93.32732192706317,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 43,
+          "status": 503,
+          "latency_ms": 99.34484597761184,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 44,
+          "status": 503,
+          "latency_ms": 98.1601889943704,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 45,
+          "status": 503,
+          "latency_ms": 95.62829998321831,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 46,
+          "status": 503,
+          "latency_ms": 96.20780404657125,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 47,
+          "status": 503,
+          "latency_ms": 93.66936993319541,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 48,
+          "status": 503,
+          "latency_ms": 94.45997898001224,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 49,
+          "status": 503,
+          "latency_ms": 90.16242297366261,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 50,
+          "status": 503,
+          "latency_ms": 93.4738980140537,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 51,
+          "status": 503,
+          "latency_ms": 91.42503200564533,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 52,
+          "status": 503,
+          "latency_ms": 88.83704605977982,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 53,
+          "status": 503,
+          "latency_ms": 86.82488405611366,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 54,
+          "status": 503,
+          "latency_ms": 89.58368597086519,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 55,
+          "status": 503,
+          "latency_ms": 88.79842201713473,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 56,
+          "status": 503,
+          "latency_ms": 87.3754930216819,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 57,
+          "status": 503,
+          "latency_ms": 86.50758804287761,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 58,
+          "status": 503,
+          "latency_ms": 83.95792194642127,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 59,
+          "status": 503,
+          "latency_ms": 84.18792195152491,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 60,
+          "status": 503,
+          "latency_ms": 81.57932793255895,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 61,
+          "status": 503,
+          "latency_ms": 80.99558507092297,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 62,
+          "status": 503,
+          "latency_ms": 81.3374730059877,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 63,
+          "status": 503,
+          "latency_ms": 88.11995794530958,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 64,
+          "status": 503,
+          "latency_ms": 87.79344602953643,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 65,
+          "status": 503,
+          "latency_ms": 87.48066099360585,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 66,
+          "status": 503,
+          "latency_ms": 84.13096307776868,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 67,
+          "status": 503,
+          "latency_ms": 83.74728192575276,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 68,
+          "status": 503,
+          "latency_ms": 83.05312204174697,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 69,
+          "status": 503,
+          "latency_ms": 82.51731295604259,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 70,
+          "status": 503,
+          "latency_ms": 82.23876904230565,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 71,
+          "status": 503,
+          "latency_ms": 82.34030497260392,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 72,
+          "status": 503,
+          "latency_ms": 81.89252903684974,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 73,
+          "status": 503,
+          "latency_ms": 81.79193700198084,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 74,
+          "status": 503,
+          "latency_ms": 81.62851305678487,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 75,
+          "status": 503,
+          "latency_ms": 80.98636800423265,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 76,
+          "status": 503,
+          "latency_ms": 81.15580806042999,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 77,
+          "status": 503,
+          "latency_ms": 80.86767990607768,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 78,
+          "status": 503,
+          "latency_ms": 79.77662305347621,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 79,
+          "status": 503,
+          "latency_ms": 79.40121402498335,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 80,
+          "status": 503,
+          "latency_ms": 80.09332709480077,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 81,
+          "status": 503,
+          "latency_ms": 80.04313497804105,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 82,
+          "status": 503,
+          "latency_ms": 79.58367897663265,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 83,
+          "status": 503,
+          "latency_ms": 79.52268701046705,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 84,
+          "status": 503,
+          "latency_ms": 79.96899192221463,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 85,
+          "status": 503,
+          "latency_ms": 79.79335892014205,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 86,
+          "status": 503,
+          "latency_ms": 79.88763193134218,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 87,
+          "status": 503,
+          "latency_ms": 79.53825406730175,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 88,
+          "status": 503,
+          "latency_ms": 79.21763008926064,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 89,
+          "status": 503,
+          "latency_ms": 81.28347201272845,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 90,
+          "status": 503,
+          "latency_ms": 81.06809598393738,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 91,
+          "status": 503,
+          "latency_ms": 81.0393919236958,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 92,
+          "status": 503,
+          "latency_ms": 81.21684798970819,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 93,
+          "status": 503,
+          "latency_ms": 79.5921590179205,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 94,
+          "status": 503,
+          "latency_ms": 79.55876702908427,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 95,
+          "status": 503,
+          "latency_ms": 79.52731102705002,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 96,
+          "status": 503,
+          "latency_ms": 79.23222298268229,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 97,
+          "status": 503,
+          "latency_ms": 79.49916704092175,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 98,
+          "status": 503,
+          "latency_ms": 76.69127697590739,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 99,
+          "status": 503,
+          "latency_ms": 76.50172396097332,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 100,
+          "status": 503,
+          "latency_ms": 76.31865201983601,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 101,
+          "status": 503,
+          "latency_ms": 78.9862860692665,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 102,
+          "status": 503,
+          "latency_ms": 78.95342202391475,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 103,
+          "status": 503,
+          "latency_ms": 78.94794992171228,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 104,
+          "status": 503,
+          "latency_ms": 78.96639802493155,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 105,
+          "status": 503,
+          "latency_ms": 78.8221099646762,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 106,
+          "status": 503,
+          "latency_ms": 78.95071804523468,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 107,
+          "status": 503,
+          "latency_ms": 78.77179002389312,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 108,
+          "status": 503,
+          "latency_ms": 78.6229259101674,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 109,
+          "status": 503,
+          "latency_ms": 78.69502308312804,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 110,
+          "status": 503,
+          "latency_ms": 78.3880139933899,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 111,
+          "status": 503,
+          "latency_ms": 78.31011002417654,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 112,
+          "status": 503,
+          "latency_ms": 78.81226995959878,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 113,
+          "status": 503,
+          "latency_ms": 78.76238191965967,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 114,
+          "status": 503,
+          "latency_ms": 78.92455800902098,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 115,
+          "status": 503,
+          "latency_ms": 78.71609402354807,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 116,
+          "status": 503,
+          "latency_ms": 78.78684590104967,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 117,
+          "status": 503,
+          "latency_ms": 78.58234993182123,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 118,
+          "status": 503,
+          "latency_ms": 78.34926201030612,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 119,
+          "status": 503,
+          "latency_ms": 78.54617398697883,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        }
+      ]
+    },
+    {
+      "admission_enabled": true,
+      "requests": 120,
+      "max_queue_depth": 8,
+      "request_timeout_ms": 450,
+      "fake": {
+        "base_ms": 60,
+        "per_item_ms": 1,
+        "jitter_ms": 0
+      },
+      "max_batch_size": 4,
+      "prefetch_bound": 4,
+      "elapsed_s": 0.25479162693955004,
+      "statuses": {
+        "503": 112,
+        "200": 8
+      },
+      "observed_max_xlen": 8,
+      "success_p50_ms": 179.09300595056266,
+      "success_p95_ms": 249.02053305413574,
+      "reject_p95_ms": 94.77031498681754,
+      "timeout_p95_ms": null,
+      "after_drain_pending": 0,
+      "records": [
+        {
+          "index": 0,
+          "status": 200,
+          "latency_ms": 249.02053305413574,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 1,
+          "status": 200,
+          "latency_ms": 176.50225199759007,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 2,
+          "status": 200,
+          "latency_ms": 179.09300595056266,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 3,
+          "status": 503,
+          "latency_ms": 104.70993898343295,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 4,
+          "status": 503,
+          "latency_ms": 103.85765100363642,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 5,
+          "status": 200,
+          "latency_ms": 245.20251504145563,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 6,
+          "status": 503,
+          "latency_ms": 101.54697601683438,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 7,
+          "status": 200,
+          "latency_ms": 244.29723399225622,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 8,
+          "status": 200,
+          "latency_ms": 170.83028005436063,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 9,
+          "status": 200,
+          "latency_ms": 241.2753750104457,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 10,
+          "status": 200,
+          "latency_ms": 169.11552601959556,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 11,
+          "status": 503,
+          "latency_ms": 97.06002904567868,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 12,
+          "status": 503,
+          "latency_ms": 95.73773993179202,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 13,
+          "status": 503,
+          "latency_ms": 94.77031498681754,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 14,
+          "status": 503,
+          "latency_ms": 93.4478819835931,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 15,
+          "status": 503,
+          "latency_ms": 92.568330001086,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 16,
+          "status": 503,
+          "latency_ms": 91.58029698301107,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 17,
+          "status": 503,
+          "latency_ms": 91.03967191185802,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 18,
+          "status": 503,
+          "latency_ms": 89.75279098376632,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 19,
+          "status": 503,
+          "latency_ms": 89.33426300063729,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 20,
+          "status": 503,
+          "latency_ms": 88.48213392775506,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 21,
+          "status": 503,
+          "latency_ms": 86.56280499417335,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 22,
+          "status": 503,
+          "latency_ms": 86.25382790341973,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 23,
+          "status": 503,
+          "latency_ms": 85.43672400992364,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 24,
+          "status": 503,
+          "latency_ms": 84.39270697999746,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 25,
+          "status": 503,
+          "latency_ms": 83.6447699693963,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 26,
+          "status": 503,
+          "latency_ms": 82.29763305280358,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 27,
+          "status": 503,
+          "latency_ms": 81.79336099419743,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 28,
+          "status": 503,
+          "latency_ms": 81.16196899209172,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 29,
+          "status": 503,
+          "latency_ms": 80.13793593272567,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 30,
+          "status": 503,
+          "latency_ms": 79.06798296608031,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 31,
+          "status": 503,
+          "latency_ms": 77.94593297876418,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 32,
+          "status": 503,
+          "latency_ms": 76.95985399186611,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 33,
+          "status": 503,
+          "latency_ms": 75.98586799576879,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 34,
+          "status": 503,
+          "latency_ms": 75.68388408981264,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 35,
+          "status": 503,
+          "latency_ms": 74.55325894989073,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 36,
+          "status": 503,
+          "latency_ms": 73.51489004213363,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 37,
+          "status": 503,
+          "latency_ms": 71.66346500162035,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 38,
+          "status": 503,
+          "latency_ms": 70.6785520305857,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 39,
+          "status": 503,
+          "latency_ms": 69.63259889744222,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 40,
+          "status": 503,
+          "latency_ms": 68.54090304113925,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 41,
+          "status": 503,
+          "latency_ms": 69.39600699115545,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 42,
+          "status": 503,
+          "latency_ms": 68.33106197882444,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 43,
+          "status": 503,
+          "latency_ms": 67.34381301794201,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 44,
+          "status": 503,
+          "latency_ms": 66.5771410567686,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 45,
+          "status": 503,
+          "latency_ms": 64.21272305306047,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 46,
+          "status": 503,
+          "latency_ms": 63.23430605698377,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 47,
+          "status": 503,
+          "latency_ms": 62.213697005063295,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 48,
+          "status": 503,
+          "latency_ms": 63.23145900387317,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 49,
+          "status": 503,
+          "latency_ms": 61.90768093802035,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 50,
+          "status": 503,
+          "latency_ms": 60.88788795750588,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 51,
+          "status": 503,
+          "latency_ms": 59.7588469972834,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 52,
+          "status": 503,
+          "latency_ms": 58.74868598766625,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 53,
+          "status": 503,
+          "latency_ms": 58.10598307289183,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 54,
+          "status": 503,
+          "latency_ms": 56.902334094047546,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 55,
+          "status": 503,
+          "latency_ms": 55.7408930035308,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 56,
+          "status": 503,
+          "latency_ms": 54.439163068309426,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 57,
+          "status": 503,
+          "latency_ms": 54.435674916021526,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 58,
+          "status": 503,
+          "latency_ms": 52.96932207420468,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 59,
+          "status": 503,
+          "latency_ms": 52.67200991511345,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 60,
+          "status": 503,
+          "latency_ms": 51.828793017193675,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 61,
+          "status": 503,
+          "latency_ms": 50.81666400656104,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 62,
+          "status": 503,
+          "latency_ms": 50.07588001899421,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 63,
+          "status": 503,
+          "latency_ms": 57.85622203256935,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 64,
+          "status": 503,
+          "latency_ms": 58.23452596087009,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 65,
+          "status": 503,
+          "latency_ms": 57.93228594120592,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 66,
+          "status": 503,
+          "latency_ms": 57.74996604304761,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 67,
+          "status": 503,
+          "latency_ms": 57.40762990899384,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 68,
+          "status": 503,
+          "latency_ms": 57.183581055141985,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 69,
+          "status": 503,
+          "latency_ms": 56.348268990404904,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 70,
+          "status": 503,
+          "latency_ms": 56.007468956522644,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 71,
+          "status": 503,
+          "latency_ms": 55.83529302384704,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 72,
+          "status": 503,
+          "latency_ms": 55.54273200687021,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 73,
+          "status": 503,
+          "latency_ms": 55.36660400684923,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 74,
+          "status": 503,
+          "latency_ms": 54.71649195533246,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 75,
+          "status": 503,
+          "latency_ms": 54.70671597868204,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 76,
+          "status": 503,
+          "latency_ms": 53.86777105741203,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 77,
+          "status": 503,
+          "latency_ms": 50.45645695645362,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 78,
+          "status": 503,
+          "latency_ms": 50.22768804337829,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 79,
+          "status": 503,
+          "latency_ms": 50.023335963487625,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 80,
+          "status": 503,
+          "latency_ms": 50.1129359472543,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 81,
+          "status": 503,
+          "latency_ms": 33.556362031959,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 82,
+          "status": 503,
+          "latency_ms": 33.73001096770167,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 83,
+          "status": 503,
+          "latency_ms": 33.505274914205074,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 84,
+          "status": 503,
+          "latency_ms": 33.505578991025686,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 85,
+          "status": 503,
+          "latency_ms": 33.30983500927687,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 86,
+          "status": 503,
+          "latency_ms": 33.56441098731011,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 87,
+          "status": 503,
+          "latency_ms": 33.18229806609452,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 88,
+          "status": 503,
+          "latency_ms": 33.22655404917896,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 89,
+          "status": 503,
+          "latency_ms": 33.519417978823185,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 90,
+          "status": 503,
+          "latency_ms": 33.33383402787149,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 91,
+          "status": 503,
+          "latency_ms": 32.76769001968205,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 92,
+          "status": 503,
+          "latency_ms": 33.0087139736861,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 93,
+          "status": 503,
+          "latency_ms": 32.720457995310426,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 94,
+          "status": 503,
+          "latency_ms": 32.95615396928042,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 95,
+          "status": 503,
+          "latency_ms": 32.582569983787835,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 96,
+          "status": 503,
+          "latency_ms": 32.41176996380091,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 97,
+          "status": 503,
+          "latency_ms": 32.9952749889344,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 98,
+          "status": 503,
+          "latency_ms": 32.8341219574213,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 99,
+          "status": 503,
+          "latency_ms": 32.41764102131128,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 100,
+          "status": 503,
+          "latency_ms": 32.44055400136858,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 101,
+          "status": 503,
+          "latency_ms": 32.28460100945085,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 102,
+          "status": 503,
+          "latency_ms": 32.33385004568845,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 103,
+          "status": 503,
+          "latency_ms": 32.18133794143796,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 104,
+          "status": 503,
+          "latency_ms": 32.307129935361445,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 105,
+          "status": 503,
+          "latency_ms": 32.70765801426023,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 106,
+          "status": 503,
+          "latency_ms": 32.477673958055675,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 107,
+          "status": 503,
+          "latency_ms": 32.07778593059629,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 108,
+          "status": 503,
+          "latency_ms": 32.19829802401364,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 109,
+          "status": 503,
+          "latency_ms": 32.37711300607771,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 110,
+          "status": 503,
+          "latency_ms": 32.09119290113449,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 111,
+          "status": 503,
+          "latency_ms": 32.103560981340706,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 112,
+          "status": 503,
+          "latency_ms": 31.681273016147316,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 113,
+          "status": 503,
+          "latency_ms": 31.503049074672163,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 114,
+          "status": 503,
+          "latency_ms": 31.29236097447574,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 115,
+          "status": 503,
+          "latency_ms": 31.4217209815979,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 116,
+          "status": 503,
+          "latency_ms": 31.885112985037267,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 117,
+          "status": 503,
+          "latency_ms": 31.887050019577146,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 118,
+          "status": 503,
+          "latency_ms": 31.561241019517183,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 119,
+          "status": 503,
+          "latency_ms": 31.497529009357095,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        }
+      ]
+    },
+    {
+      "admission_enabled": true,
+      "requests": 120,
+      "max_queue_depth": 8,
+      "request_timeout_ms": 450,
+      "fake": {
+        "base_ms": 60,
+        "per_item_ms": 1,
+        "jitter_ms": 0
+      },
+      "max_batch_size": 4,
+      "prefetch_bound": 4,
+      "elapsed_s": 0.25024493504315615,
+      "statuses": {
+        "503": 112,
+        "200": 8
+      },
+      "observed_max_xlen": 8,
+      "success_p50_ms": 166.81394109036773,
+      "success_p95_ms": 241.0256149014458,
+      "reject_p95_ms": 85.81365190912038,
+      "timeout_p95_ms": null,
+      "after_drain_pending": 0,
+      "records": [
+        {
+          "index": 0,
+          "status": 200,
+          "latency_ms": 166.81394109036773,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 1,
+          "status": 503,
+          "latency_ms": 98.91411010175943,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 2,
+          "status": 200,
+          "latency_ms": 238.88577392790467,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 3,
+          "status": 200,
+          "latency_ms": 163.52148994337767,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 4,
+          "status": 200,
+          "latency_ms": 165.29957205057144,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 5,
+          "status": 200,
+          "latency_ms": 165.46438704244792,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 6,
+          "status": 200,
+          "latency_ms": 241.0256149014458,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 7,
+          "status": 503,
+          "latency_ms": 92.2082649776712,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 8,
+          "status": 200,
+          "latency_ms": 236.50561191607267,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 9,
+          "status": 200,
+          "latency_ms": 232.9950979910791,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 10,
+          "status": 503,
+          "latency_ms": 89.01752706151456,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 11,
+          "status": 503,
+          "latency_ms": 88.27869407832623,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 12,
+          "status": 503,
+          "latency_ms": 86.97549300268292,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 13,
+          "status": 503,
+          "latency_ms": 85.81365190912038,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 14,
+          "status": 503,
+          "latency_ms": 85.16286790836602,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 15,
+          "status": 503,
+          "latency_ms": 84.06861103139818,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 16,
+          "status": 503,
+          "latency_ms": 82.82833802513778,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 17,
+          "status": 503,
+          "latency_ms": 81.72961696982384,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 18,
+          "status": 503,
+          "latency_ms": 80.27947193477303,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 19,
+          "status": 503,
+          "latency_ms": 79.25718300975859,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 20,
+          "status": 503,
+          "latency_ms": 78.87676602695137,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 21,
+          "status": 503,
+          "latency_ms": 77.51604600343853,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 22,
+          "status": 503,
+          "latency_ms": 76.65534096304327,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 23,
+          "status": 503,
+          "latency_ms": 75.24449191987514,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 24,
+          "status": 503,
+          "latency_ms": 74.33767500333488,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 25,
+          "status": 503,
+          "latency_ms": 74.02121101040393,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 26,
+          "status": 503,
+          "latency_ms": 72.48232897836715,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 27,
+          "status": 503,
+          "latency_ms": 71.68042496778071,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 28,
+          "status": 503,
+          "latency_ms": 70.47986390534788,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 29,
+          "status": 503,
+          "latency_ms": 69.56762296613306,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 30,
+          "status": 503,
+          "latency_ms": 67.7785020088777,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 31,
+          "status": 503,
+          "latency_ms": 67.91403808165342,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 32,
+          "status": 503,
+          "latency_ms": 66.2765009328723,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 33,
+          "status": 503,
+          "latency_ms": 65.37749199196696,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 34,
+          "status": 503,
+          "latency_ms": 64.79562004096806,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 35,
+          "status": 503,
+          "latency_ms": 62.7816979540512,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 36,
+          "status": 503,
+          "latency_ms": 62.50249803997576,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 37,
+          "status": 503,
+          "latency_ms": 61.144529026933014,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 38,
+          "status": 503,
+          "latency_ms": 60.01974397804588,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 39,
+          "status": 503,
+          "latency_ms": 58.95415903069079,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 40,
+          "status": 503,
+          "latency_ms": 57.822030037641525,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 41,
+          "status": 503,
+          "latency_ms": 57.63570999260992,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 42,
+          "status": 503,
+          "latency_ms": 58.36556700523943,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 43,
+          "status": 503,
+          "latency_ms": 55.657948018051684,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 44,
+          "status": 503,
+          "latency_ms": 54.43058698438108,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 45,
+          "status": 503,
+          "latency_ms": 54.92609099019319,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 46,
+          "status": 503,
+          "latency_ms": 52.130457013845444,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 47,
+          "status": 503,
+          "latency_ms": 52.69417003728449,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 48,
+          "status": 503,
+          "latency_ms": 49.985944060608745,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 49,
+          "status": 503,
+          "latency_ms": 48.71285508852452,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 50,
+          "status": 503,
+          "latency_ms": 50.019096001051366,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 51,
+          "status": 503,
+          "latency_ms": 49.14389504119754,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 52,
+          "status": 503,
+          "latency_ms": 46.81229405105114,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 53,
+          "status": 503,
+          "latency_ms": 46.10000504180789,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 54,
+          "status": 503,
+          "latency_ms": 45.64306105021387,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 55,
+          "status": 503,
+          "latency_ms": 43.567250948399305,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 56,
+          "status": 503,
+          "latency_ms": 42.81769797671586,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 57,
+          "status": 503,
+          "latency_ms": 41.413345024921,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 58,
+          "status": 503,
+          "latency_ms": 40.56628909893334,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 59,
+          "status": 503,
+          "latency_ms": 40.45033606234938,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 60,
+          "status": 503,
+          "latency_ms": 39.512992021627724,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 61,
+          "status": 503,
+          "latency_ms": 38.210365921258926,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 62,
+          "status": 503,
+          "latency_ms": 36.97727702092379,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 63,
+          "status": 503,
+          "latency_ms": 46.00793996360153,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 64,
+          "status": 503,
+          "latency_ms": 45.634948066435754,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 65,
+          "status": 503,
+          "latency_ms": 45.162179972976446,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 66,
+          "status": 503,
+          "latency_ms": 44.706722954288125,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 67,
+          "status": 503,
+          "latency_ms": 44.95859600137919,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 68,
+          "status": 503,
+          "latency_ms": 44.755988055840135,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 69,
+          "status": 503,
+          "latency_ms": 44.47907500434667,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 70,
+          "status": 503,
+          "latency_ms": 43.750099022872746,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 71,
+          "status": 503,
+          "latency_ms": 43.93534699920565,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 72,
+          "status": 503,
+          "latency_ms": 43.24814700521529,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 73,
+          "status": 503,
+          "latency_ms": 42.858306085690856,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 74,
+          "status": 503,
+          "latency_ms": 42.3792339861393,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 75,
+          "status": 503,
+          "latency_ms": 42.180194053798914,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 76,
+          "status": 503,
+          "latency_ms": 42.0209449948743,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 77,
+          "status": 503,
+          "latency_ms": 38.429806008934975,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 78,
+          "status": 503,
+          "latency_ms": 38.26766205020249,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 79,
+          "status": 503,
+          "latency_ms": 37.89850999601185,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 80,
+          "status": 503,
+          "latency_ms": 37.96374297235161,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 81,
+          "status": 503,
+          "latency_ms": 37.041901028715074,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 82,
+          "status": 503,
+          "latency_ms": 36.639277008362114,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 83,
+          "status": 503,
+          "latency_ms": 36.74209292512387,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 84,
+          "status": 503,
+          "latency_ms": 36.62345290649682,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 85,
+          "status": 503,
+          "latency_ms": 36.14116495009512,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 86,
+          "status": 503,
+          "latency_ms": 36.226540920324624,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 87,
+          "status": 503,
+          "latency_ms": 36.30916494876146,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 88,
+          "status": 503,
+          "latency_ms": 35.65532492939383,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 89,
+          "status": 503,
+          "latency_ms": 35.73170898016542,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 90,
+          "status": 503,
+          "latency_ms": 35.86481302045286,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 91,
+          "status": 503,
+          "latency_ms": 36.14090906921774,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 92,
+          "status": 503,
+          "latency_ms": 35.7985720038414,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 93,
+          "status": 503,
+          "latency_ms": 35.76265193987638,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 94,
+          "status": 503,
+          "latency_ms": 35.69807601161301,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 95,
+          "status": 503,
+          "latency_ms": 35.274091991595924,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 96,
+          "status": 503,
+          "latency_ms": 35.809883964248,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 97,
+          "status": 503,
+          "latency_ms": 36.01340507157147,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 98,
+          "status": 503,
+          "latency_ms": 34.84081197530031,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 99,
+          "status": 503,
+          "latency_ms": 35.03862000070512,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 100,
+          "status": 503,
+          "latency_ms": 34.667034982703626,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 101,
+          "status": 503,
+          "latency_ms": 34.930540015921,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 102,
+          "status": 503,
+          "latency_ms": 34.6461070002988,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 103,
+          "status": 503,
+          "latency_ms": 34.63638003449887,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 104,
+          "status": 503,
+          "latency_ms": 34.294410957954824,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 105,
+          "status": 503,
+          "latency_ms": 34.63239606935531,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 106,
+          "status": 503,
+          "latency_ms": 35.62287602107972,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 107,
+          "status": 503,
+          "latency_ms": 34.95444403961301,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 108,
+          "status": 503,
+          "latency_ms": 35.09119607042521,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 109,
+          "status": 503,
+          "latency_ms": 34.94402801152319,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 110,
+          "status": 503,
+          "latency_ms": 34.79423501994461,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 111,
+          "status": 503,
+          "latency_ms": 34.6221070503816,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 112,
+          "status": 503,
+          "latency_ms": 34.17466708924621,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 113,
+          "status": 503,
+          "latency_ms": 34.19913095422089,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 114,
+          "status": 503,
+          "latency_ms": 34.16733897756785,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 115,
+          "status": 503,
+          "latency_ms": 34.11004296503961,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 116,
+          "status": 503,
+          "latency_ms": 33.847850980237126,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 117,
+          "status": 503,
+          "latency_ms": 33.57537102419883,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 118,
+          "status": 503,
+          "latency_ms": 33.425738918595016,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        },
+        {
+          "index": 119,
+          "status": 503,
+          "latency_ms": 33.4298349916935,
+          "retry_after": "1",
+          "error_code": "OVERLOADED"
+        }
+      ]
+    },
+    {
+      "admission_enabled": false,
+      "requests": 120,
+      "max_queue_depth": 8,
+      "request_timeout_ms": 450,
+      "fake": {
+        "base_ms": 60,
+        "per_item_ms": 1,
+        "jitter_ms": 0
+      },
+      "max_batch_size": 4,
+      "prefetch_bound": 4,
+      "elapsed_s": 0.5172032460104674,
+      "statuses": {
+        "200": 20,
+        "504": 100
+      },
+      "observed_max_xlen": 120,
+      "success_p50_ms": 277.7672139927745,
+      "success_p95_ms": 420.5555039225146,
+      "reject_p95_ms": null,
+      "timeout_p95_ms": 461.5358409937471,
+      "after_drain_pending": 0,
+      "records": [
+        {
+          "index": 0,
+          "status": 200,
+          "latency_ms": 132.40151398349553,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 1,
+          "status": 200,
+          "latency_ms": 135.38649200927466,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 2,
+          "status": 200,
+          "latency_ms": 286.76918894052505,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 3,
+          "status": 200,
+          "latency_ms": 134.10612300504,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 4,
+          "status": 200,
+          "latency_ms": 282.06339408643544,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 5,
+          "status": 200,
+          "latency_ms": 127.79891793616116,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 6,
+          "status": 200,
+          "latency_ms": 210.22679191082716,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 7,
+          "status": 200,
+          "latency_ms": 207.76554301846772,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 8,
+          "status": 200,
+          "latency_ms": 204.0617949096486,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 9,
+          "status": 200,
+          "latency_ms": 201.39233698137105,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 10,
+          "status": 200,
+          "latency_ms": 350.9839929174632,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 11,
+          "status": 200,
+          "latency_ms": 347.36750996671617,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 12,
+          "status": 200,
+          "latency_ms": 277.7672139927745,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 13,
+          "status": 504,
+          "latency_ms": 451.40119397547096,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 14,
+          "status": 200,
+          "latency_ms": 275.14732407871634,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 15,
+          "status": 200,
+          "latency_ms": 420.5555039225146,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 16,
+          "status": 200,
+          "latency_ms": 343.720770906657,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 17,
+          "status": 504,
+          "latency_ms": 451.50356099475175,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 18,
+          "status": 200,
+          "latency_ms": 426.0133809875697,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 19,
+          "status": 200,
+          "latency_ms": 345.8895249059424,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 20,
+          "status": 200,
+          "latency_ms": 418.2433420792222,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 21,
+          "status": 504,
+          "latency_ms": 451.75124099478126,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 22,
+          "status": 504,
+          "latency_ms": 450.92988095711917,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 23,
+          "status": 504,
+          "latency_ms": 451.4106329297647,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 24,
+          "status": 504,
+          "latency_ms": 451.36898499913514,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 25,
+          "status": 504,
+          "latency_ms": 451.8650179961696,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 26,
+          "status": 504,
+          "latency_ms": 452.51876197289675,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 27,
+          "status": 504,
+          "latency_ms": 452.3303780006245,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 28,
+          "status": 200,
+          "latency_ms": 416.553613031283,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 29,
+          "status": 504,
+          "latency_ms": 451.44000893924385,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 30,
+          "status": 504,
+          "latency_ms": 451.65365806315094,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 31,
+          "status": 504,
+          "latency_ms": 451.50386495515704,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 32,
+          "status": 504,
+          "latency_ms": 451.2016089865938,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 33,
+          "status": 504,
+          "latency_ms": 451.5553379897028,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 34,
+          "status": 504,
+          "latency_ms": 451.36628102045506,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 35,
+          "status": 504,
+          "latency_ms": 451.16962504107505,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 36,
+          "status": 504,
+          "latency_ms": 451.5476890373975,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 37,
+          "status": 504,
+          "latency_ms": 450.9020410478115,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 38,
+          "status": 504,
+          "latency_ms": 452.66735402401537,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 39,
+          "status": 504,
+          "latency_ms": 452.4599789874628,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 40,
+          "status": 504,
+          "latency_ms": 452.39796198438853,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 41,
+          "status": 504,
+          "latency_ms": 452.18549796845764,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 42,
+          "status": 504,
+          "latency_ms": 452.1642819745466,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 43,
+          "status": 504,
+          "latency_ms": 452.09621801041067,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 44,
+          "status": 504,
+          "latency_ms": 452.02424994204193,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 45,
+          "status": 504,
+          "latency_ms": 451.8927619792521,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 46,
+          "status": 504,
+          "latency_ms": 451.7838819883764,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 47,
+          "status": 504,
+          "latency_ms": 451.63839403539896,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 48,
+          "status": 504,
+          "latency_ms": 451.7950490117073,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 49,
+          "status": 504,
+          "latency_ms": 451.6454340191558,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 50,
+          "status": 504,
+          "latency_ms": 451.31904899608344,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 51,
+          "status": 504,
+          "latency_ms": 451.7975460039452,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 52,
+          "status": 504,
+          "latency_ms": 451.6213380265981,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 53,
+          "status": 504,
+          "latency_ms": 451.55175297986716,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 54,
+          "status": 504,
+          "latency_ms": 451.35401003062725,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 55,
+          "status": 504,
+          "latency_ms": 451.15834497846663,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 56,
+          "status": 504,
+          "latency_ms": 451.4381530461833,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 57,
+          "status": 504,
+          "latency_ms": 451.2851620092988,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 58,
+          "status": 504,
+          "latency_ms": 451.4696409460157,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 59,
+          "status": 504,
+          "latency_ms": 451.3134970329702,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 60,
+          "status": 504,
+          "latency_ms": 451.03527302853763,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 61,
+          "status": 504,
+          "latency_ms": 451.1904889950529,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 62,
+          "status": 504,
+          "latency_ms": 450.99464897066355,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 63,
+          "status": 504,
+          "latency_ms": 451.44253806211054,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 64,
+          "status": 504,
+          "latency_ms": 451.07981702312827,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 65,
+          "status": 504,
+          "latency_ms": 451.48909697309136,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 66,
+          "status": 504,
+          "latency_ms": 451.5219290042296,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 67,
+          "status": 504,
+          "latency_ms": 452.33772206120193,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 68,
+          "status": 504,
+          "latency_ms": 452.4131140206009,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 69,
+          "status": 504,
+          "latency_ms": 452.971258899197,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 70,
+          "status": 504,
+          "latency_ms": 453.0562189174816,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 71,
+          "status": 504,
+          "latency_ms": 453.12716299667954,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 72,
+          "status": 504,
+          "latency_ms": 452.366971061565,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 73,
+          "status": 504,
+          "latency_ms": 453.07796203996986,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 74,
+          "status": 504,
+          "latency_ms": 453.6302830092609,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 75,
+          "status": 504,
+          "latency_ms": 454.1461719200015,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 76,
+          "status": 504,
+          "latency_ms": 454.55340400803834,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 77,
+          "status": 504,
+          "latency_ms": 455.700556980446,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 78,
+          "status": 504,
+          "latency_ms": 455.7959489757195,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 79,
+          "status": 504,
+          "latency_ms": 456.10049401875585,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 80,
+          "status": 504,
+          "latency_ms": 455.777372000739,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 81,
+          "status": 504,
+          "latency_ms": 456.0742049943656,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 82,
+          "status": 504,
+          "latency_ms": 456.1716610332951,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 83,
+          "status": 504,
+          "latency_ms": 456.260861014016,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 84,
+          "status": 504,
+          "latency_ms": 456.3223490258679,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 85,
+          "status": 504,
+          "latency_ms": 456.95809402968735,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 86,
+          "status": 504,
+          "latency_ms": 457.0626060012728,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 87,
+          "status": 504,
+          "latency_ms": 457.7434869715944,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 88,
+          "status": 504,
+          "latency_ms": 457.8426870284602,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 89,
+          "status": 504,
+          "latency_ms": 457.92262302711606,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 90,
+          "status": 504,
+          "latency_ms": 458.0155350267887,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 91,
+          "status": 504,
+          "latency_ms": 458.3107829093933,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 92,
+          "status": 504,
+          "latency_ms": 458.03406299091876,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 93,
+          "status": 504,
+          "latency_ms": 458.280798047781,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 94,
+          "status": 504,
+          "latency_ms": 458.3739349618554,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 95,
+          "status": 504,
+          "latency_ms": 458.4630388999358,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 96,
+          "status": 504,
+          "latency_ms": 458.5502069676295,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 97,
+          "status": 504,
+          "latency_ms": 458.67017505224794,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 98,
+          "status": 504,
+          "latency_ms": 459.54992005135864,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 99,
+          "status": 504,
+          "latency_ms": 459.6395679982379,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 100,
+          "status": 504,
+          "latency_ms": 459.75731196813285,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 101,
+          "status": 504,
+          "latency_ms": 460.25185694452375,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 102,
+          "status": 504,
+          "latency_ms": 460.3240489959717,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 103,
+          "status": 504,
+          "latency_ms": 460.42569703422487,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 104,
+          "status": 504,
+          "latency_ms": 460.71300900075585,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 105,
+          "status": 504,
+          "latency_ms": 460.4375520721078,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 106,
+          "status": 504,
+          "latency_ms": 460.88574500754476,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 107,
+          "status": 504,
+          "latency_ms": 460.9554409980774,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 108,
+          "status": 504,
+          "latency_ms": 461.052720900625,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 109,
+          "status": 504,
+          "latency_ms": 461.35932905599475,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 110,
+          "status": 504,
+          "latency_ms": 461.05883305426687,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 111,
+          "status": 504,
+          "latency_ms": 461.3494729856029,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 112,
+          "status": 504,
+          "latency_ms": 461.63969801273197,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 113,
+          "status": 504,
+          "latency_ms": 461.35715406853706,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 114,
+          "status": 504,
+          "latency_ms": 461.81576198432595,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 115,
+          "status": 504,
+          "latency_ms": 461.52979403268546,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 116,
+          "status": 504,
+          "latency_ms": 462.01691403985023,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 117,
+          "status": 504,
+          "latency_ms": 462.2929310426116,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 118,
+          "status": 504,
+          "latency_ms": 462.0094579877332,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 119,
+          "status": 504,
+          "latency_ms": 461.5358409937471,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        }
+      ]
+    },
+    {
+      "admission_enabled": false,
+      "requests": 120,
+      "max_queue_depth": 8,
+      "request_timeout_ms": 450,
+      "fake": {
+        "base_ms": 60,
+        "per_item_ms": 1,
+        "jitter_ms": 0
+      },
+      "max_batch_size": 4,
+      "prefetch_bound": 4,
+      "elapsed_s": 0.5604680350515991,
+      "statuses": {
+        "200": 16,
+        "504": 104
+      },
+      "observed_max_xlen": 120,
+      "success_p50_ms": 267.885287059471,
+      "success_p95_ms": 407.7415600186214,
+      "reject_p95_ms": null,
+      "timeout_p95_ms": 452.4434359045699,
+      "after_drain_pending": 0,
+      "records": [
+        {
+          "index": 0,
+          "status": 200,
+          "latency_ms": 266.4438619976863,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 1,
+          "status": 200,
+          "latency_ms": 185.09565200656652,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 2,
+          "status": 200,
+          "latency_ms": 267.885287059471,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 3,
+          "status": 200,
+          "latency_ms": 265.6787259038538,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 4,
+          "status": 200,
+          "latency_ms": 188.5820230236277,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 5,
+          "status": 200,
+          "latency_ms": 186.4333659177646,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 6,
+          "status": 200,
+          "latency_ms": 261.4134910982102,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 7,
+          "status": 200,
+          "latency_ms": 181.94097804371268,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 8,
+          "status": 200,
+          "latency_ms": 407.7415600186214,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 9,
+          "status": 200,
+          "latency_ms": 331.1492099892348,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 10,
+          "status": 200,
+          "latency_ms": 331.692683044821,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 11,
+          "status": 200,
+          "latency_ms": 330.15231299214065,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 12,
+          "status": 200,
+          "latency_ms": 324.9552049674094,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 13,
+          "status": 200,
+          "latency_ms": 403.14520499669015,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 14,
+          "status": 200,
+          "latency_ms": 395.23660601116717,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 15,
+          "status": 200,
+          "latency_ms": 397.8705439949408,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 16,
+          "status": 504,
+          "latency_ms": 451.2209389358759,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 17,
+          "status": 504,
+          "latency_ms": 451.96087600197643,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 18,
+          "status": 504,
+          "latency_ms": 451.1304589686915,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 19,
+          "status": 504,
+          "latency_ms": 452.6823640335351,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 20,
+          "status": 504,
+          "latency_ms": 452.2980760084465,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 21,
+          "status": 504,
+          "latency_ms": 451.46273099817336,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 22,
+          "status": 504,
+          "latency_ms": 451.11836201976985,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 23,
+          "status": 504,
+          "latency_ms": 451.9194830209017,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 24,
+          "status": 504,
+          "latency_ms": 451.65948406793177,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 25,
+          "status": 504,
+          "latency_ms": 451.3466189382598,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 26,
+          "status": 504,
+          "latency_ms": 451.9282840192318,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 27,
+          "status": 504,
+          "latency_ms": 451.45273103844374,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 28,
+          "status": 504,
+          "latency_ms": 450.9961870498955,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 29,
+          "status": 504,
+          "latency_ms": 451.556412037462,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 30,
+          "status": 504,
+          "latency_ms": 451.3691470492631,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 31,
+          "status": 504,
+          "latency_ms": 452.72877998650074,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 32,
+          "status": 504,
+          "latency_ms": 452.4434359045699,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 33,
+          "status": 504,
+          "latency_ms": 451.8914349609986,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 34,
+          "status": 504,
+          "latency_ms": 451.3060270110145,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 35,
+          "status": 504,
+          "latency_ms": 451.4483790844679,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 36,
+          "status": 504,
+          "latency_ms": 452.1021719556302,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 37,
+          "status": 504,
+          "latency_ms": 451.3356590177864,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 38,
+          "status": 504,
+          "latency_ms": 450.9839790407568,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 39,
+          "status": 504,
+          "latency_ms": 451.2002510018647,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 40,
+          "status": 504,
+          "latency_ms": 451.21669908985496,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 41,
+          "status": 504,
+          "latency_ms": 451.07929094228894,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 42,
+          "status": 504,
+          "latency_ms": 451.31807506550103,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 43,
+          "status": 504,
+          "latency_ms": 451.41548302490264,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 44,
+          "status": 504,
+          "latency_ms": 450.8517229696736,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 45,
+          "status": 504,
+          "latency_ms": 451.30290696397424,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 46,
+          "status": 504,
+          "latency_ms": 450.75695402920246,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 47,
+          "status": 504,
+          "latency_ms": 451.1220909189433,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 48,
+          "status": 504,
+          "latency_ms": 451.63642801344395,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 49,
+          "status": 504,
+          "latency_ms": 451.04337099473923,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 50,
+          "status": 504,
+          "latency_ms": 451.29977201577276,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 51,
+          "status": 504,
+          "latency_ms": 451.4705559704453,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 52,
+          "status": 504,
+          "latency_ms": 450.5645550088957,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 53,
+          "status": 504,
+          "latency_ms": 450.93050703871995,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 54,
+          "status": 504,
+          "latency_ms": 451.52492297347635,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 55,
+          "status": 504,
+          "latency_ms": 450.81018609926105,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 56,
+          "status": 504,
+          "latency_ms": 450.6388269364834,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 57,
+          "status": 504,
+          "latency_ms": 451.0555319720879,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 58,
+          "status": 504,
+          "latency_ms": 451.5441880794242,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 59,
+          "status": 504,
+          "latency_ms": 452.0792760886252,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 60,
+          "status": 504,
+          "latency_ms": 451.11839508172125,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 61,
+          "status": 504,
+          "latency_ms": 451.73521200194955,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 62,
+          "status": 504,
+          "latency_ms": 450.82796295173466,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 63,
+          "status": 504,
+          "latency_ms": 450.94391505699605,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 64,
+          "status": 504,
+          "latency_ms": 450.61669894494116,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 65,
+          "status": 504,
+          "latency_ms": 451.49119501002133,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 66,
+          "status": 504,
+          "latency_ms": 450.94613905530423,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 67,
+          "status": 504,
+          "latency_ms": 450.9622030891478,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 68,
+          "status": 504,
+          "latency_ms": 451.0876910062507,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 69,
+          "status": 504,
+          "latency_ms": 450.7007790962234,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 70,
+          "status": 504,
+          "latency_ms": 450.6233549909666,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 71,
+          "status": 504,
+          "latency_ms": 450.5550670437515,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 72,
+          "status": 504,
+          "latency_ms": 451.6904429765418,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 73,
+          "status": 504,
+          "latency_ms": 451.2965070316568,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 74,
+          "status": 504,
+          "latency_ms": 450.9139470756054,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 75,
+          "status": 504,
+          "latency_ms": 450.8767949882895,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 76,
+          "status": 504,
+          "latency_ms": 450.76978707220405,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 77,
+          "status": 504,
+          "latency_ms": 450.77884302008897,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 78,
+          "status": 504,
+          "latency_ms": 450.7588269189,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 79,
+          "status": 504,
+          "latency_ms": 450.6242830539122,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 80,
+          "status": 504,
+          "latency_ms": 450.50922594964504,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 81,
+          "status": 504,
+          "latency_ms": 451.9679800141603,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 82,
+          "status": 504,
+          "latency_ms": 451.55948400497437,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 83,
+          "status": 504,
+          "latency_ms": 451.4816759619862,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 84,
+          "status": 504,
+          "latency_ms": 451.2704589869827,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 85,
+          "status": 504,
+          "latency_ms": 452.1654359996319,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 86,
+          "status": 504,
+          "latency_ms": 451.54858799651265,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 87,
+          "status": 504,
+          "latency_ms": 451.43887598533183,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 88,
+          "status": 504,
+          "latency_ms": 451.05572405736893,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 89,
+          "status": 504,
+          "latency_ms": 452.6109239086509,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 90,
+          "status": 504,
+          "latency_ms": 452.5111960247159,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 91,
+          "status": 504,
+          "latency_ms": 452.2501400206238,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 92,
+          "status": 504,
+          "latency_ms": 451.987580046989,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 93,
+          "status": 504,
+          "latency_ms": 451.9655799958855,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 94,
+          "status": 504,
+          "latency_ms": 451.6053079860285,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 95,
+          "status": 504,
+          "latency_ms": 452.2347319871187,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 96,
+          "status": 504,
+          "latency_ms": 452.0760440500453,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 97,
+          "status": 504,
+          "latency_ms": 451.9122840138152,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 98,
+          "status": 504,
+          "latency_ms": 451.7192440107465,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 99,
+          "status": 504,
+          "latency_ms": 451.91962795797735,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 100,
+          "status": 504,
+          "latency_ms": 451.8879309762269,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 101,
+          "status": 504,
+          "latency_ms": 451.97041099891067,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 102,
+          "status": 504,
+          "latency_ms": 452.2516439901665,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 103,
+          "status": 504,
+          "latency_ms": 451.84450794477016,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 104,
+          "status": 504,
+          "latency_ms": 451.79870002903044,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 105,
+          "status": 504,
+          "latency_ms": 451.7617399105802,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 106,
+          "status": 504,
+          "latency_ms": 471.28092404454947,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 107,
+          "status": 504,
+          "latency_ms": 451.41151593998075,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 108,
+          "status": 504,
+          "latency_ms": 451.1580109829083,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 109,
+          "status": 504,
+          "latency_ms": 451.54850801918656,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 110,
+          "status": 504,
+          "latency_ms": 451.2426829896867,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 111,
+          "status": 504,
+          "latency_ms": 451.2909559998661,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 112,
+          "status": 504,
+          "latency_ms": 451.26290793996304,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 113,
+          "status": 504,
+          "latency_ms": 451.37486001476645,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 114,
+          "status": 504,
+          "latency_ms": 451.15133898798376,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 115,
+          "status": 504,
+          "latency_ms": 451.2590829981491,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 116,
+          "status": 504,
+          "latency_ms": 451.2300109490752,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 117,
+          "status": 504,
+          "latency_ms": 451.3108750106767,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 118,
+          "status": 504,
+          "latency_ms": 451.32546697277576,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 119,
+          "status": 504,
+          "latency_ms": 451.2970829382539,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        }
+      ]
+    },
+    {
+      "admission_enabled": false,
+      "requests": 120,
+      "max_queue_depth": 8,
+      "request_timeout_ms": 450,
+      "fake": {
+        "base_ms": 60,
+        "per_item_ms": 1,
+        "jitter_ms": 0
+      },
+      "max_batch_size": 4,
+      "prefetch_bound": 4,
+      "elapsed_s": 0.517692435067147,
+      "statuses": {
+        "200": 18,
+        "504": 102
+      },
+      "observed_max_xlen": 120,
+      "success_p50_ms": 292.57969197351485,
+      "success_p95_ms": 447.70618609618396,
+      "reject_p95_ms": null,
+      "timeout_p95_ms": 454.6808790182695,
+      "after_drain_pending": 0,
+      "records": [
+        {
+          "index": 0,
+          "status": 200,
+          "latency_ms": 139.36800102237612,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 1,
+          "status": 200,
+          "latency_ms": 142.62856298591942,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 2,
+          "status": 200,
+          "latency_ms": 140.7092650188133,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 3,
+          "status": 200,
+          "latency_ms": 216.7526870034635,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 4,
+          "status": 200,
+          "latency_ms": 141.56921801622957,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 5,
+          "status": 200,
+          "latency_ms": 216.63724607788026,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 6,
+          "status": 200,
+          "latency_ms": 292.8533249069005,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 7,
+          "status": 200,
+          "latency_ms": 371.71135598327965,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 8,
+          "status": 200,
+          "latency_ms": 220.18276900053024,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 9,
+          "status": 200,
+          "latency_ms": 218.11244694981724,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 10,
+          "status": 200,
+          "latency_ms": 297.1209759125486,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 11,
+          "status": 200,
+          "latency_ms": 372.7597409160808,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 12,
+          "status": 200,
+          "latency_ms": 297.8666720446199,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 13,
+          "status": 200,
+          "latency_ms": 292.57969197351485,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 14,
+          "status": 504,
+          "latency_ms": 451.84598094783723,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 15,
+          "status": 200,
+          "latency_ms": 368.17477794829756,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 16,
+          "status": 504,
+          "latency_ms": 451.25017198733985,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 17,
+          "status": 200,
+          "latency_ms": 444.7839119238779,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 18,
+          "status": 200,
+          "latency_ms": 447.70618609618396,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 19,
+          "status": 504,
+          "latency_ms": 452.03204499557614,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 20,
+          "status": 504,
+          "latency_ms": 451.94303803145885,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 21,
+          "status": 504,
+          "latency_ms": 451.92111702635884,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 22,
+          "status": 200,
+          "latency_ms": 367.6989050582051,
+          "retry_after": null,
+          "error_code": null
+        },
+        {
+          "index": 23,
+          "status": 504,
+          "latency_ms": 451.75836491398513,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 24,
+          "status": 504,
+          "latency_ms": 451.62097294814885,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 25,
+          "status": 504,
+          "latency_ms": 451.4942530076951,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 26,
+          "status": 504,
+          "latency_ms": 451.6044929623604,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 27,
+          "status": 504,
+          "latency_ms": 451.51246106252074,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 28,
+          "status": 504,
+          "latency_ms": 451.85657299589366,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 29,
+          "status": 504,
+          "latency_ms": 450.9847490116954,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 30,
+          "status": 504,
+          "latency_ms": 451.6407969640568,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 31,
+          "status": 504,
+          "latency_ms": 451.4275649562478,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 32,
+          "status": 504,
+          "latency_ms": 451.27700502052903,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 33,
+          "status": 504,
+          "latency_ms": 451.5663490165025,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 34,
+          "status": 504,
+          "latency_ms": 451.22646098025143,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 35,
+          "status": 504,
+          "latency_ms": 451.4198210090399,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 36,
+          "status": 504,
+          "latency_ms": 451.2911479687318,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 37,
+          "status": 504,
+          "latency_ms": 450.8725890191272,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 38,
+          "status": 504,
+          "latency_ms": 450.90665202587843,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 39,
+          "status": 504,
+          "latency_ms": 450.7100769551471,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 40,
+          "status": 504,
+          "latency_ms": 450.69505204446614,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 41,
+          "status": 504,
+          "latency_ms": 450.78148401807994,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 42,
+          "status": 504,
+          "latency_ms": 450.7964759832248,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 43,
+          "status": 504,
+          "latency_ms": 450.7225080160424,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 44,
+          "status": 504,
+          "latency_ms": 450.5819479236379,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 45,
+          "status": 504,
+          "latency_ms": 450.6219959584996,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 46,
+          "status": 504,
+          "latency_ms": 450.62825200147927,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 47,
+          "status": 504,
+          "latency_ms": 450.90026897378266,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 48,
+          "status": 504,
+          "latency_ms": 451.8402849789709,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 49,
+          "status": 504,
+          "latency_ms": 451.6904449556023,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 50,
+          "status": 504,
+          "latency_ms": 451.52458897791803,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 51,
+          "status": 504,
+          "latency_ms": 452.27638201322407,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 52,
+          "status": 504,
+          "latency_ms": 451.62314898334444,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 53,
+          "status": 504,
+          "latency_ms": 451.8038689857349,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 54,
+          "status": 504,
+          "latency_ms": 451.8615970155224,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 55,
+          "status": 504,
+          "latency_ms": 451.8408779986203,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 56,
+          "status": 504,
+          "latency_ms": 451.7134369816631,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 57,
+          "status": 504,
+          "latency_ms": 451.9781250273809,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 58,
+          "status": 504,
+          "latency_ms": 451.7389250686392,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 59,
+          "status": 504,
+          "latency_ms": 451.25466806348413,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 60,
+          "status": 504,
+          "latency_ms": 452.04340503551066,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 61,
+          "status": 504,
+          "latency_ms": 451.5786690171808,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 62,
+          "status": 504,
+          "latency_ms": 452.72279798518866,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 63,
+          "status": 504,
+          "latency_ms": 452.0265249302611,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 64,
+          "status": 504,
+          "latency_ms": 451.75550098065287,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 65,
+          "status": 504,
+          "latency_ms": 451.92239701282233,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 66,
+          "status": 504,
+          "latency_ms": 451.6763010760769,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 67,
+          "status": 504,
+          "latency_ms": 451.65958104189485,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 68,
+          "status": 504,
+          "latency_ms": 451.5799969667569,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 69,
+          "status": 504,
+          "latency_ms": 451.9134049769491,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 70,
+          "status": 504,
+          "latency_ms": 451.94082998204976,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 71,
+          "status": 504,
+          "latency_ms": 451.72374101821333,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 72,
+          "status": 504,
+          "latency_ms": 451.64569292683154,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 73,
+          "status": 504,
+          "latency_ms": 451.9847499905154,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 74,
+          "status": 504,
+          "latency_ms": 452.2216930054128,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 75,
+          "status": 504,
+          "latency_ms": 451.4015009626746,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 76,
+          "status": 504,
+          "latency_ms": 451.29815698601305,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 77,
+          "status": 504,
+          "latency_ms": 451.65545400232077,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 78,
+          "status": 504,
+          "latency_ms": 451.0352279758081,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 79,
+          "status": 504,
+          "latency_ms": 451.6058369772509,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 80,
+          "status": 504,
+          "latency_ms": 451.3587320689112,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 81,
+          "status": 504,
+          "latency_ms": 451.7915489850566,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 82,
+          "status": 504,
+          "latency_ms": 451.91785297356546,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 83,
+          "status": 504,
+          "latency_ms": 451.4163970015943,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 84,
+          "status": 504,
+          "latency_ms": 451.4903320232406,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 85,
+          "status": 504,
+          "latency_ms": 451.7892290605232,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 86,
+          "status": 504,
+          "latency_ms": 451.70956500805914,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 87,
+          "status": 504,
+          "latency_ms": 451.7752450192347,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 88,
+          "status": 504,
+          "latency_ms": 451.9246369600296,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 89,
+          "status": 504,
+          "latency_ms": 451.9917250145227,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 90,
+          "status": 504,
+          "latency_ms": 451.87132502906024,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 91,
+          "status": 504,
+          "latency_ms": 451.9113900605589,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 92,
+          "status": 504,
+          "latency_ms": 451.9881730666384,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 93,
+          "status": 504,
+          "latency_ms": 452.19190092757344,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 94,
+          "status": 504,
+          "latency_ms": 452.2704939590767,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 95,
+          "status": 504,
+          "latency_ms": 452.17948604840785,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 96,
+          "status": 504,
+          "latency_ms": 452.08175701554865,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 97,
+          "status": 504,
+          "latency_ms": 452.0831009140238,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 98,
+          "status": 504,
+          "latency_ms": 452.31250999495387,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 99,
+          "status": 504,
+          "latency_ms": 452.5094060227275,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 100,
+          "status": 504,
+          "latency_ms": 452.69977301359177,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 101,
+          "status": 504,
+          "latency_ms": 452.5940780295059,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 102,
+          "status": 504,
+          "latency_ms": 452.79798202682287,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 103,
+          "status": 504,
+          "latency_ms": 452.7048780582845,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 104,
+          "status": 504,
+          "latency_ms": 453.2542700180784,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 105,
+          "status": 504,
+          "latency_ms": 453.240558039397,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 106,
+          "status": 504,
+          "latency_ms": 453.69491109158844,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 107,
+          "status": 504,
+          "latency_ms": 454.01663903612643,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 108,
+          "status": 504,
+          "latency_ms": 454.31094290688634,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 109,
+          "status": 504,
+          "latency_ms": 453.9980629924685,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 110,
+          "status": 504,
+          "latency_ms": 454.2461590608582,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 111,
+          "status": 504,
+          "latency_ms": 454.3253759620711,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 112,
+          "status": 504,
+          "latency_ms": 454.5774710131809,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 113,
+          "status": 504,
+          "latency_ms": 454.6808790182695,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 114,
+          "status": 504,
+          "latency_ms": 454.9285430693999,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 115,
+          "status": 504,
+          "latency_ms": 454.6483989106491,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 116,
+          "status": 504,
+          "latency_ms": 454.9119679722935,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 117,
+          "status": 504,
+          "latency_ms": 455.0492479465902,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 118,
+          "status": 504,
+          "latency_ms": 455.1251040538773,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        },
+        {
+          "index": 119,
+          "status": 504,
+          "latency_ms": 455.2330879960209,
+          "retry_after": null,
+          "error_code": "TIMEOUT"
+        }
+      ]
+    }
+  ]
+}

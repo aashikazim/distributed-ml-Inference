@@ -1,0 +1,12 @@
+{
+  "redis_py": "8.1.0",
+  "server": "7.4.12",
+  "method": "One reserved connection models the inbox reader; 120 concurrent PING calls.",
+  "default_immediate_pool_limit": 100,
+  "default_pool_outcomes": {
+    "PONG": 99,
+    "MaxConnectionsError": 21
+  },
+  "blocking_pool_limit": 64,
+  "blocking_pool_successes": 120
+}

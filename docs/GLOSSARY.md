@@ -20,8 +20,8 @@
 | In-flight | Work delivered and not finished |
 | Idempotency | Repeating work does not create additional external side effects |
 | At-least-once delivery | Retry-capable handling may process the same work more than once |
-| Reclaim | Transfer idle pending work to a new worker; Phase 3 |
-| Dead-letter queue (DLQ) | Separate place for repeatedly failing work; Phase 3 |
+| Reclaim | Transfer sufficiently idle pending ownership using XAUTOCLAIM |
+| Dead-letter queue (DLQ) | Bounded stream holding repeatedly failing envelopes, errors and delivery counts |
 | Deadline | Point beyond which work or waiting should stop |
 | Timeout | Maximum permitted duration for an operation |
 | Monotonic clock | Clock for elapsed time that is not adjusted like wall time |
@@ -29,7 +29,7 @@
 | Event loop | Scheduler that lets asynchronous I/O tasks share one thread |
 | Lifespan | Application startup/shutdown context managing resources |
 | Backpressure | Preventing fast producers from overwhelming slower consumers |
-| Admission control | Rejecting new work when capacity is insufficient; Phase 3 |
+| Admission control | Rejecting new work before enqueue when retained depth or live capacity is insufficient |
 | Dynamic batching | Gathering independent inputs into a compute batch with a size and wait policy |
 | Continuous batching | Updating the active LLM sequence batch during generation; later vLLM |
 | Latency | Elapsed time from a defined start to finish |
@@ -59,3 +59,19 @@
 | Poison input | Input that repeatedly makes inference fail |
 | Safetensors | Tensor-weight serialization format used instead of pickle model weights |
 | Little's Law | In a stable interval, average work present equals throughput times average time |
+
+
+| Term | Plain-language meaning |
+|---|---|
+| Delivery count | Initial delivery plus redeliveries/claims recorded in the pending ledger |
+| Heartbeat | Periodically refreshed TTL registration advertising a worker's capacity |
+| Reclaim idle threshold | Minimum time since delivery/claim before ownership may transfer |
+| Token bucket | Per-key rate budget that refills over Redis server time, up to a burst cap |
+| Load shedding | Rejecting excess requests early so accepted work has bounded waiting |
+| Retry storm | Many callers repeating failed work together and amplifying overload |
+| Tail latency | Slow end of the request-latency distribution |
+| SIGTERM | Signal asking a worker to stop reading, drain and exit cleanly |
+| SIGKILL | Immediate process termination; no cleanup code can run |
+| Redis transaction | MULTI/EXEC group of commands executed without other clients interleaving |
+| Blocking connection pool | Fixed connection budget whose callers wait with a timeout for free slots |
+| Async polling | Fetching the eventual outcome using an accepted request ID |
