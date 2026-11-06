@@ -1,0 +1,42 @@
+name: infer-platform
+services:
+  redis:
+    image: redis:7.4
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 1s
+      retries: 30
+  gateway:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    environment:
+      INFER_REDIS_URL: redis://redis:6379/0
+      INFER_API_KEYS: ${INFER_API_KEYS:?Set INFER_API_KEYS as a JSON array in your environment}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/readyz', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  worker-fake:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    command: ["python", "-m", "infer_platform.worker.main"]
+    environment:
+      INFER_REDIS_URL: redis://redis:6379/0
+      INFER_API_KEYS: ${INFER_API_KEYS:?Set INFER_API_KEYS as a JSON array in your environment}
+    depends_on:
+      redis:
+        condition: service_healthy
+volumes:
+  redis-data:

@@ -1,0 +1,7 @@
+models:
+  fake-classifier:
+    backend: fake
+    fake: {base_ms: 20, per_item_ms: 2, jitter_ms: 3}
+    max_input_chars: 4000
+    request_timeout_ms: 5000
+    max_queue_depth: 500
