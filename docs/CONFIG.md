@@ -13,10 +13,10 @@ Model policy is loaded from config/models.yaml and validated at startup.
 | INFER_INBOX_TTL_S | 120 | Gateway inbox expiry, refreshed during reads |
 | INFER_MAX_GATEWAY_INFLIGHT | 1000 | Maximum concurrent response waiters per gateway |
 
-Model fields: backend (currently fake only), fake.base_ms, fake.per_item_ms,
+Model fields: backend (fake or torch), fake.base_ms, fake.per_item_ms,
 fake.jitter_ms (simulated cost), max_input_chars, request_timeout_ms, max_queue_depth.
 Queue admission enforcement arrives in Phase 3; max_queue_depth is policy only for now.
-No real model names are accepted in Phase 1. Test-only INFER_TEST_REDIS_URL can
+Phase 1 accepted only the fake backend; Phase 2 adds the configured sentiment model. Test-only INFER_TEST_REDIS_URL can
 point integration tests at a dedicated real Redis instead of Testcontainers.
 INFER_SMOKE_API_KEY is consumed only by scripts/smoke.sh.
 

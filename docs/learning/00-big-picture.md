@@ -20,7 +20,8 @@ of model copies without changing the client's API. A replica means one running
 copy of a model worker. Our first step separates accepting a request from executing
 it, while keeping the client's initial experience simple: send HTTP, receive JSON.
 
-The model is deliberately fake. Its sleep represents compute cost, and its output
+This introductory example deliberately uses the fake model. Phase 2 also
+provides real sentiment inference, described in lesson 02. Its sleep represents compute cost, and its output
 says SIMULATED. There is no claim about sentiment accuracy or GPU performance.
 That lets us study distribution without downloading weights or confusing model
 correctness with transport correctness.
@@ -66,7 +67,7 @@ Read these files in order:
    construct resources in lifespan and define the HTTP boundary.
 3. [response_router.py](../../src/infer_platform/gateway/response_router.py),
    ResponseRouter.register/read: connect incoming replies to local waiters.
-4. [main.py](../../src/infer_platform/worker/main.py), Worker.run/process:
+4. [main.py](../../src/infer_platform/worker/main.py), Worker.consume/prepare/finish:
    pull one request, run it, write a response, then acknowledge.
 5. [fake.py](../../src/infer_platform/worker/runners/fake.py),
    FakeRunner.predict_batch: simulate cost in a dedicated executor thread.

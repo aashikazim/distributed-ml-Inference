@@ -8,7 +8,7 @@ functions; introduce one controlled failure; teach the result without reading no
 |---|---|---|
 | 00 | [Big picture](00-big-picture.md), [architecture](../ARCHITECTURE.md) | Phase 1 |
 | 01 | [Request path](01-request-path.md), [Redis Streams](../concepts/redis-streams.md), E1, ADRs 0001–0003 | Phase 1 |
-| 02 | Dynamic batching, batching concept, E2–E3, ADR-0004 | Phase 2 |
+| 02 | [Dynamic batching](02-dynamic-batching.md), [batching concept](../concepts/batching.md), E2–E3, [ADR-0004](../adr/0004-dynamic-batching.md) | Phase 2: available |
 | 03 | Reliability, reliability/backpressure concept, E4–E5, ADRs 0005–0006 | Phase 3 |
 | 04 | LLM serving, LLM concept, E6a–E6b, ADR-0007 | Phase 4 |
 | 05 | Observability, latency concept, E7, ADR-0008 | Phase 5 |

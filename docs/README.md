@@ -1,6 +1,7 @@
 # Learn the inference platform
 
-Phase 1 has a real distributed request path and a **simulated** model. Start with
+Phase 2 has a real distributed request path, a **simulated** fake backend,
+and a real CPU-verified DistilBERT sentiment model with dynamic batching. Start with
 [the repository quickstart](../README.md), then follow this order:
 
 1. [Big picture](learning/00-big-picture.md): responsibilities and boundaries.
@@ -10,6 +11,10 @@ Phase 1 has a real distributed request path and a **simulated** model. Start wit
 5. [E1](EXPERIMENTS.md): predict, kill a worker, inspect pending work.
 6. [ADRs](adr/0001-redis-streams.md): queue choice, then
    [inboxes](adr/0002-gateway-inboxes.md) and [pull distribution](adr/0003-pull-distribution.md).
+
+Next read [dynamic batching](learning/02-dynamic-batching.md), its
+[concept guide](concepts/batching.md), [ADR-0004](adr/0004-dynamic-batching.md),
+and E2/E3 in the experiment record.
 
 Use the [study plan](learning/README.md) for the full roadmap. Keep the
 [glossary](GLOSSARY.md) nearby. Read [configuration](CONFIG.md) before changing

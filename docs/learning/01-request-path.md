@@ -55,7 +55,8 @@ the last entry ID it has seen. It puts a recognized response into a bounded queu
 Unknown IDs and already-full queues are ignored so late or duplicate replies
 cannot create additional HTTP responses.
 
-The worker reads one request at a time. Delivery enters it in the pending-entry
+In Phase 1 the worker read one request at a time. The current worker reads
+bounded free capacity and stages a dynamic batch, as lesson 02 explains. Delivery enters it in the pending-entry
 list, Redis's record of unacknowledged ownership. Inference runs in a dedicated
 executor. The worker writes the final reply, calls XACK to clear pending ownership,
 then XDEL to remove retained work. Acknowledgement and deletion are separate:
@@ -78,7 +79,7 @@ Read these functions in order:
    wait with a deadline, then remove the waiter in finally.
 4. [ResponseRouter.start/read](../../src/infer_platform/gateway/response_router.py):
    establish a concrete starting cursor before requests can arrive and route replies.
-5. [Worker.process](../../src/infer_platform/worker/main.py): compute queue age,
+5. [Worker.prepare/finish](../../src/infer_platform/worker/main.py): compute queue age,
    skip expired work, run inference and write the reply before acknowledgement.
 
 Finally read [the integration tests](../../tests/integration/test_request_path.py).
@@ -95,8 +96,8 @@ curl --fail --silent --show-error -H "X-API-Key: $INFER_SMOKE_API_KEY" -H 'Conte
 
 The tests check a successful round trip, validation and auth errors, deadline
 cleanup, reply dispatch, stream removal, and expired requests. The curl response
-includes a worker ID and batch_size one. batch_wait_ms is zero because Phase 1
-does not collect a batch.
+includes a worker ID and actual batch_size and batch_wait_ms. Phase 1 used size one and zero wait;
+Phase 2 uses the model batch policy, even for the fake backend.
 
 ## Break it
 

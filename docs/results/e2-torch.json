@@ -1,0 +1,118 @@
+{
+  "experiment": "E2",
+  "backend": "torch",
+  "simulated": false,
+  "threads": 1,
+  "repeats": 5,
+  "metadata": {
+    "date_utc": "2026-11-06T15:46:29.477859+00:00",
+    "commit": "54c1eefac3e2a8f43d198b4db607db4c60f4c2ab",
+    "tracked_changes": [
+      ".gitignore",
+      "docs/ARCHITECTURE.md",
+      "docs/EXPERIMENTS.md"
+    ],
+    "platform": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+    "cpu_count": 20,
+    "cpu_inventory": "Architecture:                         aarch64\nCPU op-mode(s):                       64-bit\nByte Order:                           Little Endian\nCPU(s):                               20\nOn-line CPU(s) list:                  0-19\nVendor ID:                            ARM\nModel name:                           Cortex-X925\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   93%\nCPU max MHz:                          4004.0000\nCPU min MHz:                          1378.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nModel name:                           Cortex-A725\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             r0p1\nCPU(s) scaling MHz:                   86%\nCPU max MHz:                          2860.0000\nCPU min MHz:                          338.0000\nBogoMIPS:                             2000.00\nFlags:                                fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt\nL1d cache:                            1.3 MiB (20 instances)\nL1i cache:                            1.3 MiB (20 instances)\nL2 cache:                             25 MiB (20 instances)\nL3 cache:                             24 MiB (2 instances)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-19\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; __user pointer sanitization\nVulnerability Spectre v2:             Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n",
+    "python": "3.12.3",
+    "torch": "2.15.0+cpu",
+    "transformers": "4.57.6",
+    "device": "cpu",
+    "model_revision": "714eb0fa89d2f80546fda750413ed43d93601a13",
+    "input": "The film was beautifully acted and I enjoyed the story from beginning to end."
+  },
+  "rows": [
+    {
+      "batch_size": 1,
+      "samples_s": [
+        0.027487425948493183,
+        0.026091204956173897,
+        0.024147188058122993,
+        0.024947852012701333,
+        0.026294535025954247
+      ],
+      "throughput_items_s": 38.7692451885696,
+      "batch_latency_ms": 25.79364120028913,
+      "amortized_item_ms": 25.79364120028913
+    },
+    {
+      "batch_size": 2,
+      "samples_s": [
+        0.031581445946358144,
+        0.032238155021332204,
+        0.02849439496640116,
+        0.029341346002183855,
+        0.03124939394183457
+      ],
+      "throughput_items_s": 65.40019798975771,
+      "batch_latency_ms": 30.580947175621986,
+      "amortized_item_ms": 15.290473587810993
+    },
+    {
+      "batch_size": 4,
+      "samples_s": [
+        0.03451835201121867,
+        0.034267885028384626,
+        0.0382006709696725,
+        0.03513230895623565,
+        0.03750989807303995
+      ],
+      "throughput_items_s": 111.34052514653689,
+      "batch_latency_ms": 35.92582300771028,
+      "amortized_item_ms": 8.98145575192757
+    },
+    {
+      "batch_size": 8,
+      "samples_s": [
+        0.047625939012505114,
+        0.04965026001445949,
+        0.04803282197099179,
+        0.042819159920327365,
+        0.050860830931924284
+      ],
+      "throughput_items_s": 167.37171173824066,
+      "batch_latency_ms": 47.79780237004161,
+      "amortized_item_ms": 5.974725296255201
+    },
+    {
+      "batch_size": 16,
+      "samples_s": [
+        0.06728824006859213,
+        0.06731134292203933,
+        0.0635232460917905,
+        0.07257657300215214,
+        0.06528289406560361
+      ],
+      "throughput_items_s": 238.10778400133773,
+      "batch_latency_ms": 67.19645923003554,
+      "amortized_item_ms": 4.1997787018772215
+    },
+    {
+      "batch_size": 32,
+      "samples_s": [
+        0.10868706600740552,
+        0.1186796500114724,
+        0.1189472529804334,
+        0.12498877698089927,
+        0.11404631403274834
+      ],
+      "throughput_items_s": 273.3411752578159,
+      "batch_latency_ms": 117.06981200259179,
+      "amortized_item_ms": 3.6584316250809934
+    },
+    {
+      "batch_size": 64,
+      "samples_s": [
+        0.20557177206501365,
+        0.21215624606702477,
+        0.21256479306612164,
+        0.21690422191750258,
+        0.2074876750120893
+      ],
+      "throughput_items_s": 303.4082105618611,
+      "batch_latency_ms": 210.9369416255504,
+      "amortized_item_ms": 3.295889712899225
+    }
+  ]
+}
