@@ -143,7 +143,10 @@ while slightly reducing throughput. Their own methods, hardware/image revisions,
 raw records and caveats are in [EXPERIMENTS.md](EXPERIMENTS.md). They must not be
 combined into one generic classifier-or-LLM speed number.
 
-Still unverified: long-duration soak, WAN/cloud performance, production Redis HA,
-GPU Kubernetes, CUDA graph comparisons, long-context saturation, and hosted CI.
+Wrap-up additionally verified hosted CI/GHCR, real GPU kind and a 15-minute
+soak: 18,000 simulated classifier and 1,800 real CPU sentiment requests all
+succeeded; p95 was 82.10/69.36 ms. See [wrap-up evidence](FINAL_VERIFICATION.md).
+WAN/cloud deployment is outside the owner's localhost scope. Production Redis HA,
+month-long SLOs, CUDA graph comparisons and context saturation are not claimed.
 The local candidate targets are proposals for the measured scope, not commercial
 service guarantees or evidence that arbitrary prompts fit a 250 ms budget.

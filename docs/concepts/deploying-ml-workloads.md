@@ -61,8 +61,8 @@ without maintaining divergent dependency sets for every role.
 
 ## GPU scheduling and vLLM
 
-A Kubernetes NVIDIA device plugin advertises GPU resources. The untested GPU
-overlay requests nvidia.com/gpu, uses a node selector for GPU-capable labeled
+A Kubernetes NVIDIA device plugin advertises GPU resources. The GPU overlay,
+verified on local GB10 kind during wrap-up, requests nvidia.com/gpu, uses a node selector for GPU-capable labeled
 nodes and a matching toleration for GPU-tainted nodes. Labels/taints must match
 the actual cluster setup; the overlay is not an installer for drivers, runtime
 support, GPU feature discovery or the device plugin. Check those prerequisites
@@ -73,7 +73,15 @@ The vLLM Deployment owns one engine and its GPU allocation; the adapter cap stay
 aligned with its sequence cap. Do not scale adapters independently as if each
 created another GPU engine. The current Kubernetes autoscaler map manages only
 the fake classifier. Real vLLM and CUDA classifier runner were verified in Docker;
-GPU Kubernetes scheduling remains explicitly untested.
+GPU Kubernetes scheduling, completion and cancellation also passed on local kind.
+That does not certify another cluster's driver/runtime setup. See
+[the reproduction and results](../GPU_VERIFICATION.md).
+
+The vLLM Pod disables service-link injection: a Service named vllm otherwise
+creates VLLM_PORT, conflicting with the engine's own setting. The one-GPU engine
+uses Recreate rather than a surge rollout, because a replacement cannot request
+a second GPU that does not exist. Expect engine-update downtime; classifier
+worker rolling updates are a separate, verified scenario.
 
 ## Redis and monitoring availability
 

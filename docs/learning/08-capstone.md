@@ -102,7 +102,7 @@ The formula was not wrong; the assumed mean duration was too optimistic.
 | Why Redis instead of direct routing? | Pull distribution, durable ownership and visible waiting, at the cost of extra I/O and infrastructure availability |
 | Why a custom controller? | Transparent learning policy and simulations; HPA/KEDA often reduce production maintenance |
 | Why not put LLMs in DynamicBatcher? | Generation requires engine-level iteration scheduling and KV management; vLLM owns that |
-| Why not declare production-ready? | Hosted CI, GPU cluster, HA, soak and representative production traffic remain unverified |
+| Why not declare production-ready? | Hosted CI, local GPU kind and a bounded soak now pass; production HA, month-long SLOs and representative production traffic still need deployment acceptance |
 
 The [SLO proposal](../SLO.md) is deliberately scoped. Short zero-error runs do not
 establish a month-long reliability target. A larger queue may accept more work

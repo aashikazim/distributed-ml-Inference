@@ -1,0 +1,10 @@
+{
+  "stage": "Real GPU Kubernetes startup before fix",
+  "image_pulled_successfully": true,
+  "gpu_model_loaded_successfully": true,
+  "error": "ValueError: VLLM_PORT 'tcp://10.96.196.111:8000' appears to be a URI",
+  "cause": "Kubernetes Service named vllm injected VLLM_PORT; it conflicts with vLLM internal configuration.",
+  "fix": "enableServiceLinks: false; single-GPU Deployment strategy Recreate avoids surge requiring another GPU.",
+  "scope": "Not counted as successful GPU serving.",
+  "full_overlay_namespace_bug": "Overlay lacked namespace, so added vLLM resources landed in default; fixed with namespace: infer-platform. Owned test resources in default removed."
+}

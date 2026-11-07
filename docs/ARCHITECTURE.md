@@ -7,8 +7,9 @@ polling remain shared. Streaming chat uses a separate vLLM adapter, verified on
 a TCP fake server and real GB10 vLLM. Dashboards and actual kind autoscaling,
 rollout and process-loss recovery are implemented. Phase 8 adds executed runbook
 drills, open/closed-loop benchmarks, a measured capacity worksheet and a local
-SLO proposal. Hosted CI, GPU Kubernetes and production HA/soak remain unverified;
-see [the audit](VERIFICATION.md).
+SLO proposal. Wrap-up verifies hosted CI/GHCR, real GPU kind, snapshot restore
+and a bounded soak. Production HA/cloud and month-long SLOs remain outside those
+checks; see [the audit](VERIFICATION.md) and [wrap-up](FINAL_VERIFICATION.md).
 
 ## Diagram 1: containers
 
@@ -433,5 +434,8 @@ The final local verification suite passes 62 CPU tests plus one explicit real
 GB10/vLLM test. A real GPU engine scrape and current Compose round trip are
 recorded separately. This is a learning deployment: Redis and monitoring are not
 HA, stream resumption and automatic DLQ replay are absent, production ingress/
-TLS/notification/retention policies are deployment work, and no hosted CI or GPU
-cluster run is claimed. The GPU overlay is rendered, explicitly untested.
+TLS/notification/retention policies are deployment work. Hosted CI and GHCR
+publication passed; the GPU overlay actually served on local kind. Its vLLM Pod
+disables service-link injection to avoid a VLLM_PORT collision, and uses Recreate
+because the single GPU cannot accommodate a surge engine. Engine updates have
+downtime; the zero-failure rolling experiment concerns classifier workers.

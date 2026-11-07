@@ -3,9 +3,11 @@ kind: Deployment
 metadata:
   name: vllm
   annotations:
-    verification: UNTESTED on GPU Kubernetes cluster
+    verification: Verified on local GB10 kind; see docs/results/final-kind-gpu.json
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: vllm
@@ -14,6 +16,7 @@ spec:
       labels:
         app: vllm
     spec:
+      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

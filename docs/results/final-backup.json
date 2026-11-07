@@ -1,0 +1,13 @@
+{
+  "date_utc": "2026-11-06T21:33:16Z",
+  "redis_version": "7.4.12",
+  "snapshot_sha256": "8872b53e89dba5b8fca676d2d34c2df062f8c719ab5d7e1c7c82f4a82cf77797",
+  "restored_stream_entries": 2,
+  "pending_ownership_restored": true,
+  "pending_reclaim_succeeded": true,
+  "undelivered_cursor_restored": true,
+  "cached_result_and_ttl_restored": true,
+  "inbox_restored": true,
+  "elapsed_s": 0.974895998951979,
+  "scope": "Local RDB snapshot and independent container restore; no HA, disk-loss RPO or continuous backup claim."
+}

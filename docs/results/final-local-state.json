@@ -1,0 +1,134 @@
+{
+  "date_utc": "2026-11-07T00:49:41Z",
+  "scope": "Local CPU/fake stack restored; GPU engine removed, model PVC retained.",
+  "checks": {
+    "/healthz": 200,
+    "/readyz": 200,
+    "/metrics": 200,
+    "fake-classifier": {
+      "status": 200,
+      "meta": {
+        "worker_id": "worker-fake-587dbccc74-nxjck-813ee534",
+        "batch_size": 1,
+        "queue_ms": 0.60107421875,
+        "batch_wait_ms": 11.285279993899167,
+        "inference_ms": 52.38857900258154,
+        "total_ms": 66.08262797817588,
+        "gateway_overhead_ms": 1.8076947629451752
+      }
+    },
+    "sentiment": {
+      "status": 200,
+      "meta": {
+        "worker_id": "worker-sentiment-58d96f5df-kfhkd-7c0f61ed",
+        "batch_size": 1,
+        "queue_ms": 1.76611328125,
+        "batch_wait_ms": 11.852532043121755,
+        "inference_ms": 31.981986947357655,
+        "total_ms": 47.51479998230934,
+        "gateway_overhead_ms": 1.9141677105799317
+      }
+    },
+    "simulated_sse": {
+      "status": 200,
+      "done": true
+    }
+  },
+  "pods": [
+    {
+      "name": "autoscaler-6b554d766-dmx2x",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "exporter-6bbb78cf74-gvffk",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "fake-openai-8b854f465-8j52l",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "gateway-5ccc946488-2t5vk",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "gateway-5ccc946488-6l2mx",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "grafana-7bd6f567d4-jqgx8",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "prometheus-66b66d5855-j9w5t",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "redis-0",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "worker-chat-7d45cd9c5-52vtd",
+      "ready": true,
+      "restarts": 2
+    },
+    {
+      "name": "worker-fake-587dbccc74-nxjck",
+      "ready": true,
+      "restarts": 0
+    },
+    {
+      "name": "worker-sentiment-58d96f5df-kfhkd",
+      "ready": true,
+      "restarts": 0
+    }
+  ],
+  "dashboards": [
+    "Autoscaler",
+    "Batching",
+    "LLM",
+    "Overview"
+  ],
+  "scrape_targets": [
+    {
+      "job": "autoscaler",
+      "health": "up"
+    },
+    {
+      "job": "exporter",
+      "health": "up"
+    },
+    {
+      "job": "gateway",
+      "health": "up"
+    },
+    {
+      "job": "gateway",
+      "health": "up"
+    },
+    {
+      "job": "vllm",
+      "health": "up"
+    },
+    {
+      "job": "workers",
+      "health": "up"
+    },
+    {
+      "job": "workers",
+      "health": "up"
+    },
+    {
+      "job": "workers",
+      "health": "up"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "started_unix": 1794000489.2494526,
+  "hardware": "Linux-6.11.0-1016-nvidia-aarch64-with-glibc2.39",
+  "duration_target_s": 900,
+  "trials": [
+    {
+      "model": "fake-classifier",
+      "simulated_compute": true,
+      "offered_rps": 20,
+      "arrival_seconds": 900,
+      "elapsed_s": 900.0355124269845,
+      "statuses": {
+        "200": 18000
+      },
+      "completed_rps": 19.999210866093744,
+      "mean_s": 0.07586234250460337,
+      "p50_s": 0.07580409897491336,
+      "p95_s": 0.08209876401815563,
+      "p99_s": 0.08646620507352054,
+      "sampled_mean_inflight": 1.4949495659370837,
+      "little_law_lambda_W": 1.5171869845453891
+    },
+    {
+      "model": "sentiment",
+      "simulated_compute": false,
+      "offered_rps": 2,
+      "arrival_seconds": 900,
+      "elapsed_s": 899.5590838050703,
+      "statuses": {
+        "200": 1800
+      },
+      "completed_rps": 2.000980294019298,
+      "mean_s": 0.0595331425220421,
+      "p50_s": 0.058907123981043696,
+      "p95_s": 0.06936415703967214,
+      "p99_s": 0.08747972792480141,
+      "sampled_mean_inflight": 0.11716045158438285,
+      "little_law_lambda_W": 0.11912464502764858
+    }
+  ],
+  "commit": "ed752c1d4c927515ec55dd1f7f13c3cb090aea22",
+  "autoscaler_enabled": true,
+  "scope": "900-second local open-loop HTTP soak, overlapping GPU image import/startup. Fake classifier compute simulated; sentiment real CPU. No month-long SLO or leak-free claim."
+}

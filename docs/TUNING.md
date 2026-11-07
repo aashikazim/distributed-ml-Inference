@@ -31,7 +31,8 @@ Law estimates means within a stable boundary; it does not certify a p95 admissio
 threshold. Keep Redis depth, local prefetch and LLM semaphore limits consistent.
 For vLLM, align adapter concurrency with max-num-seqs, then measure context/memory
 and output-length effects instead of copying the small Qwen results to a larger
-model. Real GPU cluster and long-context tuning are pending.
+model. Local GPU kind also passed a 1,031-token prompt with 128 generated
+tokens; this is not exhaustive long-context tuning or another cluster's capacity.
 
 The [local SLO proposal](SLO.md) applies only to its measured workload. Before
 production adoption, rerun longer tests with representative inputs, failures,

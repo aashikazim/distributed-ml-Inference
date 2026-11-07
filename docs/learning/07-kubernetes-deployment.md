@@ -68,7 +68,8 @@ Read these files in order:
 
 The base serves simulated classifier/chat workloads. The CPU component adds real
 sentiment with a weight PVC; the GPU overlay routes chat to a GPU vLLM Deployment.
-The latter is explicitly untested on a GPU cluster.
+The latter was subsequently verified on real GB10 kind during wrap-up;
+[the GPU guide](../GPU_VERIFICATION.md) records prerequisites and scope.
 
 ## 5. Try it
 
@@ -120,12 +121,15 @@ ephemeral in this local cluster.
 CPU requests guide placement; limits constrain usage and can throttle compute.
 Threads per replica must fit the available cores. Weight caches improve startup
 but require storage and non-root write permissions. The CUDA image and GPU runner
-were verified in Docker; GPU scheduling needs the NVIDIA device plugin, matching
-node labels/taints and actual cluster testing. Do not confuse those two results.
+were verified in Docker. Subsequent real GPU kind testing also verified the
+NVIDIA device plugin, matching node labels and actual GPU allocation. These
+remain distinct checks, not a guarantee about another cluster.
 
 The CI workflow checks code and builds/publishes role images on authorized main
-pushes. Local equivalents were run; hosted CI and GHCR publication remain pending
-because this work was committed locally, not pushed.
+pushes. The wrap-up ran hosted CI and published six role images successfully.
+It also caught real overlay issues: missing namespace and a Kubernetes-injected
+VLLM_PORT variable. Rendered namespace/service-link checks now run in CI.
+The single-GPU engine uses Recreate, so engine updates have downtime.
 
 ## 8. Check your understanding
 

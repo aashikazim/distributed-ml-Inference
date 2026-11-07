@@ -1,8 +1,8 @@
 # ADR-0010: one process per serving container, development Redis with persistence
 
 ## Status
-Accepted in Phase 7. Local kind experiments are recorded separately from the
-untested GPU Kubernetes overlay. Hosted GitHub Actions execution is pending.
+Accepted in Phase 7; wrap-up additionally verified GPU kind and hosted CI/GHCR.
+See [final verification](../FINAL_VERIFICATION.md) for measured scope.
 
 ## Context
 Model warmup and graceful draining differ from ordinary stateless web startup.
@@ -19,12 +19,17 @@ Kustomize base contains gateways, fake classifier/chat workers, fake upstream,
 exporter, autoscaler, Prometheus/Grafana, and a development Redis StatefulSet with
 AOF on a PVC. CPU sentiment is an optional component with its own model PVC and
 ML image. A GPU overlay adds vLLM resource requests, scheduling selectors/tolerations,
-model storage and adapter routing; it is explicitly untested on a GPU cluster.
+model storage and adapter routing; it was verified on the local GB10 kind node.
+The overlay explicitly sets namespace infer-platform. The vLLM Pod disables
+service-link variables because a Service named vllm otherwise injects VLLM_PORT,
+which conflicts with engine configuration.
 
 Worker readiness follows load/warmup and becomes false on draining. Liveness is
 process-local, independent of Redis. Startup probes allow warmup before liveness
 restarts are considered. Gateways use Redis/inbox readiness and process liveness.
-Rollouts use maxUnavailable=0 and maxSurge=1. Classifier grace 45 seconds exceeds
+Serving-worker rollouts use maxUnavailable=0 and maxSurge=1. The single-GPU
+vLLM engine uses Recreate: a surge would require a second allocatable GPU. Engine
+updates therefore have downtime, distinct from worker rolling-update evidence. Classifier grace 45 seconds exceeds
 the kind request budget (30 seconds); chat grace 80 seconds exceeds 60 seconds.
 CPU threads default to one per replica within explicit CPU/memory resources.
 
@@ -54,4 +59,4 @@ authentication/TLS, backups and recovery tests, durable monitoring storage,
 notification routing and ingress policies. This repository adds no extra queue
 system or service mesh. The CI workflow checks code/tests and builds role images;
 GHCR publication is conditional on a push to main. No hosted CI success is claimed
-without an actual run. See [deployment concepts](../concepts/deploying-ml-workloads.md).
+without an actual run; the wrap-up now records that successful run. See [deployment concepts](../concepts/deploying-ml-workloads.md).

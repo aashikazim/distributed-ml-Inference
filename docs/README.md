@@ -25,6 +25,8 @@ instead of copying another command.
 Keep the [glossary](GLOSSARY.md) and [configuration](CONFIG.md) nearby. All metrics
 have explicit units and populations; all simulated inference is labeled. Hardware,
 source, predictions and measured surprises live in [EXPERIMENTS.md](EXPERIMENTS.md).
-The [progress record](PROGRESS.md) preserves phase history. The final audit is the
+The [progress record](PROGRESS.md) preserves phase history.
+The [wrap-up verification](FINAL_VERIFICATION.md) records hosted CI, actual GPU
+kind, snapshot restore and bounded-soak results for the localhost sign-off. The final audit is the
 source for what is actually verified versus pending; document existence alone
 cannot prove a new reader understands the system.

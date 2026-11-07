@@ -1,6 +1,36 @@
 # Progress
 
-## Phase 8 — implementation and local verification complete
+## Final localhost sign-off
+
+All eight phases have code and beginner learning materials. The owner explicitly
+scoped final acceptance to localhost; cloud deployment is not required.
+
+Closed the outstanding hosted CI/GHCR and GPU Kubernetes verification. Fixed the
+Redis service health-command quoting in Actions. Hosted checks passed (60 tests,
+2 uncached-model skips); all six role images were published. Local lint, format,
+mypy and all 62 CPU tests passed, including the cached real-model tests.
+
+The full GPU overlay served real Qwen on the GB10 via the actual kind gateway,
+Redis and LLM adapter. One GPU was allocated to the non-root pinned-image engine.
+A longer prompt used 1,031 input tokens and generated 128 tokens. Disconnecting
+an active stream reached zero engine sequences and cached CANCELLED in 234.96 ms.
+The first-use TTFT was 17.28 s; warmup limits remain visible. The run exposed and
+fixed a missing overlay namespace and the Kubernetes VLLM_PORT service-variable
+collision. CI now checks rendered namespaces and service-link settings. The
+one-GPU engine uses Recreate so it does not require a nonexistent surge GPU;
+engine updates have downtime.
+
+A 900-second local soak completed 18,000 simulated-classifier and 1,800 real CPU
+sentiment requests with no failures; p95 82.10/69.36 ms. An independent Redis
+snapshot restore preserved queue entries, pending ownership, group cursor, inbox
+and result TTL, and XAUTOCLAIM recovered the pending entry.
+
+[Final verification](FINAL_VERIFICATION.md), [Definition of Done](VERIFICATION.md)
+and linked raw records distinguish these checks from production HA, month-long
+SLOs and human comprehension. No stretch feature was added. Temporary GPU testing
+is stopped afterward and the CPU/fake local stack is restored.
+
+## Phase 8 — historical implementation and local verification checkpoint
 
 Delivered bounded steady/ramp/spike/mixed Locust scenarios, open-loop HTTP
 benchmarking, independent occupancy sampling and a prediction-first Little's Law
@@ -36,9 +66,10 @@ fresh worker pool, matching process restart. AOF preserved its pre-outage final;
 this is not a production zero-loss/HA guarantee. promtool accepted all rules and
 synthetic sustained-alert tests, including checks against early firing.
 
-**Not fully signed off:** hosted CI/GHCR publication, GPU Kubernetes, production
-HA/cloud/soak and actual human teach-back remain unverified. The Definition of
-Done audit distinguishes implementation, measured checks and these limits.
+At that checkpoint, hosted CI/GHCR and GPU Kubernetes were unverified. The
+wrap-up above closes those checks and adds a bounded soak and snapshot restore.
+Production HA/cloud remain outside the owner's localhost scope; actual human
+teach-back remains an owner exercise.
 All eight phases now have code/docs; no stretch feature is started.
 
 ## Phase 7 — historical local implementation and verification
@@ -65,7 +96,8 @@ container PID from its ancestor namespace.
 Optional CPU sentiment component served real inference on kind. Sync/async/SSE
 paths passed; Grafana provisioned four dashboards; Prometheus scraped both gateway
 Pod IPs and worker Pod IPs. RBAC allowed named scale writes and denied general
-Deployment writes. GPU overlay rendered but is **untested on a GPU cluster**.
+Deployment writes. At the Phase 7 checkpoint the GPU overlay was only rendered;
+wrap-up later verified it on the local GB10 kind node.
 Initial dependency-startup restarts were observed; stable readiness preceded runs.
 The kind script was rerun for idempotency. Lesson 07, deployment concept,
 ADR-0010, diagram 8, experiment records and image/path evidence are delivered.

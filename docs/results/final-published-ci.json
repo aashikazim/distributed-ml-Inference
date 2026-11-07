@@ -1,0 +1,574 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-11-06T21:34:01Z",
+  "headSha": "ed752c1d4c927515ec55dd1f7f13c3cb090aea22",
+  "jobs": [
+    {
+      "completedAt": "2026-11-06T21:36:00Z",
+      "conclusion": "success",
+      "databaseId": 128167391274,
+      "name": "checks",
+      "startedAt": "2026-11-06T21:34:05Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run uv sync --frozen --extra ml",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run uv run ruff check . && uv run ruff format --check .",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run uv run mypy src",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run uv run pytest",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Validate monitoring and sustained alerts",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 17,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 18,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128167391274"
+    },
+    {
+      "completedAt": "2026-11-06T21:36:54Z",
+      "conclusion": "success",
+      "databaseId": 128168340839,
+      "name": "images (fake-openai, fake-openai, 0)",
+      "startedAt": "2026-11-06T21:36:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/setup-buildx-action@v3",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/login-action@v3",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Image name",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/build-push-action@v6",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/build-push-action@v6",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/login-action@v3",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/setup-buildx-action@v3",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128168340839"
+    },
+    {
+      "completedAt": "2026-11-06T21:36:49Z",
+      "conclusion": "success",
+      "databaseId": 128168340885,
+      "name": "images (autoscaler, autoscaler, 0)",
+      "startedAt": "2026-11-06T21:36:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/setup-buildx-action@v3",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/login-action@v3",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Image name",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/build-push-action@v6",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/build-push-action@v6",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/login-action@v3",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/setup-buildx-action@v3",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128168340885"
+    },
+    {
+      "completedAt": "2026-11-06T21:36:49Z",
+      "conclusion": "success",
+      "databaseId": 128168340953,
+      "name": "images (worker, worker-fake, 0)",
+      "startedAt": "2026-11-06T21:36:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/setup-buildx-action@v3",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/login-action@v3",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Image name",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/build-push-action@v6",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/build-push-action@v6",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/login-action@v3",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/setup-buildx-action@v3",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128168340953"
+    },
+    {
+      "completedAt": "2026-11-06T21:36:53Z",
+      "conclusion": "success",
+      "databaseId": 128168341018,
+      "name": "images (gateway, gateway, 0)",
+      "startedAt": "2026-11-06T21:36:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/setup-buildx-action@v3",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/login-action@v3",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Image name",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/build-push-action@v6",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/build-push-action@v6",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/login-action@v3",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/setup-buildx-action@v3",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128168341018"
+    },
+    {
+      "completedAt": "2026-11-06T21:36:54Z",
+      "conclusion": "success",
+      "databaseId": 128168341024,
+      "name": "images (exporter, exporter, 0)",
+      "startedAt": "2026-11-06T21:36:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/setup-buildx-action@v3",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/login-action@v3",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Image name",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/build-push-action@v6",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/build-push-action@v6",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/login-action@v3",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/setup-buildx-action@v3",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128168341024"
+    },
+    {
+      "completedAt": "2026-11-06T21:38:00Z",
+      "conclusion": "success",
+      "databaseId": 128168341178,
+      "name": "images (worker, worker-cpu, 1)",
+      "startedAt": "2026-11-06T21:36:04Z",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/setup-buildx-action@v3",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/login-action@v3",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Image name",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run docker/build-push-action@v6",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/build-push-action@v6",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/login-action@v3",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run docker/setup-buildx-action@v3",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510/job/128168341178"
+    }
+  ],
+  "updatedAt": "2026-11-06T21:38:00Z",
+  "url": "https://github.com/aashikazim/distributed-ml-Inference/actions/runs/42297779510",
+  "published_images": [
+    "ghcr.io/aashikazim/distributed-ml-inference:autoscaler-ed752c1d4c927515ec55dd1f7f13c3cb090aea22@sha256:43b8ea1193b44f5ea3610fad6fc92b4f78f4643046b51023ffc76a73ee9e9456",
+    "ghcr.io/aashikazim/distributed-ml-inference:exporter-ed752c1d4c927515ec55dd1f7f13c3cb090aea22@sha256:108ce2c691698c8491295ffd780eaa69aefab0be113df9bee2d4fe7934bbba44",
+    "ghcr.io/aashikazim/distributed-ml-inference:fake-openai-ed752c1d4c927515ec55dd1f7f13c3cb090aea22@sha256:7a8647559d63c34e26a02199fbde8fba2731abf06718f9f274c83f26be925aad",
+    "ghcr.io/aashikazim/distributed-ml-inference:gateway-ed752c1d4c927515ec55dd1f7f13c3cb090aea22@sha256:73c51871a2c11f97a00219ccc042eb03e9fd0cc89071ad77cb4efdf5bce864f3",
+    "ghcr.io/aashikazim/distributed-ml-inference:worker-cpu-ed752c1d4c927515ec55dd1f7f13c3cb090aea22@sha256:172f10eefd92419d7a25dd26c9c2fe641b3b8d0abb085eae08660e2303de5df4",
+    "ghcr.io/aashikazim/distributed-ml-inference:worker-fake-ed752c1d4c927515ec55dd1f7f13c3cb090aea22@sha256:c5c248e7940b9b7119aa4e355aab774910d55e699ddfaf7dda71e075144d7c24"
+  ],
+  "hosted_tests": {
+    "passed": 60,
+    "skipped_uncached_model": 2,
+    "deselected_gpu": 1
+  },
+  "image_platform": "linux/amd64"
+}

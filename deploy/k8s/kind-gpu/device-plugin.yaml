@@ -1,0 +1,97 @@
+# Copyright (c) 2019, NVIDIA CORPORATION.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Local ARM64 kind adaptation: narrow driver/CDI mounts, upstream v0.18.0.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nvidia-device-plugin-daemonset
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: nvidia-device-plugin-ds
+  template:
+    metadata:
+      labels:
+        name: nvidia-device-plugin-ds
+    spec:
+      containers:
+      - env:
+        - name: DEVICE_LIST_STRATEGY
+          value: cdi-cri
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: void
+        - name: LD_LIBRARY_PATH
+          value: /usr/local/nvidia/lib64
+        image: nvcr.io/nvidia/k8s-device-plugin:v0.18.0
+        name: nvidia-device-plugin-ctr
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/kubelet/device-plugins
+          name: kubelet-device-plugins-dir
+        - mountPath: /usr/local/nvidia/lib64
+          name: driver
+          readOnly: true
+        - mountPath: /dev
+          name: dev
+        - mountPath: /driver-root/usr/lib/aarch64-linux-gnu
+          name: driver-libs
+          readOnly: true
+        - mountPath: /driver-root/usr/bin
+          name: driver-bin
+          readOnly: true
+        - mountPath: /driver-root/etc/ld.so.cache
+          name: driver-cache
+          readOnly: true
+        - mountPath: /driver-root/dev
+          name: driver-dev
+          readOnly: true
+        - mountPath: /var/run/cdi
+          name: cdi
+      priorityClassName: system-node-critical
+      tolerations:
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /var/lib/kubelet/device-plugins
+          type: Directory
+        name: kubelet-device-plugins-dir
+      - hostPath:
+          path: /usr/lib/aarch64-linux-gnu
+        name: driver
+      - hostPath:
+          path: /dev
+        name: dev
+      - hostPath:
+          path: /usr/lib/aarch64-linux-gnu
+        name: driver-libs
+      - hostPath:
+          path: /usr/bin
+        name: driver-bin
+      - hostPath:
+          path: /etc/ld.so.cache
+        name: driver-cache
+      - hostPath:
+          path: /dev
+        name: driver-dev
+      - hostPath:
+          path: /var/run/cdi
+          type: DirectoryOrCreate
+        name: cdi
+  updateStrategy:
+    type: RollingUpdate

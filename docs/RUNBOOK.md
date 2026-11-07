@@ -148,3 +148,18 @@ Alert timing is verified with promtool's synthetic time-series tests; the drill
 does not pretend to hold every outage for five minutes. Notification receivers,
 production TLS/auth and durable monitoring history require deployment-specific
 configuration. See the final [verification audit](VERIFICATION.md).
+
+
+## Snapshot recovery verification
+
+The executed isolated backup drill is:
+
+```bash
+UV_CACHE_DIR=/tmp/infer-uv-cache uv run python -m tools.verify_backup
+```
+
+It creates disposable source/restore containers, snapshots with SAVE, removes
+the source, and verifies queue IDs, pending ownership, group cursor, result TTL
+and inbox after restoration. It then reclaims the restored pending entry.
+[Measured result](results/final-backup.json). This proves local snapshot recovery;
+it does not measure off-host recovery, replication failover or zero-loss RPO.

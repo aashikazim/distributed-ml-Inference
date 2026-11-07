@@ -7,8 +7,10 @@ Python 3.12, FastAPI, Redis Streams, PyTorch, vLLM, Prometheus/Grafana and Kuber
 Phases 1–8 are implemented with code, tests, diagrams and beginner lessons.
 **Verified locally:** real CPU DistilBERT, real GB10 vLLM generation/cancellation,
 Compose monitoring, real kind scaling/rollout/process-loss recovery, load tests
-and operational drills. **Still unverified:** hosted CI/GHCR publication, GPU
-Kubernetes, production Redis HA, cloud/WAN and long-duration SLOs. The
+and operational drills. **Wrap-up verified:** hosted CI, six GHCR publications,
+real GPU Kubernetes, snapshot restore and a 15-minute, 19,800-request soak.
+Production Redis HA, cloud/WAN and month-long SLOs require deployment-specific
+acceptance. Human teach-back remains the owner's assessment. The
 [Definition of Done audit](docs/VERIFICATION.md) separates these claims.
 
 ## Start on CPU
@@ -61,7 +63,8 @@ upstream cancellation and Prometheus engine scraping were verified on NVIDIA GB1
 The first cold completion took seconds; engine health alone did not establish
 warmed latency. Exact flags, image/model revision, commands and pending checks:
 [GPU_VERIFICATION.md](docs/GPU_VERIFICATION.md). CUDA classifier images were also
-built and exercised; that is separate from an untested GPU Kubernetes overlay.
+built and exercised. The GPU overlay also served real vLLM on local kind; see
+[wrap-up verification](docs/FINAL_VERIFICATION.md) for its scope and fixes.
 
 ## API behavior to learn
 

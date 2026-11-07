@@ -80,21 +80,21 @@ reproducing historical engine output rather than assuming main is immutable.
 - `--enforce-eager`: the tested execution mode, avoiding CUDA graph capture here.
   These measurements do not establish graph-mode performance.
 
-## CPU reproduction and pending checks
+## CPU reproduction and scope limits
 
 Use the fake-llm profile and [lesson 04](learning/04-llm-serving.md) for CPU-only
 transport and failure testing. Its tokens and inference timings are **simulated**.
 The application does not need CUDA packages when calling the separate GPU server.
 
 **Pending:** other GPUs/models, long-context saturation, production-sized load,
-CUDA graph comparisons, GPU Kubernetes scheduling and a GPU cluster. The GPU
-Kustomize overlay is now provided in deploy/k8s/overlays/gpu, rendered but
-**untested on a GPU Kubernetes cluster**.
+CUDA graph comparisons and other GPU clusters. The GPU Kustomize overlay in
+deploy/k8s/overlays/gpu was subsequently verified on real local GB10 kind.
 Prometheus scraping configuration, dashboards and alerts were added in Phase 5.
 Phase 4 abort evidence queried the real engine directly. Phase 7 additionally
 built the CUDA worker image and ran real DistilBERT load/warmup/prediction on
 GB10 with torch 2.14.1+cu130; see results/p7-cuda-runner.json. That Docker
-verification does not establish Kubernetes GPU scheduling.
+verification alone does not establish Kubernetes GPU scheduling; the separate
+wrap-up below does.
 
 Primary references: [vLLM Docker deployment](https://docs.vllm.ai/en/stable/deployment/docker/),
 [vLLM GPU installation](https://docs.vllm.ai/en/stable/getting_started/installation/gpu/),
@@ -119,4 +119,80 @@ INFER_GPU_BASE_URL=http://127.0.0.1:8100 INFER_GPU_REPORT_PATH=docs/results/p8-g
 ```
 
 See [final verification](results/p8-gpu-verification.json) and
-[cold run](results/p8-gpu-cold-run.json). GPU Kubernetes remains untested.
+[cold run](results/p8-gpu-cold-run.json). GPU Kubernetes was subsequently verified in the wrap-up below.
+
+
+## Wrap-up: real GPU Kubernetes on localhost
+
+The full GPU overlay ran on kind 0.30.0 / Kubernetes 1.34.0 with NVIDIA device
+plugin v0.18.0, Container Toolkit 1.18.0 and driver 580.95.05 on the same GB10.
+Kubernetes allocated one actual GPU to the non-root vLLM Pod. The final image ID
+matches the pinned official registry digest; the model revision is recorded.
+
+Gateway → Redis → LLM adapter → GPU Pod completion passed. A longer request used
+1,031 prompt tokens and generated 128 tokens. Disconnecting another active stream
+changed the engine's running-sequence gauge from 1 to 0 and persisted CANCELLED
+in Redis in **234.96 ms** with the catalog's 200 ms cancellation polling. The
+short completion's first-use TTFT was **17.28 s**; health readiness does not imply
+all request-shape kernels are warm. These are individual observations.
+
+[Final GPU kind evidence](results/final-kind-gpu.json) and
+[initial successful attempt](results/final-kind-gpu-initial-success.json).
+The initial attempt had a noncanonical locally imported image reference; the
+final run repeated the check after removing that import and pulling the pinned
+registry image. The actual fake server was removed before the final run.
+
+The real run exposed and fixed three deployment issues:
+
+- The GPU overlay must explicitly set namespace infer-platform; its added
+  resources otherwise land in default even though base resources are namespaced.
+- Disable service-link injection for the engine. A Service named vllm injects
+  VLLM_PORT, conflicting with vLLM's internal port setting. The
+  [official environment-variable guide](https://docs.vllm.ai/en/latest/configuration/env_vars/)
+  documents this collision. Initial startup failure is
+  [retained](results/final-gpu-initial-failure.json).
+- A single-GPU engine uses Recreate. A surge replacement needs a second GPU and
+  can remain Pending indefinitely. Engine updates have downtime; classifier
+  rolling-update results do not establish interruption-free engine updates.
+
+A local-only ARM64 helper copies NVIDIA driver files into the dedicated kind
+node and installs a device plugin with narrow driver/device/CDI mounts. It does
+not change the host Docker daemon. It is specific to this tested GB10 setup,
+not a production driver installer. Other clusters need their own supported
+NVIDIA driver/runtime/plugin installation. Sources: [NVIDIA device plugin v0.18.0](https://github.com/NVIDIA/k8s-device-plugin/tree/v0.18.0)
+and [NVIDIA CDI support](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html).
+
+Executed commands (kind and kubectl were installed in /tmp/infer-tools):
+
+```bash
+PATH=/tmp/infer-tools:$PATH KUBECONFIG=/tmp/infer-kind-kubeconfig UV_CACHE_DIR=/tmp/infer-uv-cache uv run python -m tools.prepare_kind_gpu
+PATH=/tmp/infer-tools:$PATH KUBECONFIG=/tmp/infer-kind-kubeconfig kubectl apply -k deploy/k8s/overlays/gpu
+PATH=/tmp/infer-tools:$PATH KUBECONFIG=/tmp/infer-kind-kubeconfig kubectl -n infer-platform scale deployment/vllm --replicas=1
+PATH=/tmp/infer-tools:$PATH KUBECONFIG=/tmp/infer-kind-kubeconfig kubectl -n infer-platform port-forward svc/vllm 18100:8000
+```
+
+The forward stays running. In another terminal, the executed verifier is:
+
+```bash
+PATH=/tmp/infer-tools:$PATH KUBECONFIG=/tmp/infer-kind-kubeconfig UV_CACHE_DIR=/tmp/infer-uv-cache uv run python -m tools.verify_kind_gpu
+```
+
+Use the existing kind API-key setup from lesson 07. A fresh model PVC needs
+network access to download weights; this run preloaded its PVC from the already
+verified local model cache. Do not run fake and real chat adapters on the same
+queue while trying to verify which engine served a request.
+
+The owner scoped final acceptance to localhost. Cloud deployment is outside this
+project sign-off, rather than a required unfinished task. Longer contexts,
+other models, CUDA graph mode and production traffic require separate measurement.
+
+The final opt-in regression also passed against the Kubernetes-hosted engine:
+
+```bash
+INFER_GPU_BASE_URL=http://127.0.0.1:18100 INFER_GPU_REPORT_PATH=docs/results/final-gpu-regression.json UV_CACHE_DIR=/tmp/infer-uv-cache uv run --extra ml pytest -m gpu -vv
+```
+
+Its [separate record](results/final-gpu-regression.json) measured 21.35 ms warm
+TTFT and 1,017.68 ms from disconnect to zero/CANCELLED with 20 ms test polling.
+That differs from the 234.96 ms full-kind observation and reinforces that neither
+one measurement nor the polling interval is an abort-latency guarantee.

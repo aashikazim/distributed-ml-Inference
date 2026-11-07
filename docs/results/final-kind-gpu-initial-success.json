@@ -1,0 +1,35 @@
+{
+  "date_utc": "2026-11-06T21:42:54Z",
+  "scope": "Actual kind gateway -> Redis -> LLM adapter -> GPU vLLM Pod; no fake compute.",
+  "gpu_resource_limit": "1",
+  "node": "infer-platform-control-plane",
+  "engine_image_id": "docker.io/library/import-2026-11-06@sha256:0abeed3862181c2b29c15aaed5e000634a5ebb392b3f62d074b482775c7c159a",
+  "process_non_root_uid": 1000,
+  "completion_usage": {
+    "prompt_tokens": 33,
+    "completion_tokens": 10,
+    "total_tokens": 43
+  },
+  "long_context_usage": {
+    "prompt_tokens": 1031,
+    "completion_tokens": 128,
+    "total_tokens": 1159
+  },
+  "completion_meta": {
+    "worker_id": "worker-chat-56b8b86659-lwk48-79f06b6f",
+    "batch_size": 1,
+    "queue_ms": 0.79296875,
+    "batch_wait_ms": 0.0,
+    "inference_ms": 17546.195333939977,
+    "total_ms": 17571.306028054096,
+    "gateway_overhead_ms": 24.317725364118814,
+    "ttft_ms": 17487.732104957104,
+    "tpot_ms": 5.4837024460236234,
+    "completion_tokens": 10,
+    "chunk_writes": 0
+  },
+  "active_before_disconnect": 1.0,
+  "active_after_disconnect": 0,
+  "disconnect_to_zero_and_cancelled_ms": 233.06803591549397,
+  "worker_outcome": "CANCELLED"
+}

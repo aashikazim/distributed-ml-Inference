@@ -763,7 +763,8 @@ classification. Sync, async polling and simulated chat SSE passed through kind:
 Prometheus scrapes both gateways through a separate headless metrics service,
 plus worker Pod IPs: [monitoring evidence](results/p7-kind-monitoring.json).
 RBAC permitted named worker scale writes and denied general Deployment writes.
-GPU overlay rendered successfully but remains **untested on a GPU cluster**.
+At this Phase 7 checkpoint the GPU overlay rendered but was not run. The
+wrap-up below subsequently verifies it on the local GB10 kind node.
 
 
 ## Phase 8 — load, occupancy, operational recovery and final regression
@@ -837,3 +838,18 @@ See [benchmarks](BENCHMARKS.md), [worksheet](CAPACITY_PLANNING.md),
 [runbook](RUNBOOK.md), [SLO proposal](SLO.md), [audit](VERIFICATION.md) and their
 linked raw artifacts. Short/local/synthetic traces do not establish production
 capacity, Redis HA, arbitrary input latency, hosted CI or human understanding.
+
+
+## Wrap-up verification after E1–E13
+
+The final localhost acceptance adds hosted CI and GHCR publication, actual GPU
+kind serving/cancellation, an independent Redis snapshot restore, and a
+900-second soak. The soak completed 18,000 simulated classifier and 1,800 real
+CPU requests without failures (p95 82.10/69.36 ms); GPU setup overlapped it and
+the autoscaler remained enabled, so it is not an isolated capacity benchmark.
+The real GPU longer request used 1,031 prompt tokens and 128 generated tokens;
+disconnect reached zero/CANCELLED in 234.96 ms. The first-use TTFT remained 17.28 s.
+Namespace and service-variable bugs only appeared during actual GPU deployment.
+[Methods, fixes and raw records](FINAL_VERIFICATION.md) preserve the scope and
+initial failures. These checks do not turn a local SLO proposal into a month-long
+guarantee. The owner explicitly excluded cloud deployment from final acceptance.
