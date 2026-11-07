@@ -79,8 +79,8 @@ CPU/CUDA extras, worker warmup/drain HTTP probes, complete Compose health/restar
 policies, Kustomize base/kind/CPU/GPU layouts, Redis AOF PVC, model caches,
 resources, rolling policies, PDBs, Secret-based keys and named scale-only RBAC.
 Added dedicated-context kind-up.sh and GitHub Actions checks/image builds with
-conditional main-branch GHCR publication. Hosted CI/publication remain pending;
-no remote push or hosted success is claimed.
+conditional main-branch GHCR publication. At the Phase 7 checkpoint hosted
+CI/publication had not run; the final localhost sign-off above records success.
 
 Ruff, mypy (48 source files) and all 62 CPU tests passed. All role/CPU/CUDA images
 built; real DistilBERT warmup/prediction passed in CPU and GB10 CUDA containers.
@@ -300,12 +300,14 @@ Docker required execution-environment escalation, which was granted.
   in the study cheat sheet are reference notation; their actual uses are in code
   and the experiment. No GPU result is claimed.
 
-## Deferred — according to the phase plan
+## Scope exclusions after localhost sign-off
 
-Hosted GitHub Actions/registry publication, GPU Kubernetes verification,
-production HA/cloud/soak and human teach-back remain pending. See VERIFICATION.md.
-Production auth/TLS/notification routing and durable monitoring retention are
-explicit deployment work, not silently completed local guarantees.
+Hosted GitHub Actions/GHCR and GPU Kubernetes are verified. A 15-minute local
+soak and snapshot restore also passed. Production HA, cloud deployment, external
+auth/TLS/notification routing and durable monitoring retention are outside the
+owner's localhost acceptance scope. Month-long SLO compliance is not claimed.
+Human teach-back remains an owner exercise, with complete study materials and
+answer keys supplied. See VERIFICATION.md for evidence and practical limits.
 
 ## Current limitations
 
@@ -333,8 +335,9 @@ expire; DLQ retention is approximate and contains original input data. There is
 no DLQ replay endpoint or automatic pruning of all old consumer metadata.
 HTTP body bytes are capped; slow-client/ingress concurrency policies remain a
 deployment concern. Model readiness HTTP probes and Kubernetes termination grace
-are implemented in Phase 7. GPU Kubernetes, other models/hardware and long-context
-saturation remain pending; local GB10 inference and abort are verified.
+are implemented in Phase 7. Local GB10 GPU Kubernetes inference and abort are
+verified. Other models/hardware and long-context saturation are outside these
+measurements; the longer tested prompt used 1,031 input tokens.
 
 Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 .gitignore modification was preserved and excluded from agent commits.
@@ -343,5 +346,6 @@ Owner .env remains untouched and excluded from Git/Docker. The owner's staged
 
 Stop after Phase 8 for owner review. The next action is reviewing the measured
 scope and capstone answers; no automatic Phase 9 or stretch implementation.
-The full project checklist remains partially open for the explicitly unverified
-hosted/production/GPU-cluster and human-learning items.
+Engineering acceptance is complete for localhost. Hosted CI/GHCR and local GPU
+kind have actual evidence; cloud deployment is excluded by the owner. Review the
+capstone to assess understanding, and retain the measured limits in VERIFICATION.md.
