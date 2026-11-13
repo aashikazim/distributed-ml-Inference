@@ -33,6 +33,19 @@ jobs:
         run: |
           docker run --rm --entrypoint promtool -v "$PWD/deploy/monitoring:/etc/prometheus:ro" prom/prometheus:v3.5.0 check config /etc/prometheus/prometheus.yml
           docker run --rm --entrypoint promtool -v "$PWD/deploy/monitoring:/etc/prometheus:ro" prom/prometheus:v3.5.0 test rules /etc/prometheus/alerts.test.yml
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with: {version: '0.13.6', python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: uv sync --frozen
+      - name: Static docs lint (links, fences, Mermaid pitfalls)
+        run: uv run python -m tools.check_docs
+      - name: Render every Mermaid diagram with Mermaid CLI
+        run: ./scripts/render-mermaid.sh
   images:
     runs-on: ubuntu-latest
     needs: checks

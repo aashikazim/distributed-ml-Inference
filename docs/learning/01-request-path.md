@@ -46,7 +46,7 @@ sequenceDiagram
     W->>R: XACK then XDEL
     R-->>I: XREAD reply
     I-->>H: Put response in waiter
-    H->>H: Return JSON; remove waiter
+    H->>H: Return JSON, then remove waiter
 ```
 
 The request's reply_to field names the accepting gateway's inbox. The worker needs

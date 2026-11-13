@@ -63,7 +63,7 @@ sequenceDiagram
     W->>W: Dynamic batching and executor inference
     W->>R: XADD final/error reply
     W->>R: SET final result with TTL
-    W->>R: MULTI: XACK, XDEL; EXEC
+    W->>R: MULTI, XACK, XDEL, EXEC (one transaction)
     R-->>G: Inbox reader XREAD dispatches by request_id
     G-->>C: Output with timing metadata
 ```
@@ -160,14 +160,14 @@ sequenceDiagram
     participant B as Worker B
     G->>R: Accepted request XADD
     A->>R: XREADGROUP workers A >
-    A->>A: Begin batch; SIGKILL
+    A->>A: Begin batch, then SIGKILL
     Note over R: Entry remains pending under A
     B->>R: XAUTOCLAIM after idle threshold
     B->>R: XPENDING id id 1 (delivery count)
     B->>R: TIME and cancellation/deadline checks
     B->>B: Retry inference if eligible
-    B->>R: XADD reply; SET result
-    B->>R: MULTI: XACK + XDEL; EXEC
+    B->>R: XADD reply, then SET result
+    B->>R: MULTI, XACK + XDEL, EXEC (one transaction)
     R-->>G: Final reply through inbox XREAD
 ```
 

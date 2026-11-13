@@ -58,13 +58,13 @@ sequenceDiagram
     participant R as Redis
     participant B as Worker B
     A->>R: XREADGROUP >
-    A->>A: Compute; SIGKILL
+    A->>A: Compute, then SIGKILL
     Note over R: Pending entry remains owned by A
     B->>R: XAUTOCLAIM after idle threshold
     B->>R: XPENDING entry entry 1
-    B->>B: Recheck deadline; compute
-    B->>R: XADD reply; SET result
-    B->>R: MULTI: XACK + XDEL; EXEC
+    B->>B: Recheck deadline, then compute
+    B->>R: XADD reply, then SET result
+    B->>R: MULTI, XACK + XDEL, EXEC (one transaction)
 ```
 
 A crash after response publication but before acknowledgement can repeat compute
