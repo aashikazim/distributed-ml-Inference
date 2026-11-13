@@ -100,8 +100,8 @@ server and records prefix caching and eager execution; it is not a production SL
 
 **Status in this project: not used.** No Compose service or Kubernetes overlay
 passes a speculative-decoding option to vLLM, and no experiment has measured it.
-A GPU experiment (E14) is proposed but not yet approved; see
-[PROGRESS](../PROGRESS.md).
+Experiment E14 has a ready harness but no valid measurement yet, because the
+shared GPU was busy; see [EXPERIMENTS](../EXPERIMENTS.md).
 
 ### The problem it attacks
 

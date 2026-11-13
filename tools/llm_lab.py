@@ -79,6 +79,7 @@ def llm_settings(
     coalesce_ms: float = 20,
     deadline_ms: int = 3000,
     cap: int = 64,
+    served_model: str = "Qwen/Qwen2.5-0.5B-Instruct",
 ) -> Settings:
     model = "chat-" + uuid4().hex
     path = root / f"catalog-{uuid4().hex}.yaml"
@@ -96,7 +97,7 @@ def llm_settings(
                         "reclaim_interval_ms": 100,
                         "llm": {
                             "base_url": upstream + "/v1",
-                            "served_model": "Qwen/Qwen2.5-0.5B-Instruct",
+                            "served_model": served_model,
                             "max_concurrent": concurrent,
                             "max_tokens_cap": cap,
                             "coalesce_ms": coalesce_ms,

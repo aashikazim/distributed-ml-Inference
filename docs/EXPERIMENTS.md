@@ -853,3 +853,37 @@ Namespace and service-variable bugs only appeared during actual GPU deployment.
 [Methods, fixes and raw records](FINAL_VERIFICATION.md) preserve the scope and
 initial failures. These checks do not turn a local SLO proposal into a month-long
 guarantee. The owner explicitly excluded cloud deployment from final acceptance.
+
+## E14 — speculative decoding on real vLLM (not yet measured)
+
+**Status: harness built, no valid measurement yet.** Started 2026-11-13 and stopped
+deliberately: another GPU workload on the same GB10 (an unrelated video-generation
+job, about 91% GPU utilization, about 7 GB) ran continuously, and all three attempts at the
+first trial were contaminated. No E14 numbers exist, and the partial file was deleted.
+
+- **Question:** Does speculative decoding lower TPOT for our chat path, and what
+  does it cost in throughput at high concurrency?
+- **Hypothesis:** n-gram drafting helps most when output repeats the prompt
+  (verbatim quoting), helps little for open-ended writing, and the benefit shrinks or
+  reverses at concurrency 32. A 0.5B draft model helps the 1.5B target more evenly.
+- **Setup:**
+  [tools/spec_decode_experiment.py](../tools/spec_decode_experiment.py), pinned vLLM 0.33.0
+  image, Compose `gpu`-profile flags (including `--enforce-eager`). Five engine configs:
+  0.5B off / n-gram (k=4); 1.5B off / n-gram / 0.5B draft model. Qwen2.5 0.5B and 1.5B
+  share a 151,936-token vocabulary. Three workloads (copy-edit, verbatim-quote,
+  open-ended) × concurrency 1/8/32 × 3 repeats, 32 requests × 128 tokens, temperature 0,
+  through gateway → Redis → adapter. Acceptance rate comes from `vllm:spec_decode_*`
+  counter deltas per trial.
+- **Contamination control:** before each attempt, wait until no foreign GPU process has
+  been seen for 15 s; watch during the trial; retry up to 3 times; record `contaminated`.
+- **Smoke run (8 requests × 32 tokens, 0.5B n-gram, c=8; plumbing only, not a result):**
+  copy-edit acceptance 8.3% (the 0.5B model paraphrased the passage instead of copying it),
+  open-ended 0%. 8 identical greedy requests produced 3 distinct texts, so batched
+  greedy decoding isn't bit-reproducible on this engine. "Lossless" must therefore be
+  judged against the spread with speculation off, not by exact equality.
+
+Run when the GPU is otherwise idle:
+
+```bash
+uv run --extra ml python -m tools.spec_decode_experiment --output docs/results/e14-spec-decode.json
+```

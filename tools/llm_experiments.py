@@ -64,10 +64,22 @@ async def trial(
     window_ms: float,
     requests: int,
     tokens: int,
+    prompt: str = PROMPT,
+    served_model: str = "Qwen/Qwen2.5-0.5B-Instruct",
+    deadline_ms: int = 60000,
 ) -> dict[str, Any]:
-    cfg = llm_settings(root, url, upstream, concurrency, window_ms, deadline_ms=60000, cap=512)
+    cfg = llm_settings(
+        root,
+        url,
+        upstream,
+        concurrency,
+        window_ms,
+        deadline_ms=deadline_ms,
+        cap=512,
+        served_model=served_model,
+    )
     config = cfg.load_models()[cfg.worker_model]
-    config.llm.http_timeout_s = 60
+    config.llm.http_timeout_s = deadline_ms / 1000
     redis = create_redis(cfg)
     worker = LLMWorker(redis, cfg.worker_model, config, cfg)
     worker_task = asyncio.create_task(worker.run())
@@ -86,7 +98,7 @@ async def trial(
         )
         await gateway.ready("/readyz")
         async with httpx.AsyncClient(
-            timeout=65,
+            timeout=deadline_ms / 1000 + 5,
             limits=httpx.Limits(
                 max_connections=requests,
                 max_keepalive_connections=requests,
@@ -107,7 +119,7 @@ async def trial(
                     headers={"X-API-Key": cfg.api_keys[0].get_secret_value()},
                     json={
                         "model": cfg.worker_model,
-                        "messages": [{"role": "user", "content": PROMPT}],
+                        "messages": [{"role": "user", "content": prompt}],
                         "max_tokens": tokens,
                         "temperature": 0.0,
                         "stream": True,
