@@ -1,0 +1,45 @@
+# Example catalog for the generic backends (Phase D). Not loaded by default:
+# point INFER_MODELS_PATH at this file, or copy entries into config/models.yaml.
+# Every hf_id here is allowlisted configuration; requests can never choose a model.
+models:
+  image-classifier:
+    backend: hf_pipeline
+    hf_id: google/vit-base-patch16-224
+    pipeline: {task: image-classification, kwargs: {top_k: 3}}
+    inputs:
+      image: {type: image, max_bytes: 2000000}
+    max_batch_size: 8
+    max_wait_ms: 10
+    request_timeout_ms: 10000
+    max_queue_depth: 100
+  embedder:
+    backend: hf_pipeline
+    hf_id: sentence-transformers/all-MiniLM-L6-v2
+    pipeline: {task: feature-extraction, kwargs: {truncation: true}}
+    inputs:
+      text: {type: text, max_chars: 2000}
+    max_batch_size: 32
+    max_wait_ms: 5
+    # Padded cost: 32 items x 512 estimated tokens would be wasteful; cap the tensor.
+    max_batch_cost: 4096
+    batch_cost_mode: padded
+    request_timeout_ms: 5000
+    max_queue_depth: 500
+  sentiment-pipeline:
+    backend: hf_pipeline
+    hf_id: distilbert/distilbert-base-uncased-finetuned-sst-2-english
+    pipeline: {task: text-classification, kwargs: {truncation: true}}
+    max_input_chars: 4000   # no `inputs`: accepts the original {"input": "..."} body
+    max_batch_size: 16
+    max_wait_ms: 10
+    request_timeout_ms: 5000
+    max_queue_depth: 200
+  tabular-onnx:
+    backend: onnx
+    onnx: {path: double.onnx}   # relative to INFER_MODEL_CACHE
+    inputs:
+      x: {type: tensor, dtype: float32, shape: [3], max_elements: 3}
+    max_batch_size: 64
+    max_wait_ms: 2
+    request_timeout_ms: 2000
+    max_queue_depth: 1000

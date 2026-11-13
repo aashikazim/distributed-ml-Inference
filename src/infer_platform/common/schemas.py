@@ -2,11 +2,9 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from infer_platform.common.inputs import InferInput
 
-class InferInput(BaseModel):
-    model_config = ConfigDict(extra="forbid", strict=True)
-    input: str = Field(min_length=1)
-    options: dict[str, Any] = Field(default_factory=dict)
+__all__ = ["InferInput"]  # re-exported: the HTTP body now lives in common.inputs
 
 
 class RequestMessage(BaseModel):
@@ -18,9 +16,16 @@ class RequestMessage(BaseModel):
     stream: Literal["0", "1"] = "0"
     key_id: str
     trace_id: str
+    # Claim-check: when set, the real payload lives at this blob key and payload is "".
+    payload_ref: str = ""
 
     def fields(self) -> dict[str, str]:
-        return {key: str(value) for key, value in self.model_dump().items()}
+        # Omit an empty payload_ref so ordinary entries keep the original field set.
+        return {
+            key: str(value)
+            for key, value in self.model_dump().items()
+            if key != "payload_ref" or value
+        }
 
 
 class Meta(BaseModel):

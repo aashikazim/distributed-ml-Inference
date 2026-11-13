@@ -166,6 +166,7 @@ def install_chat_routes(
                     model.max_queue_depth,
                     config.result_ttl_s,
                     config.admission_enabled,
+                    state.directory,
                 )
                 if outcome != "ACCEPTED":
                     attempted = False

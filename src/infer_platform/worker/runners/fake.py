@@ -6,7 +6,7 @@ from infer_platform.common.settings import FakeConfig
 
 
 class FakeRunner:
-    """Simulated cost, not a trained classifier; call only from an executor thread."""
+    """Simulated cost, not a trained model; call only from an executor thread."""
 
     def __init__(self, config: FakeConfig) -> None:
         self.config = config
@@ -21,4 +21,11 @@ class FakeRunner:
         delay = self.config.base_ms + self.config.per_item_ms * len(inputs)
         delay += random.uniform(0, self.config.jitter_ms)
         time.sleep(delay / 1000)
-        return [{"label": "SIMULATED", "input_chars": len(item["input"])} for item in inputs]
+        return [self.describe(item) for item in inputs]
+
+    @staticmethod
+    def describe(item: dict[str, Any]) -> dict[str, Any]:
+        if set(item) <= {"input", "options"} and isinstance(item.get("input"), str):
+            return {"label": "SIMULATED", "input_chars": len(item["input"])}
+        names = sorted(name for name in item if name != "options")
+        return {"label": "SIMULATED", "inputs": names}

@@ -13,7 +13,8 @@ from prometheus_client import generate_latest
 from redis.exceptions import RedisError
 
 from infer_platform.common.clock import Clock, SystemClock
-from infer_platform.common.keys import cancel_key, inbox, request_stream, result_key
+from infer_platform.common.inputs import InputError, describe, normalize
+from infer_platform.common.keys import blob_key, cancel_key, inbox, request_stream, result_key
 from infer_platform.common.logging import configure_logging
 from infer_platform.common.redis import create_redis, server_ms
 from infer_platform.common.registry import live_workers
@@ -26,7 +27,7 @@ from infer_platform.common.schemas import (
     ResultRecord,
 )
 from infer_platform.common.settings import Settings
-from infer_platform.gateway.admission import enqueue
+from infer_platform.gateway.admission import WorkerDirectory, enqueue
 from infer_platform.gateway.auth import Authenticator
 from infer_platform.gateway.body_limit import BodyLimit
 from infer_platform.gateway.rate_limit import RateLimiter
@@ -68,6 +69,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         app.state.chat_ttft = observed.ttft
         app.state.redis = redis
         app.state.router = router
+        app.state.directory = WorkerDirectory(redis, config.worker_cache_s, clock)
         try:
             await router.start()
             yield
@@ -123,6 +125,11 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
                     "backend": config.backend,
                     "queue_depth": await request.app.state.redis.xlen(request_stream(name)),
                     "live_workers": len(await live_workers(request.app.state.redis, name)),
+                    **(
+                        {}
+                        if config.backend == "llm"
+                        else {"inputs": describe(config.input_specs())}
+                    ),
                 }
                 for name, config in request.app.state.models.items()
             ]
@@ -188,8 +195,10 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             return error(404, "UNKNOWN_MODEL", "Unknown model")
         if model_config.backend == "llm":
             return error(400, "INVALID_INPUT", "Use /v1/chat/completions for LLM models")
-        if len(body.input) > model_config.max_input_chars:
-            return error(422, "INVALID_INPUT", "Input exceeds model character limit")
+        try:
+            normalize(body, model_config.input_specs())
+        except InputError as exc:
+            return error(422, "INVALID_INPUT", str(exc))
         if any(key != "async" for key in request.query_params):
             return error(400, "INVALID_INPUT", "Unknown query parameter")
         started = clock.monotonic()
@@ -210,10 +219,15 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         context = structlog.contextvars.get_contextvars()
         structlog.contextvars.bind_contextvars(request_id=request_id)
         queue = None if async_mode else router.register(request_id)
+        # exclude_none keeps legacy bodies byte-identical to the original wire payload.
+        payload = body.model_dump_json(exclude_none=True)
+        payload_bytes = len(payload.encode())
+        claim_check = payload_bytes > config.claim_check_bytes
         message = RequestMessage(
             request_id=request_id,
             reply_to=router.inbox,
-            payload=body.model_dump_json(),
+            payload="" if claim_check else payload,
+            payload_ref=blob_key(request_id) if claim_check else "",
             timeout_ms=max(1, int(remaining_s * 1000)),
             key_id=key_id,
             trace_id=context.get("trace_id", uuid4().hex),
@@ -221,6 +235,9 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         accepted = False
         try:
             async with asyncio.timeout(remaining_s):
+                if claim_check:
+                    # The blob must exist before the entry is visible to any worker.
+                    await state.redis.set(blob_key(request_id), payload, ex=config.result_ttl_s)
                 outcome = await enqueue(
                     state.redis,
                     model,
@@ -228,8 +245,11 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
                     model_config.max_queue_depth,
                     config.result_ttl_s,
                     config.admission_enabled,
+                    state.directory,
                 )
                 if outcome != "ACCEPTED":
+                    if claim_check:
+                        await state.redis.delete(blob_key(request_id))
                     return error(
                         503, outcome, "No worker capacity available", request_id, retry_after=1
                     )
@@ -258,7 +278,8 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
                 request_id=request_id,
                 trace_id=message.trace_id,
                 model=model,
-                input_chars=len(body.input),
+                payload_bytes=payload_bytes,
+                claim_check=claim_check,
                 accepted=accepted,
                 async_mode=async_mode,
             )

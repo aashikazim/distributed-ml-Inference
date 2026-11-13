@@ -13,6 +13,7 @@ from redis.asyncio import Redis
 from redis.exceptions import ResponseError
 
 from infer_platform.common.clock import Clock, SystemClock
+from infer_platform.common.inputs import InputError, normalize
 from infer_platform.common.keys import (
     GROUP,
     cancel_key,
@@ -36,8 +37,9 @@ from infer_platform.worker.batcher import BatchItem, BatchResult, DynamicBatcher
 from infer_platform.worker.heartbeat import Heartbeats
 from infer_platform.worker.metrics import WorkerMetrics
 from infer_platform.worker.reclaim import Reclaimer
-from infer_platform.worker.runners.base import ModelRunner
+from infer_platform.worker.runners.base import CostedRunner, ModelRunner
 from infer_platform.worker.runners.fake import FakeRunner
+from infer_platform.worker.runners.registry import create_runner
 
 log = structlog.get_logger()
 
@@ -62,11 +64,10 @@ class Worker:
         self.redis, self.model, self.config = redis, model, config
         self.clock = clock or SystemClock()
         self.worker_id = f"{socket.gethostname()}-{uuid4().hex[:8]}"
-        if runner is None:
-            if config.backend == "torch":
-                raise ValueError("Torch worker requires an explicitly configured runner")
-            if config.backend == "fake":
-                runner = FakeRunner(config.fake)
+        if runner is None and config.backend == "fake":
+            runner = FakeRunner(config.fake)  # tests construct fake workers without Settings
+        if runner is None and config.backend != "llm":
+            raise ValueError(f"{config.backend} worker requires an explicitly configured runner")
         self.runner = runner
         self.stop = asyncio.Event()
         self.ready = asyncio.Event()
@@ -101,6 +102,8 @@ class Worker:
                 self.config.prefetch_bound,
                 self.clock,
                 lambda size, seconds: self.metrics.invocation(self.model, size, seconds),
+                self.config.max_batch_cost,
+                self.config.batch_cost_mode,
             )
             heartbeat = Heartbeats(
                 self.redis,
@@ -218,13 +221,18 @@ class Worker:
             return
         received = self.clock.monotonic()
         queue_ms = max(0, await server_ms(self.redis) - int(entry_id.split("-")[0]))
+        payload = message.payload
+        if message.payload_ref:
+            # Claim-check: fetch the real payload. A missing blob fails in prepare().
+            payload = str(await self.redis.get(message.payload_ref) or "")
         self.active.add(entry_id)
         await batcher.submit(
             BatchItem(
                 message.request_id,
-                message.payload,
+                payload,
                 received,
                 Delivery(entry_id, message, queue_ms),
+                self.item_cost(payload),
             )
         )
         if deliveries > 1:
@@ -236,6 +244,19 @@ class Worker:
                 request_id=message.request_id,
                 delivery_count=deliveries,
             )
+
+    def item_cost(self, payload: str) -> float:
+        """Batch cost of one item; only computed when the model sets max_batch_cost."""
+        if self.config.max_batch_cost is None:
+            return 1.0
+        if isinstance(self.runner, CostedRunner):
+            try:
+                body = json.loads(payload)
+            except ValueError:
+                return float(len(payload.encode()))
+            if isinstance(body, dict):
+                return self.runner.cost(body)
+        return float(len(payload.encode()))
 
     async def dead_letter(
         self,
@@ -293,7 +314,7 @@ class Worker:
                 )
                 await self.redis.expire(reply, 120)
                 await self.redis.set(result_key(rid), record.model_dump_json(), ex=self.result_ttl)
-            await self.ack_delete(entry_id)
+            await self.ack_delete(entry_id, fields.get("payload_ref", ""))
         self.metrics.dlq.labels(self.model).inc()
         log.warning(
             "request_dead_lettered",
@@ -311,12 +332,14 @@ class Worker:
             raise ItemRejected("EXPIRED")
         if await self.redis.exists(cancel_key(item.request_id)):
             raise ItemRejected("CANCELLED")
+        if not item.payload:
+            raise ItemRejected("PAYLOAD_MISSING")  # claim-check blob expired or lost
         try:
-            body = InferInput.model_validate_json(item.payload)
-        except ValidationError as exc:
+            inputs = normalize(
+                InferInput.model_validate_json(item.payload), self.config.input_specs()
+            )
+        except (ValidationError, InputError) as exc:
             raise ItemRejected("INVALID_INPUT") from exc
-        if len(body.input) > self.config.max_input_chars:
-            raise ItemRejected("INVALID_INPUT")
         record = ResultRecord(
             status="RUNNING",
             key_id=delivery.message.key_id,
@@ -327,7 +350,7 @@ class Worker:
         )
         if existing is not None:
             raise ItemRejected("ALREADY_FINISHED")
-        return body.model_dump()
+        return inputs
 
     async def finish(self, item: BatchItem, result: BatchResult) -> None:
         delivery: Delivery = item.context
@@ -415,34 +438,19 @@ class Worker:
         await self.redis.set(
             result_key(message.request_id), record.model_dump_json(), ex=self.result_ttl
         )
-        await self.ack_delete(entry_id)
+        await self.ack_delete(entry_id, message.payload_ref)
         self.metrics.items.labels(self.model, record.status).inc()
         timing = Meta.model_validate_json(response.meta)
         self.metrics.wait.labels(self.model).observe(timing.batch_wait_ms / 1000)
 
-    async def ack_delete(self, entry_id: str) -> None:
+    async def ack_delete(self, entry_id: str, blob: str = "") -> None:
         # Atomic cleanup avoids an ACKed-but-retained entry permanently consuming admission depth.
         async with self.redis.pipeline(transaction=True) as pipe:
             pipe.xack(request_stream(self.model), GROUP, entry_id)
             pipe.xdel(request_stream(self.model), entry_id)
+            if blob.startswith("blob:"):
+                pipe.delete(blob)  # the claim-check payload dies with its entry
             await pipe.execute()
-
-
-def make_runner(config: ModelConfig, settings: Settings) -> ModelRunner:
-    if config.backend == "fake":
-        return FakeRunner(config.fake)
-    from infer_platform.worker.runners.torch_classifier import TorchClassifierRunner
-
-    assert config.hf_id is not None
-    return TorchClassifierRunner(
-        config.hf_id,
-        config.revision,
-        settings.device,
-        settings.torch_threads,
-        settings.torch_fp16,
-        settings.model_cache,
-        settings.model_local_files_only,
-    )
 
 
 async def main() -> None:
@@ -461,7 +469,7 @@ async def main() -> None:
             redis,
             settings.worker_model,
             config,
-            runner=make_runner(config, settings),
+            runner=create_runner(config, settings),
             settings=settings,
         )
     for sig in (signal.SIGTERM, signal.SIGINT):

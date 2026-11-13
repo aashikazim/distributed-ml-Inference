@@ -59,6 +59,11 @@ class TorchClassifierRunner:
         self.model.eval()
         self.resolved_revision = getattr(self.model.config, "_commit_hash", None)
 
+    def cost(self, body: dict[str, Any]) -> float:
+        """Estimated tokens after truncation (~4 characters per token)."""
+        text = body.get("input") or ""
+        return float(min(256, len(text) // 4 + 2))
+
     def warmup(self) -> None:
         self.predict_batch([{"input": "Warmup."}])
 

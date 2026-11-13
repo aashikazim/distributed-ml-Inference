@@ -6,7 +6,14 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 from infer_platform.common.schemas import InferInput
-from infer_platform.worker.batcher import BatchItem, BatchResult, DynamicBatcher, ItemRejected
+from infer_platform.worker.batcher import (
+    BatchItem,
+    BatchResult,
+    CostMode,
+    DynamicBatcher,
+    ItemRejected,
+    batch_cost,
+)
 
 
 class FakeClock:
@@ -61,7 +68,15 @@ class RecordingRunner:
 
 
 class Harness:
-    def __init__(self, size: int, wait: float, bound: int | None, block: bool) -> None:
+    def __init__(
+        self,
+        size: int,
+        wait: float,
+        bound: int | None,
+        block: bool,
+        max_cost: float | None = None,
+        mode: CostMode = "padded",
+    ) -> None:
         self.clock = FakeClock()
         self.runner = RecordingRunner(block)
         self.executor = ThreadPoolExecutor(max_workers=1)
@@ -76,6 +91,8 @@ class Harness:
             wait,
             bound,
             self.clock,
+            max_batch_cost=max_cost,
+            cost_mode=mode,
         )
 
     async def prepare(self, item: BatchItem) -> dict[str, Any]:
@@ -89,21 +106,27 @@ class Harness:
     async def finish(self, item: BatchItem, result: BatchResult) -> None:
         self.results.put_nowait((item.request_id, result))
 
-    async def add(self, rid: str, text: str | None = None) -> None:
+    async def add(self, rid: str, text: str | None = None, cost: float = 1.0) -> None:
         await self.batcher.submit(
             BatchItem(
                 rid,
-                InferInput(input=text or rid).model_dump_json(),
+                InferInput(input=text or rid).model_dump_json(exclude_none=True),
                 self.clock.monotonic(),
+                cost=cost,
             )
         )
 
 
 @asynccontextmanager
 async def harness(
-    size: int = 2, wait: float = 10, bound: int | None = None, block: bool = False
+    size: int = 2,
+    wait: float = 10,
+    bound: int | None = None,
+    block: bool = False,
+    max_cost: float | None = None,
+    mode: CostMode = "padded",
 ) -> AsyncGenerator[Harness]:
-    h = Harness(size, wait, bound, block)
+    h = Harness(size, wait, bound, block, max_cost, mode)
     task = asyncio.create_task(h.batcher.run())
     try:
         async with asyncio.timeout(5):
@@ -242,3 +265,38 @@ async def test_slow_result_delivery_does_not_hold_idle_runner() -> None:
             release.set()
         results = [await h.results.get() for _ in range(4)]
         assert {rid for rid, _ in results} == {"a", "b", "c", "d"}
+
+
+def test_batch_cost_rules() -> None:
+    assert batch_cost([10, 10, 30], "padded") == 90  # every row padded to the longest
+    assert batch_cost([10, 10, 30], "sum") == 50
+    assert batch_cost([], "padded") == 0
+
+
+async def test_padded_cost_budget_closes_batch_before_size_limit() -> None:
+    async with harness(size=8, wait=10, max_cost=40) as h:
+        await h.add("a", cost=10)
+        await h.add("b", cost=10)
+        assert h.runner.calls.empty()  # 2 x 10 = 20 <= 40: keep waiting for company
+        await h.add("c", cost=30)  # 3 x 30 = 90 > 40: c must start the next batch
+        assert await asyncio.wait_for(h.runner.calls.get(), 5) == ["a", "b"]
+        assert h.clock.monotonic() == 0  # flushed by cost, not by the timer
+        await h.clock.armed.wait()
+        h.clock.advance(0.011)
+        assert await asyncio.wait_for(h.runner.calls.get(), 5) == ["c"]
+
+
+async def test_oversized_item_runs_alone_instead_of_blocking() -> None:
+    async with harness(size=8, wait=10, max_cost=40) as h:
+        await h.add("huge", cost=100)
+        assert await asyncio.wait_for(h.runner.calls.get(), 5) == ["huge"]
+        assert h.clock.monotonic() == 0
+
+
+async def test_sum_cost_mode_adds_item_costs() -> None:
+    async with harness(size=8, wait=10, max_cost=40, mode="sum") as h:
+        for rid, cost in (("a", 10), ("b", 10), ("c", 15)):
+            await h.add(rid, cost=cost)
+        assert h.runner.calls.empty()  # 35 <= 40 under "sum" (padded would be 45)
+        await h.add("d", cost=10)
+        assert await asyncio.wait_for(h.runner.calls.get(), 5) == ["a", "b", "c"]

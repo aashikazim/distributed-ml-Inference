@@ -1,0 +1,110 @@
+{
+  "models": {
+    "image-classifier": {
+      "image": {
+        "type": "image",
+        "required": true,
+        "max_bytes": 2000000
+      }
+    },
+    "embedder": {
+      "text": {
+        "type": "text",
+        "required": true,
+        "max_chars": 2000
+      }
+    },
+    "sentiment-pipeline": {
+      "input": {
+        "type": "text",
+        "required": true,
+        "max_chars": 4000
+      }
+    },
+    "tabular-onnx": {
+      "x": {
+        "type": "tensor",
+        "required": true,
+        "dtype": "float32",
+        "shape": [
+          3
+        ],
+        "max_elements": 3
+      }
+    }
+  },
+  "image": {
+    "output": {
+      "predictions": [
+        {
+          "label": "bow",
+          "score": 0.031889963895082474
+        },
+        {
+          "label": "plunger, plumber's helper",
+          "score": 0.03054683655500412
+        },
+        {
+          "label": "rifle",
+          "score": 0.022953331470489502
+        }
+      ]
+    },
+    "meta": {
+      "worker_id": "spark-6024-1e2f2235",
+      "batch_size": 1,
+      "queue_ms": 12.2041015625,
+      "batch_wait_ms": 14.388445008080453,
+      "inference_ms": 146.5407340147067,
+      "total_ms": 176.5488219971303,
+      "gateway_overhead_ms": 3.415541411843151
+    }
+  },
+  "embedding": {
+    "dimensions": 384,
+    "sentences": {
+      "a": "The cat sat on the warm windowsill.",
+      "b": "A kitten was resting by the sunny window.",
+      "c": "Quarterly revenue grew by twelve percent."
+    },
+    "cosine_a_b_related": 0.6571676393713269,
+    "cosine_a_c_unrelated": 0.005408148290836104
+  },
+  "sentiment_legacy_body": {
+    "predictions": {
+      "label": "POSITIVE",
+      "score": 0.9998778104782104
+    }
+  },
+  "onnx": {
+    "y": [
+      3.0,
+      -4.0,
+      8.0
+    ]
+  },
+  "cost_batching": {
+    "max_batch_size": 32,
+    "max_batch_cost": 4096.0,
+    "batch_size_seen_by_short": [
+      9,
+      9,
+      9,
+      9,
+      9,
+      9,
+      9,
+      7
+    ],
+    "batch_size_seen_by_long": [
+      9,
+      7,
+      7,
+      7,
+      7,
+      9,
+      7,
+      7
+    ]
+  }
+}

@@ -23,3 +23,8 @@ def worker_key(model: str, worker_id: str) -> str:
 
 def dlq_key(model: str) -> str:
     return f"dlq:{model}"
+
+
+def blob_key(request_id: str) -> str:
+    """Claim-check storage for a large request payload (see ADR-0011)."""
+    return f"blob:{request_id}"

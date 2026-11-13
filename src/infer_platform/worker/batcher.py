@@ -2,7 +2,7 @@ import asyncio
 from collections.abc import Awaitable, Callable
 from concurrent.futures import Executor
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal
 
 from infer_platform.common.clock import Clock, SystemClock
 from infer_platform.worker.runners.base import ModelRunner
@@ -14,6 +14,18 @@ class BatchItem:
     payload: str
     enqueued_at: float
     context: Any = None
+    # Runner-defined cost (e.g. estimated tokens); only used when max_batch_cost is set.
+    cost: float = 1.0
+
+
+CostMode = Literal["padded", "sum"]
+
+
+def batch_cost(costs: list[float], mode: CostMode) -> float:
+    """Padded tensors cost n x longest; ragged/sequential work costs the sum."""
+    if not costs:
+        return 0.0
+    return len(costs) * max(costs) if mode == "padded" else sum(costs)
 
 
 @dataclass
@@ -52,6 +64,8 @@ class DynamicBatcher:
         prefetch_bound: int | None = None,
         clock: Clock | None = None,
         observe: Callable[[int, float], None] | None = None,
+        max_batch_cost: float | None = None,
+        cost_mode: CostMode = "padded",
     ) -> None:
         bound = prefetch_bound if prefetch_bound is not None else 2 * max_batch_size
         if max_batch_size < 1 or max_wait_ms < 0 or bound < max_batch_size:
@@ -71,6 +85,9 @@ class DynamicBatcher:
         self.observe = observe
         self.closed = False
         self.deliveries: set[asyncio.Task[None]] = set()
+        self.max_batch_cost, self.cost_mode = max_batch_cost, cost_mode
+        # An item that did not fit the current batch's cost budget leads the next one.
+        self.carry: BatchItem | None = None
 
     @property
     def free_capacity(self) -> int:
@@ -107,8 +124,7 @@ class DynamicBatcher:
                 if running is not None and running.done():
                     await running  # Propagate reply/transport errors; never ACK unseen results.
                     running = None
-                while len(staged) < self.max_batch_size and not self.queue.empty():
-                    staged.append(self.queue.get_nowait())
+                cost_full = self.stage(staged)
                 if not staged and running is None and not self.deliveries and self.closed:
                     return
                 deadline = staged[0].enqueued_at + self.max_wait_ms / 1000 if staged else None
@@ -117,6 +133,7 @@ class DynamicBatcher:
                     and running is None
                     and (
                         len(staged) == self.max_batch_size
+                        or cost_full
                         or self.closed
                         or (deadline is not None and self.clock.monotonic() >= deadline)
                     )
@@ -147,6 +164,27 @@ class DynamicBatcher:
             for task in unfinished:
                 task.cancel()
             await asyncio.gather(*unfinished, return_exceptions=True)
+
+    def stage(self, staged: list[BatchItem]) -> bool:
+        """Fill ``staged`` up to the size and cost limits; return True if cost-full.
+
+        The first item is always admitted, so one oversized item still runs alone
+        instead of blocking the queue forever.
+        """
+        while len(staged) < self.max_batch_size and (
+            self.carry is not None or not self.queue.empty()
+        ):
+            item = self.carry if self.carry is not None else self.queue.get_nowait()
+            self.carry = None
+            if self.max_batch_cost is not None and staged:
+                costs = [*(staged_item.cost for staged_item in staged), item.cost]
+                if batch_cost(costs, self.cost_mode) > self.max_batch_cost:
+                    self.carry = item
+                    return True
+            staged.append(item)
+        if self.max_batch_cost is None:
+            return False
+        return batch_cost([item.cost for item in staged], self.cost_mode) >= self.max_batch_cost
 
     async def predict(self, inputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         self.busy_started = self.clock.monotonic()
