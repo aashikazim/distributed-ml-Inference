@@ -66,9 +66,9 @@ def lint_file(path: Path) -> list[str]:
     problems = []
     if len(FENCE.findall(text)) % 2:
         problems.append(f"{path}: unbalanced ``` code fences")
-    if text.count("<details>") != text.count("</details>"):
-        problems.append(f"{path}: unbalanced <details> blocks")
     prose = INLINE_CODE.sub("", re.sub(r"^```.*?^```", "", text, flags=re.M | re.S))
+    if prose.count("<details>") != prose.count("</details>"):
+        problems.append(f"{path}: unbalanced <details> blocks")
     for match in LINK.finditer(prose):
         target = match.group(1).split("#", 1)[0]
         if not target or re.match(r"^[a-z]+:", target):
