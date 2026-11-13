@@ -96,6 +96,106 @@ Our first real completion took 17.35 s, while later warmed measurements were muc
 shorter. Do not infer latency readiness from /health alone. E6 uses the warmed
 server and records prefix caching and eager execution; it is not a production SLO.
 
+## Speculative decoding
+
+**Status in this project: not used.** No Compose service or Kubernetes overlay
+passes a speculative-decoding option to vLLM, and no experiment has measured it.
+A GPU experiment (E14) is proposed but not yet approved; see
+[PROGRESS](../PROGRESS.md).
+
+### The problem it attacks
+
+During decode, each new token needs one forward pass of the whole model. For
+a small batch, that pass is dominated by **reading the weights from GPU memory**, not by
+arithmetic. The GPU's math units sit mostly idle. Our own E6a numbers show the
+symptom: TPOT stayed ~6 ms whether 1 or 16 sequences shared each step. If the GPU
+can check several tokens for the cost of one, we just need good guesses to check.
+
+### The mechanism
+
+1. A cheap **proposer** (or *drafter*) guesses the next *k* tokens.
+2. The **target model** (the one users asked for) scores all *k* positions in a
+   single forward pass, much like a short prefill.
+3. Guesses are accepted left to right while they agree with the target (with greedy
+   sampling, exact match; with sampling, a rejection-sampling test). At the first
+   rejection, the target's own token is used instead.
+4. One target pass therefore yields between 1 and *k + 1* tokens.
+
+With standard verification the result is **lossless**: the output has the same
+distribution the target model alone would produce. Speculation changes speed,
+not answers.
+
+The deciding quantity is the **acceptance rate**. If most guesses are rejected, you paid
+for drafting and wider verification and got about one token per pass anyway.
+
+### When it helps and when it hurts
+
+| Situation | Effect | Why |
+|---|---|---|
+| Few concurrent sequences, memory-bound decode | Lower TPOT (faster streams) | Spare compute verifies guesses nearly for free |
+| Output copies the input (summaries, code edits, RAG quotes) | Large win with n-gram drafting | Guesses can be looked up in the prompt, no extra model |
+| Many concurrent sequences, compute-bound | Can **lower** total throughput | Verifying rejected guesses spends compute real requests needed |
+| Creative, high-temperature text | Small or no win | Hard to guess, so low acceptance |
+| Tight GPU memory | Fewer concurrent seats | A draft model needs its own weights and KV cache |
+
+In short, it trades **throughput at high load** for **latency at low load**.
+That's a product decision, not a free upgrade.
+
+### What vLLM 0.33.0 offers
+
+Read from the `SpeculativeConfig` source inside the pinned image
+`vllm/vllm-openai@sha256:d825baf9…` (label `vllm/vllm-openai:v0.33.0`). The engine flag
+is `--speculative-config` (alias `-sc`) and takes a JSON object. Selected fields:
+
+| Field | Meaning |
+|---|---|
+| `method` | `ngram`, `draft_model`, `suffix`, `eagle`, `eagle3`, several model-specific `*_mtp` variants, `ngram_gpu`, `dflash`, `dspark`, `custom_class` |
+| `num_speculative_tokens` | *k*, the number of tokens guessed per step |
+| `model` | Draft model or EAGLE head to load (not needed for `ngram`) |
+| `prompt_lookup_max` / `prompt_lookup_min` | n-gram window sizes; max is required for `ngram` |
+
+Families of proposers, from cheapest to most involved:
+
+- **n-gram / prompt lookup:** find the latest tokens elsewhere in the prompt and
+  propose what followed them. It needs no extra weights.
+- **Draft model:** a smaller model with the same tokenizer proposes tokens. Our
+  dev model, Qwen2.5-0.5B, is already the smallest in its family, so this approach
+  fits a larger target served with a 0.5B drafter better than it fits our setup.
+- **EAGLE / MTP:** small prediction heads trained on the target's hidden states, or
+  multi-token-prediction layers shipped with some models. Higher acceptance, but
+  they need weights made for that specific target.
+
+An illustrative configuration (shape verified against the source above; **not run
+in this project**):
+
+```bash
+vllm serve Qwen/Qwen2.5-0.5B-Instruct ... \
+  --speculative-config '{"method": "ngram", "num_speculative_tokens": 4, "prompt_lookup_max": 4}'
+```
+
+### What changes in our platform if you turn it on
+
+Almost nothing, which is the point of the [adapter boundary](../adr/0007-llm-adapter.md):
+
+- **No code changes.** The adapter still streams OpenAI-compatible chunks.
+- **TPOT and tokens/s move**, and our existing `worker_tpot_seconds` shows it.
+  Measure at low *and* high concurrency, because the two can move in opposite directions.
+- **Chunks may arrive in bursts** of several tokens. The coalescing window already
+  absorbs that.
+- **New engine metrics to scrape** (counters in vLLM's `/metrics`):
+  `vllm:spec_decode_num_drafts_total`, `vllm:spec_decode_num_draft_tokens_total`,
+  `vllm:spec_decode_num_accepted_tokens_total` and
+  `vllm:spec_decode_num_accepted_tokens_per_pos_total`. Acceptance rate is
+  `rate(vllm:spec_decode_num_accepted_tokens_total[5m]) / rate(vllm:spec_decode_num_draft_tokens_total[5m])`.
+  Mean tokens per target pass is `1 + rate(accepted_tokens_total) / rate(drafts_total)`.
+  Both formulas come from the docstring of `SpecDecodingProm` in the pinned vLLM source.
+- **It's per engine, not per request.** Every request on that vLLM server gets it.
+  To offer both, run two engines behind two model names in `config/models.yaml`.
+
+Reference: Leviathan, Kalman and Matias, *Fast Inference from Transformers via
+Speculative Decoding*, ICML 2023 (verify link). Chen et al., *Accelerating Large
+Language Model Decoding with Speculative Sampling*, 2023 (verify link).
+
 ## Sources and next reading
 
 The tested engine is vLLM 0.33.0; environment and pending deployment checks are in
