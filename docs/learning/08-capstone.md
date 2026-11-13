@@ -62,6 +62,32 @@ Read these together, following one request ID:
 The [architecture](../ARCHITECTURE.md) is the current view; historical phase
 records explain how measurements changed decisions.
 
+### Capstone drill: rebuild the whole flow from memory
+
+Before you reread anything, draw the request's path on paper with all ten stations
+from the [walkthrough](WALKTHROUGH.md). Then check yourself against this table,
+which joins each station to the lesson that explains it and the number that
+characterizes it in our measurements:
+
+| # | Station | Code | Lesson | A measured number to remember |
+|---|---|---|---|---|
+| 1 | Authenticate | `Authenticator.authenticate` | 01 | 0 Redis calls on a bad key |
+| 2 | Rate limit | `TOKEN_BUCKET` Lua | 03 | burst 200, refill 100/s per key |
+| 3 | Register waiter | `ResponseRouter.register` | 01 | must happen **before** step 4 |
+| 4 | Admit + enqueue | `ENQUEUE` Lua | 03 | E5: 112 of 120 shed in ms instead of ~102 timing out |
+| 5 | Pull | `Worker.consume`/`accept` | 01 | `queue_ms` ≈ 1 ms when a worker is idle |
+| 6 | Batch | `DynamicBatcher.run` | 02 | E2: 38.8 → 238 items/s, batch 1 → 16 (real CPU) |
+| 7 | Last checks | `Worker.prepare` | 03 | expired or cancelled work is never computed |
+| 8 | Compute | `predict` in executor | 02 | DistilBERT 25.8 ms alone, 4.2 ms/item at 16 |
+| 8b | Reply, cache, ACK | `publish`, `ack_delete` | 03 | E4: recovery ≈ `reclaim_idle_ms` + one batch |
+| 9 | Inbox reader | `ResponseRouter.read` | 01 | one reader per gateway, not per request |
+| 10 | Respond | `timed_reply`, `render` | 05 | overhead 7.6 ms alone, 16 ms at 20-way concurrency |
+| LLM | Seat-limited stream | `LLMWorker.serve` | 04 | E6a: 139 → 1,751 tokens/s, concurrency 1 → 16 (real GB10) |
+| Scale | Control loop | `decide` | 06 | scale up ×2 per cycle; scale down after 120 s of lower demand |
+
+If you can explain *why* each number came out the way it did, you understand
+the system.
+
 ## 5. Try it
 
 With the dedicated kind/CPU setup from [benchmarks](../BENCHMARKS.md):

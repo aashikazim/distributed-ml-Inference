@@ -142,3 +142,8 @@
 | Coordinated omission | A slow system also slows closed-loop arrivals, hiding some fixed-rate waiting |
 | System boundary | Exact entry/exit points and population included in a measurement |
 | Service-level proposal | A candidate target requiring representative operation and review before acceptance |
+| Speculative decoding | An LLM engine technique: a cheap proposer guesses several next tokens and the full model checks them all in one pass. It is lossless with standard verification. Not enabled in this project |
+| Proposer (drafter) | The cheap source of guessed tokens in speculative decoding: n-gram prompt lookup, a small draft model, or EAGLE/MTP heads |
+| Acceptance rate | Fraction of guessed tokens the target model accepts; it decides whether speculative decoding helps |
+| Bucket resolution | Width of a histogram bucket at a given latency. Percentile estimates are only as precise as the bucket containing them |
+| Coalescing window | Short delay that bundles several streamed LLM chunks into one Redis write |

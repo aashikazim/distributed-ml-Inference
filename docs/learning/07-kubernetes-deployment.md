@@ -49,6 +49,95 @@ During a rolling update, maxUnavailable=0 retains available old capacity and
 maxSurge=1 permits a replacement. A PodDisruptionBudget limits voluntary eviction,
 not force deletion or process death. Spare scheduling capacity is still required.
 
+### See it concretely: the three probes, with our real numbers
+
+From [base/workloads.yaml](../../deploy/k8s/base/workloads.yaml) (worker-fake shown;
+the gateway uses the same pattern on port 8000):
+
+| Probe | Endpoint | Timing | Fails when | Kubernetes then… |
+|---|---|---|---|---|
+| startup | `GET :9001/readyz` | every 2 s, up to 90 failures (**180 s budget**) | model still loading or warming | waits; other probes are paused |
+| readiness | `GET :9001/readyz` | every 2 s, 2 s timeout | not warmed **or** draining after SIGTERM | removes the Pod from Service endpoints |
+| liveness | `GET :9001/healthz` | every 10 s, 2 s timeout | the process stops answering HTTP | **restarts** the container |
+
+The logic is three lines in
+[`probes.py`](../../src/infer_platform/worker/probes.py#L19):
+
+```python
+elif path in {"/healthz", "/readyz"}:
+    status = 503 if path == "/readyz" and (not ready.is_set() or stop.is_set()) else 200
+```
+
+Liveness deliberately ignores Redis and the model. If Redis goes down, restarting
+every worker wouldn't fix Redis. It would only add a cold start (model load + warmup)
+on top of the outage. **Liveness should fail only when a restart would help.**
+
+Workers don't receive traffic from a Service (they *pull* from Redis), so worker
+readiness mainly drives rollouts and PDB accounting, not load balancing.
+
+### See it concretely: a worker Pod being replaced
+
+```mermaid
+sequenceDiagram
+    participant K as Kubernetes
+    participant N as New worker Pod
+    participant O as Old worker Pod
+    participant R as Redis
+    K->>N: Create (maxSurge 1)
+    N->>N: Load model, warmup (startup probe waits)
+    N->>R: SET heartbeat, then XREADGROUP
+    K->>N: readiness OK, so rollout may continue
+    K->>O: SIGTERM (grace period 45 s starts)
+    O->>O: stop event set, readiness 503
+    O->>R: stop reading new work
+    O->>O: finish staged and running batches
+    O->>R: reply, SET result, XACK + XDEL for each
+    O->>R: DEL heartbeat key
+    O-->>K: exit 0 (well inside 45 s)
+    Note over K,O: If still running at 45 s, SIGKILL. Unfinished entries stay pending and another worker reclaims them.
+```
+
+**Why 45 s for worker-fake and 80 s for worker-chat?** The grace period must cover
+the worst case: the last batch, or the longest in-flight generation, plus reply
+time. A fake batch is tens of milliseconds, so 45 s is generous. A chat stream can
+run up to `request_timeout_ms` (60 s), so worker-chat gets 80 s. If grace were
+shorter than a long generation, every rollout would cut streams mid-sentence.
+
+### See it concretely: the live kind cluster
+
+A read-only snapshot of the dedicated `kind-infer-platform` cluster on the GB10 host,
+taken 2026-11-13 (Kubernetes v1.34.0):
+
+```text
+NAME                               READY   UP-TO-DATE   AVAILABLE
+deployment.apps/autoscaler         1/1     1            1
+deployment.apps/exporter           1/1     1            1
+deployment.apps/fake-openai        1/1     1            1
+deployment.apps/gateway            2/2     2            2
+deployment.apps/grafana            1/1     1            1
+deployment.apps/prometheus         1/1     1            1
+deployment.apps/worker-chat        1/1     1            1
+deployment.apps/worker-fake        1/1     1            1
+deployment.apps/worker-sentiment   1/1     1            1
+statefulset.apps/redis             1/1
+
+NAME                                     MIN AVAILABLE   ALLOWED DISRUPTIONS
+poddisruptionbudget.policy/gateway       1               1
+poddisruptionbudget.policy/worker-fake   1               0
+```
+
+Read the last line carefully. `worker-fake` has **1 replica and `minAvailable: 1`**,
+so **zero** voluntary disruptions are allowed. A `kubectl drain` of that node would
+wait indefinitely for the PDB. It doesn't fail, it waits, until the autoscaler
+(or you) adds a second replica. A PDB protects capacity, and with a single replica
+"protect capacity" means "never move it". The gateway, with 2 replicas, can lose
+one at a time.
+
+Resources use the same spirit. Every worker requests `cpu: 100m` (what the scheduler
+reserves) and is limited to `cpu: '2'` (the most it may use). `INFER_TORCH_THREADS`
+is set explicitly so PyTorch doesn't size its thread pool from the *node's* core count
+and fight neighboring Pods. That's the threads ≈ cores ÷ replicas rule from lesson 02.
+
 ## 4. How it works in this codebase
 
 Read these files in order:

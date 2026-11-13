@@ -48,6 +48,87 @@ utilization, saturation and errors. Overview supplies the first; Batching plus
 backlog and head age supply the second. An alert is a sustained condition, not
 an explanation. It tells you where to begin looking.
 
+### See it concretely: how a histogram turns into a p95, and how it can mislead
+
+A Prometheus histogram doesn't store latencies. It stores **counters**, one
+per bucket boundary, each counting requests *at or below* that boundary. Our
+buckets are defined once in
+[`LATENCY_BUCKETS`](../../src/infer_platform/common/metrics.py#L1):
+5 ms, 10, 25, 50, 100, 250, 500 ms, 1 s, 2.5, 5, 10, 30, 60 s.
+
+We sent 300 requests (20 at a time) to one fake-classifier worker (**simulated**
+compute) and recorded two things: the bucket counters before and after, and the
+exact `total_ms` from each response. Command and output:
+[histogram_vs_exact.py](../../tools/learning/histogram_vs_exact.py),
+[histogram-estimate.json](../results/learning/histogram-estimate.json).
+
+```text
+le="0.05"  ->   0     (no request faster than 50 ms)
+le="0.1"   -> 223     (223 of 300 took ≤ 100 ms)
+le="0.25"  -> 300     (all 300 took ≤ 250 ms)
+le="+Inf"  -> 300
+```
+
+Now estimate p95 the way `histogram_quantile()` does:
+
+```text
+rank of p95       = 0.95 × 300 = 285th fastest request
+which bucket?     the 285th is past 223, within 300 → bucket (100 ms, 250 ms]
+position inside   (285 − 223) / (300 − 223) = 62 / 77 = 0.805 of the way through
+assume uniform    100 ms + 0.805 × 150 ms ≈ 221 ms
+```
+
+| | Exact (from every response) | Histogram estimate |
+|---|---:|---:|
+| p50 | **97 ms** | 84 ms |
+| p95 | **105 ms** | 221 ms |
+| p99 | **118 ms** | 244 ms |
+
+The estimated p95 is **twice the truth.** The 77 slow requests actually took
+100–118 ms, but the histogram only knows they fell "somewhere between 100 and
+250", and interpolation assumes they were spread evenly. Three lessons:
+
+1. **Percentiles from histograms are estimates whose error depends on the
+   bucket width at that latency.** Put boundaries close together near your SLO.
+   An SLO of "p95 < 150 ms" can't be judged with a 100→250 gap.
+2. **The error is bounded:** the true value is guaranteed to be in the bucket.
+   Here, "p95 is between 100 and 250 ms" is exactly true.
+3. **Averages hide even more.** The mean here was ~98 ms. A mean never shows a
+   tail at all.
+
+### See it concretely: the latency breakdown under load
+
+The same 300 responses, averaged per `meta` field:
+
+| Component | Mean | What it means here |
+|---|---:|---|
+| `queue_ms` | 1.2 ms | Redis handed work over almost instantly |
+| `batch_wait_ms` | 37.5 ms | **4× `max_wait_ms`**: items waited for the busy runner, not for the timer |
+| `inference_ms` | 42.1 ms | Batches averaged 10 items: 20 + 2 × 10 ≈ 40 ms, plus jitter |
+| `gateway_overhead_ms` | 16.2 ms | Coordination under 20-way concurrency (vs 7.6 ms for the lone request in the [walkthrough](WALKTHROUGH.md)) |
+
+That table *is* a diagnosis. Low queue time but high batch wait means one worker
+is saturated, and its prefetch buffer is where the waiting happens. The fix is more
+worker replicas (lesson 06), not a smaller `max_wait_ms`. That's what the
+**Batching** dashboard is for: [dashboards.md](../dashboards.md) maps each panel to
+its query.
+
+### Which metric answers which question
+
+| Question | Metric (Prometheus name) | Emitted by |
+|---|---|---|
+| How many requests, how many errors? | `gateway_requests_total{model,endpoint,status}` | gateway |
+| How slow for users? | `gateway_request_duration_seconds` histogram | gateway |
+| Are we shedding load? | `gateway_rejected_total{reason}` | gateway |
+| Is work piling up? | `queue_backlog`, `queue_head_age_seconds` | exporter (reads Redis) |
+| Is work stuck with a dead worker? | `queue_pending` | exporter |
+| Are workers alive and busy? | `workers_alive`, `worker_busy_ratio` | exporter / worker |
+| Is batching working? | `worker_batch_size`, `worker_batch_wait_seconds` | worker |
+| How fast is the model itself? | `worker_inference_seconds` | worker |
+| Are poison inputs piling up? | `worker_dlq_total` | worker |
+| How fast do LLM streams start and flow? | `gateway_ttft_seconds`, `worker_ttft_seconds`, `worker_tpot_seconds` | gateway / worker |
+| What is the autoscaler doing? | `autoscaler_desired_replicas`, `autoscaler_current_replicas` | autoscaler |
+
 ## 4. How it works in this codebase
 
 Read these files in order:

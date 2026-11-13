@@ -57,6 +57,144 @@ mean better client latency. TTFT means time to first content; client TTFT includ
 queueing, whereas worker TTFT starts at dequeue. TPOT estimates decode time per
 output token using final usage, not a count of HTTP chunks.
 
+### Static vs continuous batching, one decode step at a time
+
+An illustrative grid (not a measurement). Four chat requests, three seats.
+`P` = prefill, `D` = one decode step, `.` = seat held but idle.
+
+```text
+STATIC batching: the batch is fixed until its longest member finishes
+step:     1  2  3  4  5  6  7  8  9 10 11 12 13
+seat 1 A  P  D  D  D  D  D  D  D
+seat 2 B  P  D  D  .  .  .  .  .   <- B done at step 3; seat idle for 5 steps
+seat 3 C  P  D  D  D  D  .  .  .
+seat 1 D                          P  D  D  D  D   <- D waited for the whole batch, starts at step 9
+
+CONTINUOUS batching (vLLM): the batch is re-formed every decode step
+step:     1  2  3  4  5  6  7  8
+seat 1 A  P  D  D  D  D  D  D  D
+seat 2 B  P  D  D
+seat 2 D           P  D  D  D  D   <- D takes B's seat at step 4
+seat 3 C  P  D  D  D  D
+```
+
+Request D finishes at step 8 instead of step 13. Generations vary wildly in
+length, which is why static batching suits LLMs poorly: the shortest answers
+hold seats hostage to the longest. vLLM does the continuous kind *inside* the
+engine. Our adapter only decides how many requests may be inside at once
+(`max_concurrent`, kept equal to vLLM's `--max-num-seqs 32`).
+
+### What a "seat" costs: KV-cache arithmetic for our dev model
+
+The real `config.json` of Qwen2.5-0.5B-Instruct has 24 layers, 2 key/value heads
+(grouped-query attention), head dimension 896 / 14 = 64, and bfloat16 (2 bytes).
+Each token in the cache stores one key and one value vector per layer:
+
+```text
+KV bytes per token = 2 (K and V) × 24 layers × 2 KV heads × 64 dims × 2 bytes = 12,288 B = 12 KiB
+one full sequence  = 12 KiB × 2,048 tokens (--max-model-len)                 = 24 MiB
+all 32 seats full  = 24 MiB × 32 (--max-num-seqs)                            = 768 MiB
+```
+
+So on this model, 32 maximum-length conversations need under 1 GiB of KV cache.
+That's why `--gpu-memory-utilization 0.25` is enough here. A 7B-class model
+with more layers and KV heads needs many times more per token, and **KV memory,
+not compute, usually limits concurrency.** PagedAttention allocates that memory
+in small blocks on demand, so a 50-token chat doesn't reserve 2,048 tokens' worth.
+
+### See it concretely: a real stream through our platform
+
+This is the complete output of one `stream: true` request against the
+`fake-llm` Compose profile (the **simulated** OpenAI server), captured 2026-11-13.
+IDs are shortened; the full capture is in
+[sse-fake-llm.txt](../results/learning/sse-fake-llm.txt).
+
+```text
+data: {"id": "chatcmpl-c19e…", ..., "choices": [{"index": 0, "delta": {"role": "assistant"}}]}
+data: {"id": "chatcmpl-c19e…", ..., "choices": [{"index": 0, "delta": {"content": "token0 "}}]}
+data: {... "delta": {"content": "token1 "}}]}
+data: {... "delta": {"content": "token2 "}}]}
+data: {... "delta": {"content": "token3 "}}]}
+data: {... "delta": {"content": "token4 "}}]}
+data: {... "delta": {}, "finish_reason": "length"}]}
+data: {... "choices": [], "usage": {"prompt_tokens": 1, "completion_tokens": 5, "total_tokens": 6},
+       "meta": {"queue_ms": 1.83, "inference_ms": 96.6, "total_ms": 100.6,
+                "ttft_ms": 73.2, "tpot_ms": 5.27, "completion_tokens": 5, "chunk_writes": 3}}
+data: [DONE]
+```
+
+Read the `meta`:
+
+- **8 SSE events, but `chunk_writes: 3`.** The 20 ms coalescing window bundled
+  the chunks into 3 Redis `XADD`s. The gateway unbundled them back into the
+  original events, in order.
+- `finish_reason: "length"`: generation stopped because it hit `max_tokens: 5`,
+  not because the model chose to stop (that would be `"stop"`).
+- `ttft_ms` 73 ms is mostly the fake server's configured first-token delay.
+  `tpot_ms` ≈ 5.3 ms is the configured per-token delay. Simulated or not, the
+  *measurement code* is the same one used against real vLLM.
+- `batch_size: 1` and `batch_wait_ms: 0` (in the full capture): the LLM path never
+  goes through our `DynamicBatcher`. vLLM batches.
+
+### Measured on the real GPU: why `max_concurrent` matters
+
+E6a sent 16 requests × 32 tokens to **real vLLM on the GB10** at different adapter
+concurrency limits (median of 3 runs):
+
+![Tokens per second and TTFT vs max_concurrent](img/llm-concurrency.png)
+
+| `max_concurrent` | Tokens/s | Client TTFT p50 | Worker TTFT p50 | TPOT p50 |
+|---:|---:|---:|---:|---:|
+| 1 | 139 | 1,791 ms | 18.0 ms | 6.7 ms |
+| 2 | 300 | 798 ms | 18.8 ms | 6.0 ms |
+| 4 | 546 | 407 ms | 28.0 ms | 6.2 ms |
+| 8 | 1,036 | 188 ms | 27.5 ms | 6.1 ms |
+| 16 | 1,751 | 112 ms | 33.3 ms | 6.4 ms |
+
+Three things to see:
+
+1. **Throughput scales almost linearly with concurrency, while TPOT stays ~6 ms.**
+   With 16 sequences the GPU produced 12× more tokens per second, and each
+   sequence's decode step got no slower. Decode for a small model is limited by
+   reading weights from memory, not by arithmetic, so more sequences per step
+   are nearly free. That's continuous batching paying off.
+2. **Client TTFT is mostly waiting in Redis.** At concurrency 1, the
+   *engine* produced a first token in 18 ms, but the median client waited 1.8 s,
+   queued behind the other requests. Little's Law at work: same arrival burst, fewer
+   seats, longer waits.
+3. **Worker TTFT rises slightly with concurrency** (18 → 33 ms), because a new
+   request's prefill shares GPU steps with everyone else's decode. Prefill and decode
+   compete, so more seats aren't free forever.
+
+### Speculative decoding: does this platform use it?
+
+**No.** Neither Compose nor the Kubernetes overlay passes a speculative-decoding
+option to vLLM, so every token is produced by one full forward pass of the target
+model. It's worth understanding anyway, because it's an engine-side switch that
+needs **no platform code** (the adapter boundary from ADR-0007 again).
+
+The idea, in one picture:
+
+```mermaid
+sequenceDiagram
+    participant D as Drafter (cheap)
+    participant T as Target model (expensive)
+    Note over D,T: Normal decode = 1 target pass per token
+    D->>D: Guess the next k=4 tokens ("the cat sat on")
+    D->>T: Verify all 4 guesses in ONE forward pass
+    T-->>T: Accept "the cat sat", reject "on", emit its own "down"
+    Note over D,T: 1 target pass produced 4 tokens instead of 1
+```
+
+It's lossless with the standard verification: the accepted text is distributed exactly as
+if the target had generated it alone. It's *faster* only when guesses are
+usually right and the GPU has spare capacity to verify them. Our measurements
+show it has that capacity at low concurrency: TPOT barely moved from 1 to 16
+sequences. At high load, the compute spent on rejected guesses competes with
+real requests and can *reduce* throughput. The concept guide has the details,
+the exact vLLM 0.33.0 options, and the metrics to watch:
+[speculative decoding](../concepts/llm-serving.md#speculative-decoding).
+
 ## 4. How it works in this codebase
 
 Read these files in order:
@@ -74,6 +212,48 @@ Read these files in order:
 
 The adapter is separate from ModelRunner and DynamicBatcher. Even nonstream
 clients use streaming upstream; the gateway returns one complete JSON response.
+
+### Annotated: "excess requests wait in Redis, not inside vLLM"
+
+From [`LLMWorker.serve`](../../src/infer_platform/worker/llm_worker.py#L117) (abridged):
+
+```python
+capacity = self.llm.max_concurrent - len(self.active)   # free seats right now
+if not capacity:
+    await <a seat frees up or shutdown>                  # read NOTHING from Redis
+    continue
+streams = await self.redis.xreadgroup(
+    GROUP, self.worker_id, {request_stream(self.model): ">"},
+    count=capacity,                                      # never more than free seats
+    block=100,
+)
+```
+
+The worker never holds a request it can't start. A backlog therefore stays in
+`req:chat` where the exporter, autoscaler and admission control can all see it,
+and where another worker replica can take it.
+
+### Annotated: the coalescer is a tiny batcher
+
+From [`LLMAdapter._generate`](../../src/infer_platform/worker/llm_adapter.py#L79),
+inner `consume` loop (abridged):
+
+```python
+if not pending:
+    deadline = now + self.config.coalesce_ms / 1000  # timer starts at the FIRST buffered chunk
+pending.append(chunk)
+if not self.config.coalesce_ms or len(pending) >= self.config.max_buffered_chunks:
+    await flush()  # window off, or buffer full: write now
+...
+if timer and timer in done:
+    await flush()  # window expired: one XADD for all of them
+```
+
+That's the shuttle-bus rule from lesson 02 again (leave when full or when the timer
+for the first passenger expires), this time applied to Redis writes instead of
+model calls. E6b measured the effect on real vLLM: with 4 concurrent streams × 64 tokens,
+`coalesce_ms: 0` made 1,040 `XADD`s and `coalesce_ms: 20` made ~256, with the
+same ~600 tokens/s.
 
 ## 5. Try it
 

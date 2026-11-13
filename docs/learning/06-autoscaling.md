@@ -38,6 +38,84 @@ flowchart LR
     W --> R
 ```
 
+### See it concretely: twelve decisions through the real `decide()`
+
+[tools/learning/autoscale_walkthrough.py](../../tools/learning/autoscale_walkthrough.py)
+feeds a scripted spike into the **real** `decide()` function with the
+`fake-classifier` policy (`min 1, max 10, target_backlog_per_replica 20,
+target_busy_ratio 0.7`, defaults otherwise: 5 s up-cooldown, 30 s down-cooldown,
+120 s stabilization, at most +4 or ×2 per step). To isolate the decision logic,
+it assumes new replicas are ready instantly. Real pods take seconds to minutes to warm up.
+
+The three signals, recomputed every cycle:
+
+```text
+by_backlog = ceil(backlog / 20)                  # "enough workers to hold 20 waiting each"
+by_util    = ceil(current × busy_ratio / 0.7)    # "enough workers so each is ~70% busy"
+by_latency = current + 1 if head_age > 0.5 s     # "the oldest request waited too long: add one"
+raw        = clamp(max(all three), min, max)
+```
+
+Output (also saved as [autoscale-walkthrough.md](../results/learning/autoscale-walkthrough.md)):
+
+| t (s) | backlog | busy | head age | current | by_backlog | by_util | by_latency | desired | reason |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | 0 | 0.30 | 0.0 | 1 | 0 | 1 | 0 | **1** | demand |
+| 5 | 150 | 1.00 | 0.8 | 1 | 8 | 2 | 2 | **2** | demand |
+| 10 | 140 | 1.00 | 0.9 | 2 | 7 | 3 | 3 | **4** | demand |
+| 15 | 60 | 0.95 | 0.6 | 4 | 3 | 6 | 5 | **6** | demand |
+| 20 | 10 | 0.80 | 0.1 | 6 | 1 | 7 | 0 | **7** | demand |
+| 25 | 0 | 0.40 | 0.0 | 7 | 0 | 5 | 0 | **7** | stabilization |
+| 60 | 0 | 0.10 | 0.0 | 7 | 0 | 2 | 0 | **7** | stabilization |
+| 120 | 0 | 0.10 | 0.0 | 7 | 0 | 2 | 0 | **7** | stabilization |
+| 145 | 0 | 0.10 | 0.0 | 7 | 0 | 2 | 0 | **2** | stabilization |
+| 150 | 0 | 0.10 | 0.0 | 2 | 0 | 1 | 0 | **2** | stabilization |
+| 185 | 0 | 0.10 | 0.0 | 2 | 0 | 1 | 0 | **2** | stabilization |
+| 270 | 0 | 0.10 | 0.0 | 2 | 0 | 1 | 0 | **1** | stabilization |
+
+How to read it, row by row:
+
+- **t=5:** the backlog says 8 replicas, but the result is **2**. The step limit allows at most
+  doubling per cycle (`max(current + 1, current × 2)`, capped at `current + 4`).
+  Scaling up gradually lets each new replica prove useful before more are added.
+- **t=10 → 20:** 2 → 4 → 6 → 7. Notice which signal drives each step: backlog
+  at t=10, then **utilization** once the backlog has drained (t=15, 20). Backlog is
+  small at t=20, but the 6 workers are 80% busy, so they're needed.
+- **t=25 → 120:** demand fell (raw 5, then 2), but desired stays **7**. The
+  stabilization window takes the **maximum raw recommendation of the last 120 s**,
+  which is still the 7 from t=20. This is the anti-flapping memory.
+- **t=145:** the t=20 recommendation is now 125 s old and has left the window.
+  The maximum of what remains is 2, so the controller drops **7 → 2 in one step**.
+  Scale-down is slow to *start* but not gradual once it starts.
+- **t=270:** the last "2" has aged out, so the controller returns to **1**.
+
+**What surprised us:** at t=60, `by_util` is 2, although 7 workers at 10% busy is
+0.7 worker's worth of work. `7 × 0.1 / 0.7` is `1.0000000000000002` in floating
+point, and `ceil` rounds it up to 2. The production code has this edge case: an
+exact ratio can round one replica too high, which delayed the final step down here
+(t=145 to t=270). The effect is one replica for one stabilization window, but it's
+a real bug. It is recorded in [PROGRESS](../PROGRESS.md) under known issues.
+
+### The same rules over ten minutes of simulated traffic
+
+[tools/autoscale_sim.py](../../tools/autoscale_sim.py) adds what the table left
+out: arrivals over time, a queue, and **warmup delay** before a new replica is ready.
+All capacity here is **simulated**. Each ready replica serves 20 requests/s, a new
+replica takes 5 s to warm up, the controller runs every 5 s, and the policy is
+`min 1, max 8, target_backlog_per_replica 10` (the `sentiment` values, not the table's).
+
+![Backlog and desired vs ready replicas for four traffic traces](../results/autoscale-sim.png)
+
+- **Spike (third row):** traffic jumps to 120 requests/s at t=60 s. Backlog peaks at 1,100
+  at t=74 s, when 8 replicas are desired but only 4 are ready. Desired replicas
+  climb 1 → 2 → 4 → 8 by doubling, at t=60, 65 and 70. The orange *ready* line trails the blue
+  *desired* line by the warmup delay. That lag is why the backlog peak exists
+  at all. Once drained, replicas stay at 8 for the 120 s stabilization
+  window plus cooldowns, then drop to 1 at t=235 s.
+- **Sawtooth (bottom row):** traffic oscillates, but replicas don't. The window
+  remembers the peaks, so the controller holds capacity through the troughs (8,
+  then 6) instead of flapping. That's the behavior E9 contrasts with "no stabilization".
+
 History contains raw demand recommendations, not already stabilized outputs.
 Otherwise a high value would continually renew itself and never expire. Old high
 demand can delay a downscale, but must not independently cause a new scale-up.

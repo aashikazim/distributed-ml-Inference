@@ -7,6 +7,7 @@ one lesson per sitting. Predict an observation before running its experiment.
 | Read in order | Companion and evidence |
 |---|---|
 | [00: Big picture](learning/00-big-picture.md) | [Architecture](ARCHITECTURE.md), responsibilities and boundaries |
+| [Walkthrough: one request, every hop](learning/WALKTHROUGH.md) | Every Redis command of one real request, captured live |
 | [01: Request path](learning/01-request-path.md) | [Redis Streams](concepts/redis-streams.md), E1, ADRs 0001–0003 |
 | [02: Dynamic batching](learning/02-dynamic-batching.md) | [Batching](concepts/batching.md), E2/E3, [ADR-0004](adr/0004-dynamic-batching.md) |
 | [03: Reliability](learning/03-reliability.md) | [Backpressure](concepts/reliability-and-backpressure.md), E4/E5, ADRs 0005–0006 |

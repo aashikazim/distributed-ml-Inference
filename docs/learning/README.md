@@ -4,9 +4,35 @@ Use one lesson per sitting, with a separate sitting for its experiment. The loop
 **Run → Read → Break → Explain**. Run the smoke path first; read a small number of
 functions; introduce one controlled failure; teach the result without reading notes.
 
+## Start here
+
+1. [Lesson 00: big picture](00-big-picture.md): one-page system map and Redis key map.
+2. **[Walkthrough: one request, every hop, real data](WALKTHROUGH.md)**: follow a real
+   request through ten stations with every Redis command captured live. This is the
+   most concrete document in the repo; return to it whenever a lesson feels abstract.
+3. Then lessons 01–08 in order.
+
+## What you'll see along the way
+
+Every chart below comes from a recorded run in `docs/results/`. Charts from the fake
+backend are labeled **simulated**. Regenerate them with
+`uv run python -m tools.learning.plot_learning_charts`.
+
+| Picture | Shows | Lesson |
+|---|---|---|
+| [batch-timeline.png](img/batch-timeline.png) | Ten requests through the real batcher: who rode which batch, and why | 02 |
+| [batching-sweep.png](img/batching-sweep.png) | Throughput and cost per item vs batch size, real DistilBERT and simulated | 02 |
+| [reclaim-recovery.png](img/reclaim-recovery.png) | `kill -9` recovery time vs `reclaim_idle_ms` | 03 |
+| [admission-overload.png](img/admission-overload.png) | Overload with and without admission control | 03 |
+| [llm-concurrency.png](img/llm-concurrency.png) | Real vLLM on GB10: tokens/s and TTFT vs concurrency | 04 |
+| [autoscale-sim.png](../results/autoscale-sim.png) | Simulated backlog and replicas for four traffic shapes | 06 |
+
+## Study order
+
 | Order | Lesson and companion | Availability |
 |---|---|---|
 | 00 | [Big picture](00-big-picture.md), [architecture](../ARCHITECTURE.md) | Phase 1 |
+| 00½ | [Walkthrough: one request, every hop](WALKTHROUGH.md) | Captured 2026-11-13 |
 | 01 | [Request path](01-request-path.md), [Redis Streams](../concepts/redis-streams.md), E1, ADRs 0001–0003 | Phase 1 |
 | 02 | [Dynamic batching](02-dynamic-batching.md), [batching concept](../concepts/batching.md), E2–E3, [ADR-0004](../adr/0004-dynamic-batching.md) | Phase 2: available |
 | 03 | [Reliability](03-reliability.md), [reliability/backpressure](../concepts/reliability-and-backpressure.md), E4–E5, ADRs 0005–0006 | Phase 3: available |

@@ -57,6 +57,73 @@ pending until the worker acknowledges it. This makes a dead worker's unfinished
 work observable. It does not make recovery automatic: the first phase has no
 reclaim controller. The order board remembers an order even if its cook leaves.
 
+### The whole system on one page
+
+Every box is a separate process (a container in Compose, a Pod in Kubernetes).
+Each label names the source folder that implements it.
+
+```mermaid
+flowchart TB
+    subgraph Clients
+        CL[curl, SDK, Locust]
+    end
+    subgraph Serving
+        GW[Gateway x N<br/>src/infer_platform/gateway]
+        WF[Worker: fake runner<br/>worker/runners/fake.py]
+        WT[Worker: torch classifier<br/>worker/runners/torch_classifier.py]
+        WL[Worker: LLM adapter<br/>worker/llm_worker.py]
+        LLM[vLLM or fake OpenAI server<br/>fake/openai_server.py]
+    end
+    subgraph State
+        RD[(Redis 7)]
+    end
+    subgraph Control
+        AS[Autoscaler<br/>autoscaler/]
+        EX[Exporter<br/>exporter/]
+    end
+    subgraph Observe
+        PR[Prometheus]
+        GF[Grafana]
+    end
+    CL -->|HTTP and SSE| GW
+    GW <-->|req and inbox streams| RD
+    WF <-->|pull work, push replies| RD
+    WT <-->|pull work, push replies| RD
+    WL <-->|pull work, push chunks| RD
+    WL -->|HTTP streaming| LLM
+    EX -->|reads queue stats| RD
+    AS -->|reads queue stats| RD
+    AS -->|patch replicas| WF
+    PR -->|scrape /metrics| GW
+    PR -->|scrape| WF
+    PR -->|scrape| EX
+    GF --> PR
+```
+
+Notice that **no arrow goes from the gateway to a worker.** That's the core design
+decision. Everything the gateway and workers know about each other passes through Redis.
+
+### The Redis keys, and who reads or writes each
+
+```mermaid
+flowchart LR
+    GW[Gateway] -->|XADD| REQ[(req:model<br/>work stream)]
+    REQ -->|XREADGROUP, XAUTOCLAIM| WK[Worker]
+    WK -->|XADD reply| INB[(inbox:gateway-id<br/>reply stream)]
+    INB -->|XREAD| GW
+    WK -->|SET every 3 s, TTL 10 s| HB[(worker:model:id<br/>heartbeat)]
+    HB -->|SCAN + GET| GW
+    GW -->|SET QUEUED| RES[(result:request-id<br/>outcome, TTL 300 s)]
+    WK -->|SET RUNNING, SUCCEEDED| RES
+    GW -->|SET on timeout or disconnect| CAN[(cancel:request-id<br/>TTL 120 s)]
+    CAN -->|EXISTS| WK
+    WK -->|XADD poison| DLQ[(dlq:model)]
+    GW -->|Lua token bucket| RL[(rl:key-id)]
+```
+
+The [walkthrough](WALKTHROUGH.md) shows these keys changing during one real request,
+with every Redis command captured live. Read it right after this lesson.
+
 ## How it works in this codebase
 
 Read these files in order:

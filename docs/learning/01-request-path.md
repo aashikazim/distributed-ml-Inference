@@ -62,6 +62,70 @@ executor. The worker writes the final reply, calls XACK to clear pending ownersh
 then XDEL to remove retained work. Acknowledgement and deletion are separate:
 ACK alone would let stream storage grow with completed work.
 
+### See it concretely: the race that "register first" prevents
+
+Both orders work almost always. Only one works always:
+
+```mermaid
+sequenceDiagram
+    participant H as HTTP handler
+    participant R as Redis
+    participant W as Fast worker
+    participant I as Inbox reader
+    Note over H,I: WRONG order: enqueue, then register
+    H->>R: XADD request
+    R->>W: delivered at once
+    W->>R: XADD reply to inbox
+    R->>I: reply arrives
+    I->>I: waiters has no entry for this id, so drop it
+    H->>H: register waiter (too late)
+    H->>H: waits until 504, although the work succeeded
+```
+
+The fix is just two lines in the right order
+([app.py:212-224](../../src/infer_platform/gateway/app.py#L212)):
+
+```python
+queue = None if async_mode else router.register(request_id)  # mailbox exists first
+...
+outcome = await enqueue(state.redis, model, message, ...)  # then work becomes visible
+```
+
+`finally: router.unregister(request_id)` (line 254) removes the mailbox on *every*
+exit path (success, timeout, disconnect, error), so the waiters dict can't leak.
+
+### See it concretely: the actual bytes
+
+From a captured run (full trace in the [walkthrough](WALKTHROUGH.md)). This is the stream
+entry the worker receives:
+
+```text
+XADD req:fake-classifier *
+  request_id  29b9aa2ab4654712b7d4002351a49d48
+  reply_to    inbox:4c62a7e5bfc34b52aaeba2b746ff3167
+  kind        infer
+  payload     {"input":"Learning Redis Streams","options":{}}
+  timeout_ms  4998
+  stream      0
+  key_id      4ea86e3706913256d830ebbdc45c4460938f41f17329526fb7a6fd89b24f32f3
+  trace_id    ff768af660654b3196ea1fd2fb0fb93c
+→ entry ID 1794594405603-0   (= Redis clock in ms, then a sequence number)
+```
+
+and this is what the worker writes back to the gateway's inbox:
+
+```text
+XADD inbox:4c62a7e5bfc34b52aaeba2b746ff3167 MAXLEN ~ 10000 *
+  request_id  29b9aa2ab4654712b7d4002351a49d48
+  type        final
+  data        {"label": "SIMULATED", "input_chars": 22}
+  meta        {"worker_id":"fd1f769d8eb8-feac25f1","batch_size":1,"queue_ms":1.12,
+               "batch_wait_ms":11.21,"inference_ms":24.04,...}
+```
+
+Every field is a plain string. JSON lives *inside* `payload`, `data` and `meta`.
+Nothing is pickled, and the API key itself never appears, only its SHA-256 (`key_id`).
+
 Queue age uses Redis TIME and the request entry's timestamp. Compute duration
 uses a monotonic clock, which measures elapsed time without wall-clock adjustments.
 Comparing clocks in different containers would make queue measurements vulnerable
