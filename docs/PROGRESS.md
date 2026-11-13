@@ -1,5 +1,47 @@
 # Progress
 
+## Post-sign-off: docs rendering, learning materials, speculative decoding (2026-11-13)
+
+Scope approved by the owner: A (rendering), B (learning materials), C (speculative
+decoding documentation). Generic multi-model serving (D) is deferred.
+
+- **A, rendering:** four Mermaid sequence diagrams (ARCHITECTURE diagrams 2 and 4,
+  lessons 01 and 03) failed to parse on GitHub because `;` inside a message ends a
+  Mermaid statement. Fixed. `tools/check_docs.py` (run by `tests/unit/test_docs.py`)
+  lints fences, `<details>`, relative links and this Mermaid pitfall. A new CI `docs` job also
+  renders every diagram with Mermaid CLI 12.2.0 (`scripts/render-mermaid.sh`).
+  Locally all 32 diagrams (after the lesson additions) render with Mermaid CLI 12.2.0.
+- **B, learning materials:** new [walkthrough](learning/WALKTHROUGH.md) built from a
+  live `redis-cli MONITOR` capture of one request. Every lesson gained concrete
+  examples, extra diagrams and annotated code. Five charts are generated from recorded
+  results (`tools/learning/plot_learning_charts.py`). New measured captures are in
+  `docs/results/learning/`: batcher timeline, histogram-vs-exact percentiles, autoscaler
+  decision table, SSE stream. All fake-backend numbers are labeled simulated.
+- **C, speculative decoding:** not used by this platform. A concept section and lesson 04
+  addendum were written from the `SpeculativeConfig` source and metric names inside
+  the pinned vLLM v0.33.0 image. No speculative-decoding run was performed.
+
+### Deferred
+
+- **E14 (speculative decoding on the GB10):** off vs n-gram vs draft model at
+  concurrency 1/8/32, measuring TPOT, TTFT, tokens/s and acceptance rate.
+  Proposed; awaiting owner approval.
+- **D, generic serving:** typed multi-modal inputs, claim-check payloads,
+  runner registry, ONNX/HF-pipeline/image runners, cost-aware batching,
+  Cluster-safe keys. `onnxruntime` and `pillow` are pre-approved for that work.
+
+### Known issues found while writing the lessons (not fixed; outside A/B/C)
+
+- `autoscaler.policy.decide` computes `ceil(current * busy / target)` in floating
+  point. Exact ratios can round up by one (e.g. `ceil(7 * 0.1 / 0.7) == 2`), holding one
+  extra replica for an extra stabilization window. Reproduce with
+  `uv run python -m tools.learning.autoscale_walkthrough` (t=60 to t=270).
+- Consumer records accumulate in the `workers` group across worker restarts
+  (`XINFO GROUPS` showed 16 consumers for one live worker). They are harmless while
+  their pending count is zero; nothing calls `XGROUP DELCONSUMER`.
+- With `minAvailable: 1` and a single replica, the `worker-fake` PDB allows 0
+  disruptions, so a node drain waits until a second replica exists.
+
 ## Final localhost sign-off
 
 All eight phases have code and beginner learning materials. The owner explicitly
