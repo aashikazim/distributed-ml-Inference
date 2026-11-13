@@ -200,3 +200,30 @@ scope before changing/deploying them. Live response total_ms and
 gateway_overhead_ms describe the current HTTP delivery through final construction;
 cached results retain worker timings and leave these delivery-specific fields null.
 No Redis key or ACK-order change is introduced by the extra timing metadata.
+
+## Generic serving (Phase D)
+
+Environment settings:
+
+| Variable | Default | Meaning |
+|---|---|---|
+| INFER_CLAIM_CHECK_BYTES | 16384 | A serialized request payload larger than this is stored at `blob:{request_id}` (TTL = INFER_RESULT_TTL_S) and the stream entry carries only `payload_ref`. The blob is deleted atomically with XACK + XDEL. INFER_MAX_BODY_BYTES still caps the HTTP body, so raise both for image models. |
+| INFER_WORKER_CACHE_S | 1.0 | How long a gateway reuses its list of live worker heartbeat keys before rescanning. Liveness is still checked atomically with EXISTS in the admission script; `0` rescans on every request, as before. |
+
+New per-model fields in `config/models.yaml`:
+
+| Field | Default | Meaning |
+|---|---|---|
+| `backend` | (required) | Adds `hf_pipeline` (Hugging Face `pipeline`) and `onnx` (ONNX Runtime) to `fake`, `torch`, `llm`. Backends map to runners in `worker/runners/registry.py`. |
+| `inputs` | none | Named typed inputs: `{name: {type: text\|json\|tensor\|image, ...}}`. Text needs `max_chars`; json and image need `max_bytes`; tensor needs `dtype`, `max_elements` and optionally `shape` (`-1` = any size). Omitted, the model accepts the original single text field `input` limited by `max_input_chars`. `options` is a reserved name. |
+| `pipeline.task` | (required for hf_pipeline) | One of `text-classification`, `token-classification`, `feature-extraction` (mean-pooled embedding), `image-classification`. Needs `hf_id`; weights must be safetensors; remote code is never run. |
+| `pipeline.kwargs` | `{}` | Extra call-time arguments for the pipeline, e.g. `top_k: 3`. |
+| `onnx.path` | (required for onnx) | Model file. Relative paths resolve under INFER_MODEL_CACHE. Never taken from a request. |
+| `onnx.outputs` | all graph outputs | Output names to return. |
+| `onnx.intra_op_threads` | 1 | ONNX Runtime CPU threads per replica (same cores ÷ replicas rule as torch). |
+| `max_batch_cost` | none | Optional cost budget per batch, in addition to `max_batch_size`. The first item always fits, so one oversized item still runs alone. |
+| `batch_cost_mode` | `padded` | `padded`: batch cost = items × largest item cost (what dynamic padding actually computes). `sum`: add item costs. |
+
+Item cost comes from the runner's optional `cost()` method: estimated tokens for text
+runners, total tensor elements for ONNX, 1 per image. Without one, the cost is
+the payload size in bytes.

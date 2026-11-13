@@ -88,6 +88,7 @@ identity and returns 202 while pending, 200 on success, an error on failure, or
 | dlq:{model} | Stream | Original poison envelope, source ID, last error, delivery count; MAXLEN ~10000 |
 | rl:{key_id} | Hash | Atomic token-bucket tokens and update time |
 | autoscaler:lock | String | Token-owned NX leadership lease, default 30 s, renewed/released by Lua |
+| blob:{request_id} | String JSON | Claim-check payload for requests larger than INFER_CLAIM_CHECK_BYTES; TTL = result TTL; deleted with XACK + XDEL ([ADR-0011](adr/0011-typed-inputs-and-claim-check.md)) |
 
 The leader lease is implemented. No Redis KEYS command is used.
 
@@ -220,6 +221,31 @@ Heartbeat accepting becomes false on refresh, then the key is deleted before
 exit. Compose gives classifier workers 15 seconds and chat workers 75 seconds. There is a short signal/heartbeat race and no
 promise of new work completing on a stopping replica. SIGKILL runs no cleanup.
 Kubernetes probes and termination grace are implemented; see diagram 8.
+
+## Generic serving (Phase D)
+
+Requests carry either the legacy `{"input": "..."}` or typed named inputs
+(`text`, `json`, `tensor`, `image`), validated against each model's declaration
+by the same `normalize()` in gateway and worker
+([ADR-0011](adr/0011-typed-inputs-and-claim-check.md)). Large payloads travel by
+claim-check. Workers build their runner through a closed registry: `fake`, `torch`,
+`hf_pipeline` and `onnx`, with `llm` still an adapter
+([ADR-0012](adr/0012-runner-registry.md)). Batches may also be limited by a
+padding-aware cost budget, and gateways cache worker discovery for one second
+([ADR-0013](adr/0013-cost-aware-batching-and-worker-directory.md)).
+
+```mermaid
+flowchart LR
+    B[HTTP body: input or typed inputs] --> N1[normalize at gateway, 422 on mismatch]
+    N1 --> S{payload over claim-check limit?}
+    S -->|No| E[XADD entry with payload]
+    S -->|Yes| BL[SET blob:id, then XADD entry with payload_ref]
+    E --> W[Worker accept: cost from runner]
+    BL --> W
+    W --> N2[normalize again in prepare]
+    N2 --> R[Registry runner: fake, torch, hf_pipeline, onnx]
+    R --> P[Reply, then XACK + XDEL + DEL blob]
+```
 
 ## Design principles and remaining limits
 

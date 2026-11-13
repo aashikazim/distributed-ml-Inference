@@ -16,6 +16,7 @@ one lesson per sitting. Predict an observation before running its experiment.
 | [06: Autoscaling](learning/06-autoscaling.md) | [Controller concepts and HPA/KEDA](concepts/autoscaling.md), E8–E10, [ADR-0009](adr/0009-autoscaling.md) |
 | [07: Deployment](learning/07-kubernetes-deployment.md) | [Deployment concepts](concepts/deploying-ml-workloads.md), real kind E11–E13, [ADR-0010](adr/0010-deployment.md) |
 | [08: Capstone](learning/08-capstone.md) | [Benchmarks](BENCHMARKS.md), [capacity worksheet](CAPACITY_PLANNING.md), [SLO proposal](SLO.md), [runbook](RUNBOOK.md), [audit](VERIFICATION.md) |
+| [09: Generic serving](learning/09-generic-serving.md) | Typed inputs, claim-check, runner registry, cost-aware batching; ADRs 0011–0013 |
 
 Use the [full study plan](learning/README.md) for a concept map and Redis cheat
 sheet. The loop is **Run → Read → Break → Explain**. Run a known path, read its

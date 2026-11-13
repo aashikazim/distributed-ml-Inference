@@ -147,3 +147,11 @@
 | Acceptance rate | Fraction of guessed tokens the target model accepts; it decides whether speculative decoding helps |
 | Bucket resolution | Width of a histogram bucket at a given latency. Percentile estimates are only as precise as the bucket containing them |
 | Coalescing window | Short delay that bundles several streamed LLM chunks into one Redis write |
+| Typed input | A named request value with a declared type (text, json, tensor, image) and limits, checked against the model's declaration |
+| Input declaration | The `inputs:` block of a model in models.yaml; also published by GET /v1/models |
+| Claim-check | Store a large payload separately (here `blob:{request_id}`) and pass only a reference through the queue |
+| Runner registry | Closed map from backend name to the code that builds a ModelRunner |
+| ONNX | Open Neural Network Exchange: a framework-neutral model file format, run here by ONNX Runtime |
+| Hugging Face pipeline | Transformers helper that bundles pre-processing, model and post-processing for a task |
+| Batch cost | Budget for one batch beyond item count; padded mode charges items × largest item |
+| Mean pooling | Averaging a model's per-token vectors into one fixed-size sentence embedding |

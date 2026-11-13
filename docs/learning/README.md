@@ -10,7 +10,7 @@ functions; introduce one controlled failure; teach the result without reading no
 2. **[Walkthrough: one request, every hop, real data](WALKTHROUGH.md)**: follow a real
    request through ten stations with every Redis command captured live. This is the
    most concrete document in the repo; return to it whenever a lesson feels abstract.
-3. Then lessons 01–08 in order.
+3. Then lessons 01–08 in order, and lesson 09 (generic serving) last.
 
 ## What you'll see along the way
 
@@ -41,6 +41,7 @@ backend are labeled **simulated**. Regenerate them with
 | 06 | [Autoscaling](06-autoscaling.md), [controller concept](../concepts/autoscaling.md), E8–E10, [ADR-0009](../adr/0009-autoscaling.md) | Phase 6: available |
 | 07 | [Kubernetes](07-kubernetes-deployment.md), [deployment concept](../concepts/deploying-ml-workloads.md), E11–E13, [ADR-0010](../adr/0010-deployment.md) | Phase 7: available |
 | 08 | [Capstone](08-capstone.md), [benchmarks](../BENCHMARKS.md), [capacity worksheet](../CAPACITY_PLANNING.md), [runbook](../RUNBOOK.md), [audit](../VERIFICATION.md) | Phase 8: available |
+| 09 | [Generic serving](09-generic-serving.md), ADRs [0011](../adr/0011-typed-inputs-and-claim-check.md)–[0013](../adr/0013-cost-aware-batching-and-worker-directory.md), [example catalog](../../config/models.examples.yaml) | Phase D |
 
 ```mermaid
 flowchart LR

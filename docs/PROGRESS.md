@@ -1,5 +1,37 @@
 # Progress
 
+## Phase D: generic serving (2026-11-13)
+
+Owner-approved. Dependencies added to the `ml`/`cuda` extras: `onnxruntime`, `pillow`
+(pre-approved).
+
+- **Typed inputs** (`text`, `json`, `tensor`, `image`) declared per model, validated
+  by one `normalize()` in gateway and worker. The legacy `{"input": "..."}` body and its
+  stream payload are byte-identical to before ([ADR-0011](adr/0011-typed-inputs-and-claim-check.md)).
+- **Claim-check** for payloads over `INFER_CLAIM_CHECK_BYTES`: new key
+  `blob:{request_id}`, optional `payload_ref` envelope field, blob deleted in the
+  ACK transaction. Delivery semantics are unchanged.
+- **Runner registry** with new `hf_pipeline` and `onnx` backends
+  ([ADR-0012](adr/0012-runner-registry.md)).
+- **Cost-aware batching** (`max_batch_cost`, `padded`/`sum`) and a cached
+  **worker directory** replacing the per-request SCAN
+  ([ADR-0013](adr/0013-cost-aware-batching-and-worker-directory.md)).
+- Verified on real models (CPU): ViT image classification, MiniLM embeddings,
+  DistilBERT via `hf_pipeline`, an ONNX graph. See [lesson 09](learning/09-generic-serving.md)
+  and `docs/results/learning/generic-serving-demo.json`.
+- Tests: new unit tests (inputs, runners including a real ONNX Runtime session, cost
+  batching) and integration tests (typed round trip, claim-check, missing blob, directory refresh).
+
+**Not done / limits:** Redis Cluster hash tags (would rename every key; needs a separate
+decision); GPU ONNX providers; ragged ONNX batching (mixed shapes fall back to per-item
+runs); multipart uploads; binary tensor encoding; Compose/Kubernetes services for the
+example models (they run via `config/models.examples.yaml` and the demo tool). Loading
+several `hf_pipeline` models concurrently in *one* process can deadlock in
+`transformers` imports. Production runs one worker per process, and the demo starts them sequentially.
+
+**E14:** harness built and smoke-tested; full run stopped because another GPU job
+held the GPU (about 91% utilization). No measurement exists. See [EXPERIMENTS](EXPERIMENTS.md#e14--speculative-decoding-on-real-vllm-not-yet-measured).
+
 ## Post-sign-off: docs rendering, learning materials, speculative decoding (2026-11-13)
 
 Scope approved by the owner: A (rendering), B (learning materials), C (speculative
@@ -23,12 +55,9 @@ decoding documentation). Generic multi-model serving (D) is deferred.
 
 ### Deferred
 
-- **E14 (speculative decoding on the GB10):** off vs n-gram vs draft model at
-  concurrency 1/8/32, measuring TPOT, TTFT, tokens/s and acceptance rate.
-  Proposed; awaiting owner approval.
-- **D, generic serving:** typed multi-modal inputs, claim-check payloads,
-  runner registry, ONNX/HF-pipeline/image runners, cost-aware batching,
-  Cluster-safe keys. `onnxruntime` and `pillow` are pre-approved for that work.
+- **E14 (speculative decoding on the GB10):** approved; harness ready; blocked by a
+  concurrent GPU workload (see Phase D section above).
+- **D, generic serving:** done, except Cluster-safe keys (see Phase D section above).
 
 ### Known issues found while writing the lessons (not fixed; outside A/B/C)
 
