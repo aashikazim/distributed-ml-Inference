@@ -1,0 +1,36 @@
+{
+ "note": "Output of tools/learning/histogram_vs_exact.py: 300 requests, 20 concurrent, one fake-classifier worker (SIMULATED compute), docker compose, NVIDIA GB10 host (20 Arm cores), 2026-11-13. bucket_delta = cumulative gateway_request_duration_seconds buckets (after - before).",
+ "bucket_delta": {
+  "0.005": 0.0,
+  "0.01": 0.0,
+  "0.025": 0.0,
+  "0.05": 0.0,
+  "0.1": 223.0,
+  "0.25": 300.0,
+  "0.5": 300.0,
+  "1.0": 300.0,
+  "2.5": 300.0,
+  "5.0": 300.0,
+  "10.0": 300.0,
+  "30.0": 300.0,
+  "60.0": 300.0,
+  "+Inf": 300.0
+ },
+ "exact_ms": {
+  "p50": 97.4480320001021,
+  "p95": 104.79514798498712,
+  "p99": 118.10360199888237
+ },
+ "histogram_estimate_ms": {
+  "p50": 83.6322869955157,
+  "p95": 220.7792207792208,
+  "p99": 244.15584415584416
+ },
+ "mean_breakdown_ms": {
+  "queue_ms": 1.2410880533854167,
+  "batch_wait_ms": 37.51597949585024,
+  "inference_ms": 42.05294189751536,
+  "gateway_overhead_ms": 16.220607590338524
+ },
+ "mean_batch_size": 10.1
+}

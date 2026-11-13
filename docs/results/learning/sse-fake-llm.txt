@@ -1,0 +1,19 @@
+# curl -sN ... /v1/chat/completions with stream=true against the fake-llm Compose profile (simulated tokens), 2026-11-13.
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {"role": "assistant"}}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {"content": "token0 "}}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {"content": "token1 "}}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {"content": "token2 "}}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {"content": "token3 "}}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {"content": "token4 "}}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [{"index": 0, "delta": {}, "finish_reason": "length"}]}
+
+data: {"id": "chatcmpl-c19e3b1418814b6796e5a5d2a6d12e56", "object": "chat.completion.chunk", "created": 1794594577, "model": "Qwen/Qwen2.5-0.5B-Instruct", "choices": [], "usage": {"prompt_tokens": 1, "completion_tokens": 5, "total_tokens": 6}, "meta": {"worker_id": "6e8efb1ffb8a-e43c2db3", "batch_size": 1, "queue_ms": 1.8349609375, "batch_wait_ms": 0.0, "inference_ms": 96.62940699490719, "total_ms": 100.64592800335959, "gateway_overhead_ms": 2.1815600709524006, "ttft_ms": 73.18016598583199, "tpot_ms": 5.273291251796763, "completion_tokens": 5, "chunk_writes": 3}}
+
+data: [DONE]
+

@@ -1,0 +1,1 @@
+{"request_id":"29b9aa2ab4654712b7d4002351a49d48","output":{"label":"SIMULATED","input_chars":22},"meta":{"worker_id":"fd1f769d8eb8-feac25f1","batch_size":1,"queue_ms":1.115966796875,"batch_wait_ms":11.206508002942428,"inference_ms":24.044929014053196,"total_ms":43.93119498854503,"gateway_overhead_ms":7.563791174674407}}

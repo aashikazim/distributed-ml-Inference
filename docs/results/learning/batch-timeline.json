@@ -1,0 +1,127 @@
+{
+  "config": {
+    "max_batch_size": 4,
+    "max_wait_ms": 10,
+    "fake_cost": {
+      "base_ms": 20.0,
+      "per_item_ms": 2.0,
+      "jitter_ms": 0.0
+    },
+    "arrivals_ms": [
+      0,
+      3,
+      7,
+      12,
+      15,
+      18,
+      20,
+      25,
+      30,
+      100
+    ]
+  },
+  "batches": [
+    {
+      "size": 3,
+      "start_ms": 10.7,
+      "end_ms": 37.5
+    },
+    {
+      "size": 4,
+      "start_ms": 37.6,
+      "end_ms": 66.0
+    },
+    {
+      "size": 2,
+      "start_ms": 66.1,
+      "end_ms": 90.4
+    },
+    {
+      "size": 1,
+      "start_ms": 111.4,
+      "end_ms": 133.7
+    }
+  ],
+  "items": [
+    {
+      "request": "r1",
+      "arrived_ms": 0.1,
+      "batch_size": 3,
+      "batch_wait_ms": 10.7,
+      "inference_ms": 26.8,
+      "done_ms": 37.6
+    },
+    {
+      "request": "r2",
+      "arrived_ms": 3.3,
+      "batch_size": 3,
+      "batch_wait_ms": 7.4,
+      "inference_ms": 26.8,
+      "done_ms": 37.6
+    },
+    {
+      "request": "r3",
+      "arrived_ms": 7.5,
+      "batch_size": 3,
+      "batch_wait_ms": 3.2,
+      "inference_ms": 26.8,
+      "done_ms": 37.6
+    },
+    {
+      "request": "r4",
+      "arrived_ms": 12.4,
+      "batch_size": 4,
+      "batch_wait_ms": 25.2,
+      "inference_ms": 28.4,
+      "done_ms": 66.1
+    },
+    {
+      "request": "r5",
+      "arrived_ms": 15.5,
+      "batch_size": 4,
+      "batch_wait_ms": 22.2,
+      "inference_ms": 28.4,
+      "done_ms": 66.1
+    },
+    {
+      "request": "r6",
+      "arrived_ms": 18.6,
+      "batch_size": 4,
+      "batch_wait_ms": 19.1,
+      "inference_ms": 28.4,
+      "done_ms": 66.1
+    },
+    {
+      "request": "r7",
+      "arrived_ms": 20.6,
+      "batch_size": 4,
+      "batch_wait_ms": 17.0,
+      "inference_ms": 28.4,
+      "done_ms": 66.1
+    },
+    {
+      "request": "r8",
+      "arrived_ms": 25.7,
+      "batch_size": 2,
+      "batch_wait_ms": 40.4,
+      "inference_ms": 24.2,
+      "done_ms": 90.4
+    },
+    {
+      "request": "r9",
+      "arrived_ms": 30.8,
+      "batch_size": 2,
+      "batch_wait_ms": 35.4,
+      "inference_ms": 24.2,
+      "done_ms": 90.4
+    },
+    {
+      "request": "r10",
+      "arrived_ms": 101.2,
+      "batch_size": 1,
+      "batch_wait_ms": 10.2,
+      "inference_ms": 22.4,
+      "done_ms": 133.8
+    }
+  ]
+}
